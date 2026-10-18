@@ -54,36 +54,6 @@ Dùng Python 3.10+ và Node.js 22+. Không cần `npm install`. Giữ mã bài, 
 
 Kiểm thử bao gồm schema, các trang chức năng, 100 lượt sinh đề, ma trận, chấm điểm, ẩn lời giải, hết giờ, lưu/khôi phục và sao lưu. DOM giả lập không thay thế kiểm tra trực quan trên trình duyệt. Trước khi phát hành bản sửa, thử thêm giao diện desktop/mobile, tìm kiếm, nút điều hướng và nhập/xuất file trên trình duyệt.
 
-## Đưa lên GitHub và bật GitHub Pages
-
-1. Tạo repository mới, ví dụ `netstudy-network-security`.
-2. Đưa **nội dung bên trong** thư mục `netstudy-source` vào gốc repo. Giữ cả thư mục `.github`; `dist/`, README và `.github/` phải nằm ngay ở gốc.
-3. Nếu dùng Git, mở Terminal tại thư mục này và chạy, thay URL bằng URL repo của bạn:
-
-```sh
-git init
-git add .
-git commit -m "Initial NetStudy learning app"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-git push -u origin main
-```
-
-4. Trong repository, vào **Settings → Pages → Build and deployment → Source → GitHub Actions**.
-5. Mở **Actions → Deploy NetStudy to GitHub Pages → Run workflow** trên nhánh `main` nếu cần chạy lại sau khi bật Pages.
-6. Khi thành công, mở URL trong deployment `github-pages`, thường có dạng `https://YOUR_USERNAME.github.io/YOUR_REPOSITORY/`.
-
-Workflow kiểm tra trước khi tải `dist/` lên Pages và chạy khi push vào `main`. Nếu dùng tên nhánh khác, sửa `branches` trong workflow. Asset dùng đường dẫn tương đối và điều hướng hash để chạy được dưới đường dẫn con của project Pages.
-
-Tài liệu GitHub: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
-
-## Lưu dữ liệu và chuyển từ website cũ
-
-Lịch sử chỉ lưu trong localStorage của hồ sơ trình duyệt hiện tại, không gửi lên máy chủ. Xóa dữ liệu website, đổi trình duyệt hoặc dùng chế độ riêng tư có thể làm mất tiến độ. Người cùng dùng hồ sơ trình duyệt có thể xem lịch sử ở đó.
-
-Khi chuyển từ Sites sang GitHub Pages, địa chỉ website thay đổi nên lịch sử **không tự chuyển sang**. Ở web cũ chọn **Dữ liệu cá nhân → Xuất bản sao lưu JSON**, sau đó ở web mới chọn **Nhập bản sao lưu**. Không đưa file sao lưu cá nhân lên repository.
-
-Đồng hồ dùng thời hạn tuyệt đối: đóng trang không dừng thời gian thi. Giữ cùng khóa localStorage và các mã bài/câu khi cập nhật phiên bản để giữ lịch sử.
 
 ## Nguồn và phạm vi
 
