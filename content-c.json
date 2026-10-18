@@ -1,0 +1,3186 @@
+[
+  {
+    "id": "6",
+    "title": "Một số giao thức bảo mật mạng",
+    "pages": 104,
+    "file": "Bài 6 - Một số giao thức bảo mật mạng.pdf",
+    "objectives": [
+      "Giải thích được cơ chế bằng lời của mình",
+      "Phân biệt các giải pháp có tên gần nhau",
+      "Chọn biện pháp phù hợp theo tình huống và giới hạn bảo vệ"
+    ],
+    "overview": "Các bài mật mã trước cung cấp công cụ; bài này ghép chúng thành hệ thống truyền thông. Luôn phân biệt mục tiêu bí mật, toàn vẹn, xác thực với vị trí lớp mạng và cách quản lý khóa.",
+    "sections": [
+      {
+        "id": "6.1",
+        "title": "Vị trí của mật mã trong mạng máy tính",
+        "from": 6,
+        "to": 13,
+        "explanation": "Mật mã có thể đặt ở ứng dụng, vận chuyển, mạng hoặc liên kết dữ liệu. Phạm vi được bảo vệ phụ thuộc điểm bắt đầu và kết thúc của cơ chế. Mã hóa ứng dụng giữ dữ liệu bí mật giữa các đầu cuối ứng dụng nhưng không tự che IP/TCP header. Bảo vệ liên kết chỉ có hiệu lực trên liên kết được cấu hình. Phần cứng ASIC đổi chi phí và tính linh hoạt lấy hiệu suất; phần mềm dễ thay đổi hơn. PKI hỗ trợ tin cậy khóa, không phải bản thân một lớp đóng gói IP.",
+        "plain": "Hãy hỏi: ai khóa, ai mở, và người chuyển hộ vẫn nhìn thấy nhãn nào? Ví von phong bì giúp hình dung nhưng không mô tả đầy đủ xác thực hay chống phát lại.",
+        "example": "HTTPS bảo vệ nội dung giữa trình duyệt và điểm kết thúc TLS, trong khi các router vẫn cần địa chỉ IP để định tuyến.",
+        "pitfalls": [
+          "Không đồng nhất vị trí triển khai với bảo vệ toàn bộ header",
+          "Không suy ra mã hóa ngăn được mọi sửa đổi nếu không có kiểm tra toàn vẹn"
+        ],
+        "recap": [
+          "Tự giải thích: Vị trí của mật mã trong mạng máy tính",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "6.2",
+        "title": "Cơ sở hạ tầng khóa công khai: PKIX và X.509",
+        "from": 14,
+        "to": 32,
+        "explanation": "Public Key Infrastructure (PKI) gắn khóa công khai với danh tính qua chứng chỉ và quy trình tin cậy. Certificate Authority (CA) ký/cấp và thu hồi; Registration Authority (RA) kiểm tra yêu cầu, danh tính; repository công bố chứng chỉ và danh sách thu hồi. Chủ thể giữ khóa riêng. Chuỗi chứng chỉ dẫn về điểm tin cậy đã biết; chỉ có chữ ký hợp lệ chưa đủ nếu sai tên, hết hạn hoặc bị thu hồi. X.509 có phiên bản, serial, issuer, validity, subject, public key và extensions. Slide minh họa phát hành, gia hạn, phục hồi, tạo khóa và chứng thực chéo; không phải mọi hệ thống đều cho CA giữ hoặc khôi phục khóa riêng.\n\nLuồng cấp chứng chỉ: chủ thể tạo hoặc được cấp cặp khóa theo chính sách, giữ khóa riêng và nộp thông tin yêu cầu. RA kiểm tra danh tính/yêu cầu; CA xác nhận liên kết giữa thông tin chủ thể và khóa công khai bằng chữ ký của CA. Repository giúp người khác lấy chứng chỉ và thông tin thu hồi. Chứng chỉ là dữ liệu công khai có chữ ký, không phải nơi gửi kèm khóa riêng. CSR trong hình là Certificate Signing Request, tức yêu cầu ký chứng chỉ, khác chứng chỉ đã được CA cấp.\n\nLuồng kiểm tra: bên nhận cần một điểm tin cậy đã biết, kiểm tra chuỗi chữ ký, thời hạn, chủ thể/tên cần kết nối, mục đích sử dụng và trạng thái thu hồi phù hợp. Chuỗi không tự tạo niềm tin nếu gốc chưa được tin cậy. Chứng thực chéo cho phép nối miền tin cậy nhưng vẫn phải kiểm tra chính sách, không có nghĩa mọi CA đều được tin như nhau.\n\nVòng đời gồm đăng ký, khởi tạo thông tin tin cậy, phát hành, gia hạn, thay khóa và thu hồi. Hết hạn là đến mốc thời gian ghi trong chứng chỉ; thu hồi có thể diễn ra trước mốc đó do khóa lộ, thay danh tính hoặc thay quyền. CRL là danh sách chứng chỉ bị thu hồi, không là danh sách người có mọi quyền ứng dụng. Khôi phục khóa phụ thuộc thiết kế và loại khóa; không suy ra mọi CA có quyền giữ bí mật ký của người dùng.\n\nCác trường đọc trong X.509: issuer là bên cấp, subject là chủ thể, serial phân biệt chứng chỉ trong phạm vi bên cấp, validity xác định mốc bắt đầu/kết thúc, public-key information chỉ khóa và thuật toán; extensions diễn đạt thêm ràng buộc/mục đích. Chữ ký CA bảo vệ nội dung chứng chỉ khỏi thay đổi lén, không mã hóa chứng chỉ. Các ví dụ VeriSign, nhà cung cấp Việt Nam và giá trong hình minh họa hệ sinh thái tại thời điểm tài liệu, không phải bảng xếp hạng hay báo giá hiện hành.",
+        "plain": "Chứng chỉ giống giấy xác nhận khóa này thuộc về ai; người xác nhận cũng phải được tin cậy. Nó không phải chiếc khóa riêng hay lời cam kết website không có nội dung lừa đảo.",
+        "example": "Một chứng chỉ còn hạn nhưng được cấp cho tên miền khác vẫn không hợp lệ cho website đang truy cập.",
+        "pitfalls": [
+          "CA khác RA",
+          "Chứng chỉ chứa khóa công khai, không công bố khóa riêng",
+          "Giá/độ phổ biến nhà cung cấp trong slide là thông tin theo thời điểm"
+        ],
+        "recap": [
+          "Tự giải thích: Cơ sở hạ tầng khóa công khai: PKIX và X.509",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "6.3",
+        "title": "IPsec: AH, ESP, IKE và hai chế độ",
+        "from": 33,
+        "to": 43,
+        "explanation": "Internet Protocol Security (IPsec) bảo vệ ở lớp IP và thường xây dựng Virtual Private Network (VPN). Authentication Header (AH) cung cấp xác thực/toàn vẹn chứ không bí mật. Encapsulating Security Payload (ESP) bảo vệ payload bằng mã hóa và có cơ chế xác thực/toàn vẹn tùy tổ hợp được chọn. Internet Key Exchange (IKE) thương lượng tham số và khóa; nó không là dữ liệu người dùng được mã hóa. Transport mode giữ IP header gốc, bảo vệ phần trên IP; tunnel mode bọc gói IP gốc trong gói IP mới. Header ngoài vẫn phục vụ định tuyến. Chống replay dùng thông tin thứ tự và trạng thái kiểm tra, không chỉ mã hóa.",
+        "plain": "Transport như bọc phần hàng; tunnel như bỏ cả phong bì cũ vào phong bì mới. Giới hạn: AH không mã hóa nên ví von lớp bọc kín không áp dụng cho AH.",
+        "example": "Hai chi nhánh có thể dùng gateway tạo tunnel qua Internet để bảo vệ lưu lượng giữa các mạng.",
+        "pitfalls": [
+          "AH không mã hóa",
+          "Tunnel không làm header ngoài biến mất",
+          "Không coi nhận xét NAT ở slide 40 là quy luật cho mọi cấu hình IPsec"
+        ],
+        "recap": [
+          "Tự giải thích: IPsec: AH, ESP, IKE và hai chế độ",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "6.4",
+        "title": "SSL/TLS: cấu trúc, record và handshake",
+        "from": 44,
+        "to": 53,
+        "explanation": "Secure Sockets Layer (SSL) và Transport Layer Security (TLS) bảo vệ kênh ứng dụng; slide mô tả kiến trúc SSL lịch sử trên TCP. Handshake thỏa thuận tham số, xác thực máy chủ và thiết lập bí mật phiên; chứng chỉ khách chỉ khi được yêu cầu. Record xử lý dữ liệu theo các tham số đã chọn. Alert báo lỗi/trạng thái; Change Cipher Spec trong mô hình cũ báo đổi trạng thái mật mã. Sơ đồ slide có chia khối, nén, MAC rồi mã hóa: học ý nghĩa các bước nhưng không áp đặt trình tự SSL cũ cho mọi phiên bản TLS. TLS bảo vệ đến điểm kết thúc TLS, không kiểm chứng thiện chí của ứng dụng.",
+        "plain": "Bắt tay là thống nhất cách nói chuyện và kiểm tra người bên kia; record là cách bảo vệ các tin nhắn tiếp theo.",
+        "example": "Trình duyệt cần kiểm tra chứng chỉ trước khi gửi thông tin nhạy cảm tới máy chủ HTTPS.",
+        "pitfalls": [
+          "Handshake khác record",
+          "HTTPS không tự bảo vệ dữ liệu đã giải mã trong máy chủ",
+          "Slide SSL không mô tả nguyên trạng mọi TLS hiện đại"
+        ],
+        "recap": [
+          "Tự giải thích: SSL/TLS: cấu trúc, record và handshake",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "6.5",
+        "title": "PGP và S/MIME: bảo mật email lai",
+        "from": 54,
+        "to": 76,
+        "explanation": "Pretty Good Privacy (PGP) kết hợp ký, nén, mã hóa đối xứng và bảo vệ khóa phiên bằng khóa công khai. Để ký: băm M rồi dùng khóa riêng người gửi tạo chữ ký; người nhận dùng khóa công khai người gửi kiểm tra. Để bí mật: mã hóa M bằng khóa phiên Ks rồi bảo vệ Ks cho người nhận. Ký và mã hóa là hai nhu cầu độc lập. Trong ký hiệu slide H là băm, Z là nén, || là ghép, EC/DC là đối xứng, EP/DP là bất đối xứng. Radix-64 là mã hóa biểu diễn dữ liệu dạng chữ, không tăng độ bí mật và không có nghĩa an toàn 64 bit. Secure/Multipurpose Internet Mail Extensions (S/MIME) bổ sung ký và mã hóa cho email MIME, thường gắn với X.509/PKI. Các ảnh Outlook minh họa hai tùy chọn ký và mã hóa riêng biệt.",
+        "plain": "Gửi email kín cần khóa người nhận; chứng minh người gửi cần khóa ký người gửi. Đừng đảo hai hướng chỉ vì đều có chữ khóa công khai.",
+        "example": "Alice ký bằng khóa riêng Alice; Bob kiểm tra bằng khóa công khai Alice. Muốn Bob đọc riêng, Alice bảo vệ khóa phiên bằng khóa công khai Bob.",
+        "pitfalls": [
+          "Chữ ký không tự che nội dung",
+          "Base64/Radix-64 không phải mã hóa bảo mật",
+          "Không dùng danh sách thuật toán lịch sử làm khuyến nghị triển khai"
+        ],
+        "recap": [
+          "Tự giải thích: PGP và S/MIME: bảo mật email lai",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "6.6",
+        "title": "Kerberos: AS, TGS, vé và xác thực hai chiều",
+        "from": 77,
+        "to": 90,
+        "explanation": "Kerberos là cơ chế xác thực qua bên thứ ba tin cậy dựa chủ yếu trên mật mã đối xứng. Key Distribution Center (KDC) gồm Authentication Server (AS) và Ticket Granting Server (TGS). Client nhận vé dùng với TGS rồi xin vé cho Service Server (SS). Vé được bảo vệ bằng khóa của nơi nhận vé; client không cần đọc nội dung vé để chuyển nó đi. Authenticator có thông tin tươi như timestamp để chứng minh đang sở hữu khóa phiên, giảm replay. Dịch vụ có thể trả bằng chứng để client xác thực ngược. Đồng bộ thời gian, bảo vệ KDC và quản lý thời hạn vé là các điều kiện vận hành. Slide 84 gọi khóa bảo vệ phản hồi AS là khóa công khai nhưng mâu thuẫn mô hình đối xứng của chính slide 78; cần xác minh với giảng viên.",
+        "plain": "Giống nhận thẻ vào cổng rồi đổi lấy vé phòng cụ thể; giới hạn là vé điện tử cần chứng minh sở hữu khóa, không phải ai sao chép vé cũng tự động có quyền.",
+        "example": "Sinh viên đã đăng nhập miền có thể lấy vé cho máy chủ tập tin mà không gửi lại mật khẩu tới từng dịch vụ.",
+        "pitfalls": [
+          "TGT khác vé dịch vụ",
+          "Vé khác authenticator",
+          "Không học chi tiết khóa công khai mâu thuẫn ở trang 84 như đáp án chuẩn"
+        ],
+        "recap": [
+          "Tự giải thích: Kerberos: AS, TGS, vé và xác thực hai chiều",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "6.7",
+        "title": "SSH: kiến trúc và kết nối an toàn",
+        "from": 91,
+        "to": 99,
+        "explanation": "Secure Shell (SSH) dùng mô hình client–server, TCP 22 mặc định. Ba thành phần là transport, user authentication và connection, đều thuộc bộ giao thức ứng dụng trong TCP/IP. Transport thiết lập kênh bảo mật và xác thực host; user authentication xác thực tài khoản; connection ghép nhiều kênh logic. Khóa host giúp nhận diện server, khóa người dùng giúp xác thực client, khóa phiên bảo vệ dữ liệu: không phải cùng một loại khóa. SFTP là giao thức truyền tập tin qua SSH; không đồng nghĩa FTP được thêm SSL. Slide trình bày trao đổi khóa theo mô hình giản lược, vì vậy không xem mọi SSH đều gửi khóa phiên mã hóa bằng khóa công khai server.",
+        "plain": "Trước khi đưa mật khẩu, cần biết mình đang nói chuyện với đúng máy chủ. Sau đó mới xác thực tài khoản và sử dụng các kênh dịch vụ.",
+        "example": "Cảnh báo host key thay đổi cần được xác minh qua kênh tin cậy thay vì bấm bỏ qua theo thói quen.",
+        "pitfalls": [
+          "SSH transport không phải lớp TCP transport của OSI",
+          "Port mặc định không chứng minh dịch vụ an toàn",
+          "Khóa host khác khóa phiên"
+        ],
+        "recap": [
+          "Tự giải thích: SSH: kiến trúc và kết nối an toàn",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "6.8",
+        "title": "Bài tập tổng hợp và tự giải thích",
+        "from": 100,
+        "to": 104,
+        "explanation": "Bài tập yêu cầu phân tích PKIX, so sánh hai IPsec mode, mô tả SSL, PGP, Kerberos, SSH và tổng hợp giao thức. Khi lập bảng hãy dùng cùng tiêu chí: đối tượng bảo vệ, mục tiêu, khóa/tin cậy, điểm kết thúc và hạn chế. Bài khảo sát nhà cung cấp cần ghi ngày khảo sát, không lấy giá cũ trên slide thành giá hiện tại. Triển khai thực hành trên môi trường được phép; phần ôn trắc nghiệm tập trung nhận diện vai trò và luồng tin.",
+        "plain": "Nếu chỉ nhớ tên mà chưa kể lại được luồng, quay lại sơ đồ từng giao thức.",
+        "example": "Tự chọn giữa IPsec cho hai mạng chi nhánh, TLS cho website, S/MIME cho email và SSH cho quản trị từ xa; giải thích lý do.",
+        "pitfalls": [
+          "Không có một giao thức thay thế mọi giao thức khác",
+          "Giá và gói dịch vụ cần kiểm tra theo thời điểm"
+        ],
+        "recap": [
+          "Tự giải thích: Bài tập tổng hợp và tự giải thích",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "title": "Chọn giao thức theo nhu cầu",
+        "headers": [
+          "Cơ chế",
+          "Phạm vi chính",
+          "Điểm cần nhớ"
+        ],
+        "rows": [
+          [
+            "IPsec",
+            "Gói IP/VPN",
+            "AH, ESP, IKE; transport/tunnel"
+          ],
+          [
+            "TLS",
+            "Kênh ứng dụng",
+            "Handshake và record; kiểm tra chứng chỉ"
+          ],
+          [
+            "PGP/S/MIME",
+            "Nội dung email",
+            "Ký khác mã hóa"
+          ],
+          [
+            "Kerberos",
+            "Xác thực dịch vụ",
+            "AS, TGS, vé và authenticator"
+          ],
+          [
+            "SSH",
+            "Quản trị/kênh từ xa",
+            "Host key, user authentication, kênh"
+          ]
+        ]
+      }
+    ],
+    "study": [
+      "Đọc mục tiêu, tự vẽ luồng dữ liệu hoặc vùng mạng trước khi nhớ tên giao thức.",
+      "Đóng bài học rồi giải thích mỗi cơ chế theo ba câu: giải quyết gì, làm thế nào, không bảo vệ được gì.",
+      "Làm câu hỏi theo bài; ghi nguyên nhân câu sai và ôn lại sau 1, 3, 7 ngày."
+    ],
+    "terms": [
+      {
+        "en": "PKI",
+        "vi": "Hạ tầng khóa công khai",
+        "meaning": "Hệ thống chứng chỉ, quy trình và điểm tin cậy gắn khóa công khai với danh tính."
+      },
+      {
+        "en": "CA",
+        "vi": "Tổ chức chứng thực",
+        "meaning": "Certificate Authority ký cấp và thu hồi chứng chỉ."
+      },
+      {
+        "en": "RA",
+        "vi": "Tổ chức đăng ký",
+        "meaning": "Registration Authority kiểm tra danh tính/yêu cầu."
+      },
+      {
+        "en": "IPsec",
+        "vi": "Bảo mật ở lớp IP",
+        "meaning": "Internet Protocol Security bảo vệ truyền thông IP."
+      },
+      {
+        "en": "ESP",
+        "vi": "Payload bảo mật đóng gói",
+        "meaning": "Encapsulating Security Payload hỗ trợ bí mật và toàn vẹn tùy tổ hợp."
+      },
+      {
+        "en": "IKE",
+        "vi": "Trao đổi khóa Internet",
+        "meaning": "Internet Key Exchange thương lượng tham số và khóa IPsec."
+      },
+      {
+        "en": "TLS",
+        "vi": "Bảo mật tầng vận chuyển",
+        "meaning": "Transport Layer Security bảo vệ kênh ứng dụng."
+      },
+      {
+        "en": "KDC",
+        "vi": "Trung tâm phân phối khóa",
+        "meaning": "Key Distribution Center cung cấp AS/TGS trong Kerberos."
+      },
+      {
+        "en": "SSH",
+        "vi": "Shell bảo mật",
+        "meaning": "Secure Shell tạo kênh quản trị/truyền tập tin an toàn."
+      },
+      {
+        "en": "CRL",
+        "vi": "Certificate Revocation List — danh sách chứng chỉ bị thu hồi",
+        "meaning": "Danh sách do bên cấp chứng chỉ công bố để nhận biết chứng chỉ không còn nên tin dùng."
+      },
+      {
+        "en": "AH",
+        "vi": "Authentication Header — tiêu đề chứng thực",
+        "meaning": "Thành phần IPsec cung cấp xác thực và toàn vẹn, không mã hóa nội dung."
+      },
+      {
+        "en": "SA",
+        "vi": "Security Association — liên kết bảo mật",
+        "meaning": "Tập tham số và khóa bảo vệ lưu lượng theo ngữ cảnh IPsec."
+      },
+      {
+        "en": "SSL",
+        "vi": "Secure Sockets Layer — lớp socket bảo mật",
+        "meaning": "Tiền thân lịch sử của TLS; sơ đồ bài giảng dùng kiến trúc SSL."
+      },
+      {
+        "en": "PGP",
+        "vi": "Pretty Good Privacy — bảo mật thông điệp",
+        "meaning": "Kết hợp ký, nén và mã hóa lai cho email/tập tin."
+      },
+      {
+        "en": "S/MIME",
+        "vi": "Secure/Multipurpose Internet Mail Extensions — bảo mật phần mở rộng email",
+        "meaning": "Ký và mã hóa email MIME, thường dùng chứng chỉ X.509."
+      },
+      {
+        "en": "MIME",
+        "vi": "Multipurpose Internet Mail Extensions — mở rộng thư điện tử",
+        "meaning": "Định dạng hỗ trợ nhiều kiểu nội dung và đính kèm email; không tự cung cấp mã hóa bảo mật."
+      },
+      {
+        "en": "AS",
+        "vi": "Authentication Server — máy chủ chứng thực",
+        "meaning": "Thành phần Kerberos hỗ trợ xác thực ban đầu và cấp thông tin để dùng TGS."
+      },
+      {
+        "en": "TGS",
+        "vi": "Ticket Granting Server — máy chủ cấp vé",
+        "meaning": "Cấp vé dịch vụ khi client trình vé và bằng chứng phù hợp."
+      },
+      {
+        "en": "TGT",
+        "vi": "Ticket Granting Ticket — vé xin cấp vé",
+        "meaning": "Vé cho phép yêu cầu vé dịch vụ từ TGS trong thời hạn được phép."
+      },
+      {
+        "en": "SS",
+        "vi": "Service Server — máy chủ dịch vụ",
+        "meaning": "Nơi client trình vé dịch vụ và authenticator để sử dụng dịch vụ."
+      },
+      {
+        "en": "Authenticator",
+        "vi": "Bằng chứng chứng thực tươi",
+        "meaning": "Thông tin bảo vệ bằng khóa phiên, thường gồm định danh và timestamp."
+      },
+      {
+        "en": "Kerberos",
+        "vi": "Giao thức xác thực bằng vé",
+        "meaning": "Dựa chủ yếu vào mật mã đối xứng và KDC tin cậy, hỗ trợ xác thực hai chiều."
+      },
+      {
+        "en": "SFTP",
+        "vi": "SSH File Transfer Protocol — truyền tập tin qua SSH",
+        "meaning": "Giao thức truyền tập tin qua kênh SSH, khác FTP được bảo vệ bằng TLS."
+      },
+      {
+        "en": "Handshake",
+        "vi": "Bắt tay thiết lập phiên",
+        "meaning": "Trao đổi thông tin để chọn tham số, xác thực và thiết lập khóa theo giao thức."
+      },
+      {
+        "en": "Record protocol",
+        "vi": "Giao thức bản ghi",
+        "meaning": "Đóng gói và bảo vệ dữ liệu với các tham số mật mã đã thỏa thuận."
+      },
+      {
+        "en": "Replay",
+        "vi": "Phát lại thông tin cũ",
+        "meaning": "Tái sử dụng thông điệp đã ghi được; cần kiểm tra tính tươi/thứ tự, không chỉ mã hóa."
+      }
+    ],
+    "issues": [
+      {
+        "page": 7,
+        "note": "PKI được xếp dưới nhãn tầng mạng trong slide; PKI là hạ tầng tin cậy phục vụ nhiều lớp, không phải giao thức định tuyến."
+      },
+      {
+        "page": 10,
+        "note": "Mô tả mã hóa cả TCP header là khái quát theo vị trí; TLS thông thường không mã hóa TCP header."
+      },
+      {
+        "page": 40,
+        "note": "Nhận xét không đi NAT cần ngữ cảnh AH/ESP và NAT traversal; không dùng làm khẳng định tuyệt đối."
+      },
+      {
+        "page": 63,
+        "note": "R64 không có nghĩa mã hóa bảo mật ASCII 64 bit; đây là biểu diễn Radix-64."
+      },
+      {
+        "page": 84,
+        "note": "Khóa công khai trong gói A mâu thuẫn mô tả Kerberos đối xứng; loại chi tiết mâu thuẫn khỏi ngân hàng chấm điểm."
+      },
+      {
+        "page": 97,
+        "note": "Trao đổi khóa SSH được giản lược/lịch sử; không đại diện mọi SSH hiện đại."
+      }
+    ],
+    "questions": [
+      {
+        "id": "q6-001",
+        "section": "6.1",
+        "topic": "Vị trí của mật mã trong mạng máy tính",
+        "level": "Thông hiểu",
+        "stem": "Mã hóa ở lớp ứng dụng tự nó thường không che phần nào?",
+        "options": [
+          "IP header",
+          "Nội dung ứng dụng đã mã hóa",
+          "Bản rõ trong vùng bảo vệ",
+          "Payload đã bảo vệ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "IP header nằm ngoài phạm vi mã hóa ứng dụng.",
+          "Sai: Nội dung ứng dụng là đối tượng trực tiếp được mã hóa, khác header IP nằm bên ngoài.",
+          "Sai: Bản rõ thuộc vùng được bảo vệ được biến đổi thành bản mã; không phải trường header để định tuyến.",
+          "Sai: Payload được bảo vệ nằm trong phạm vi mã hóa, khác IP header."
+        ],
+        "page": 9
+      },
+      {
+        "id": "q6-002",
+        "section": "6.1",
+        "topic": "Vị trí của mật mã trong mạng máy tính",
+        "level": "Nhận biết",
+        "stem": "Bảo mật lớp liên kết dữ liệu trực tiếp bảo vệ đơn vị nào?",
+        "options": [
+          "Email MIME",
+          "Vé Kerberos",
+          "Chứng chỉ CA",
+          "Frame"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: MIME là định dạng nội dung email ở tầng ứng dụng, không phải đơn vị liên kết dữ liệu.",
+          "Sai: Vé Kerberos là thông tin chứng thực ở tầng ứng dụng, không phải frame.",
+          "Sai: Chứng chỉ CA là dữ liệu tin cậy khóa, không phải đơn vị truyền của lớp liên kết.",
+          "Lớp liên kết xử lý frame trên liên kết."
+        ],
+        "page": 12
+      },
+      {
+        "id": "q6-003",
+        "section": "6.1",
+        "topic": "Vị trí của mật mã trong mạng máy tính",
+        "level": "Thông hiểu",
+        "stem": "Đánh đổi điển hình khi triển khai mật mã bằng ASIC là gì?",
+        "options": [
+          "Không cần khóa",
+          "Không cần thuật toán",
+          "Hiệu suất cao nhưng chi phí và độ linh hoạt là yếu tố cần cân nhắc",
+          "Luôn miễn phí"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: ASIC vẫn thực thi thuật toán có khóa khi thuật toán yêu cầu; phần cứng không loại bỏ khóa.",
+          "Sai: ASIC hiện thực thuật toán trong mạch, không thay thế nhu cầu có thuật toán.",
+          "ASIC chuyên dụng đổi tính linh hoạt và chi phí lấy hiệu suất.",
+          "Sai: Thiết kế, sản xuất và triển khai phần cứng có chi phí, không luôn miễn phí."
+        ],
+        "page": 13
+      },
+      {
+        "id": "q6-004",
+        "section": "6.2",
+        "topic": "Cơ sở hạ tầng khóa công khai: PKIX và X.509",
+        "level": "Nhận biết",
+        "stem": "Thành phần nào chủ yếu xác minh danh tính trước khi cấp chứng chỉ?",
+        "options": [
+          "TGS",
+          "RA",
+          "ESP",
+          "Record protocol"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: TGS cấp vé Kerberos, không là thành phần đăng ký chứng chỉ PKI.",
+          "Registration Authority thực hiện kiểm tra đăng ký và danh tính.",
+          "Sai: ESP bảo vệ lưu lượng IPsec, không kiểm tra hồ sơ danh tính xin chứng chỉ.",
+          "Sai: Record protocol bảo vệ dữ liệu phiên SSL/TLS, không thẩm định đăng ký."
+        ],
+        "page": 23
+      },
+      {
+        "id": "q6-005",
+        "section": "6.2",
+        "topic": "Cơ sở hạ tầng khóa công khai: PKIX và X.509",
+        "level": "Nhận biết",
+        "stem": "Ai ký cấp và thu hồi chứng chỉ trong PKI?",
+        "options": [
+          "CA",
+          "Router trung gian bất kỳ",
+          "Client không tin cậy",
+          "NAT"
+        ],
+        "correct": 0,
+        "explanations": [
+          "CA chịu trách nhiệm cấp và thu hồi.",
+          "Sai: Router chuyển tiếp lưu lượng; không có thẩm quyền CA chỉ vì nằm trên đường đi.",
+          "Sai: Client không tin cậy không thể tự tạo sự tin cậy cho chứng chỉ của người khác.",
+          "Sai: NAT dịch địa chỉ/cổng, không ký cấp hay thu hồi chứng chỉ."
+        ],
+        "page": 23
+      },
+      {
+        "id": "q6-006",
+        "section": "6.2",
+        "topic": "Cơ sở hạ tầng khóa công khai: PKIX và X.509",
+        "level": "Thông hiểu",
+        "stem": "Chứng chỉ X.509 công bố dữ liệu khóa nào?",
+        "options": [
+          "Khóa riêng người nhận",
+          "Mọi khóa phiên trong tương lai",
+          "Mật khẩu AS",
+          "Khóa công khai của chủ thể"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Khóa riêng phải được chủ thể bảo vệ, không công bố trong chứng chỉ.",
+          "Sai: Khóa phiên được thiết lập theo phiên; chứng chỉ không chứa mọi bí mật tương lai.",
+          "Sai: Mật khẩu AS không là trường công bố của chứng chỉ X.509.",
+          "Chứng chỉ gắn danh tính với khóa công khai; khóa riêng phải được giữ kín."
+        ],
+        "page": 29
+      },
+      {
+        "id": "q6-007",
+        "section": "6.2",
+        "topic": "Cơ sở hạ tầng khóa công khai: PKIX và X.509",
+        "level": "Vận dụng",
+        "stem": "Chữ ký CA hợp lệ nhưng chứng chỉ hết hạn. Cách đánh giá đúng?",
+        "options": [
+          "Chấp nhận vì khóa công khai còn nguyên",
+          "Chỉ kiểm tra issuer, bỏ qua thời hạn",
+          "Không chấp nhận chỉ vì chữ ký đúng",
+          "Chấp nhận nếu nội dung website có vẻ hợp lệ"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Khóa công khai không đổi không kéo dài thời hạn hiệu lực đã được CA ký.",
+          "Sai: Issuer là một kiểm tra cần thiết nhưng không thay kiểm tra validity.",
+          "Kiểm tra hiệu lực là điều kiện riêng ngoài chữ ký.",
+          "Sai: Nội dung trông hợp lệ không sửa được việc chứng chỉ đã hết hạn."
+        ],
+        "page": 29
+      },
+      {
+        "id": "q6-008",
+        "section": "6.2",
+        "topic": "Cơ sở hạ tầng khóa công khai: PKIX và X.509",
+        "level": "Vận dụng",
+        "stem": "Khóa riêng bị lộ thì cần hành động nào với chứng chỉ tương ứng?",
+        "options": [
+          "Chỉ gia hạn thời hạn chứng chỉ cũ",
+          "Yêu cầu thu hồi và thay khóa phù hợp",
+          "Giữ nguyên khóa và đổi tên hiển thị",
+          "Chỉ xóa bản sao chứng chỉ trên một client"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Gia hạn cùng khóa không khắc phục việc kẻ khác đã có khóa riêng.",
+          "Thu hồi giúp bên tin cậy biết chứng chỉ không nên được tiếp tục tin dùng.",
+          "Sai: Tên hiển thị không thay đổi bí mật đã lộ hoặc quyền dùng khóa đó.",
+          "Sai: Xóa trên một client không thông báo cho các bên khác ngừng tin chứng chỉ."
+        ],
+        "page": 26
+      },
+      {
+        "id": "q6-009",
+        "section": "6.3",
+        "topic": "IPsec: AH, ESP, IKE và hai chế độ",
+        "level": "Nhận biết",
+        "stem": "Giao thức nào trong IPsec hỗ trợ thương lượng khóa?",
+        "options": [
+          "IKE",
+          "SMTP",
+          "ARP",
+          "MIME"
+        ],
+        "correct": 0,
+        "explanations": [
+          "IKE thiết lập các tham số và vật liệu khóa cho IPsec.",
+          "Sai: SMTP chuyển email, không thương lượng khóa cho IPsec.",
+          "Sai: ARP ánh xạ IP với địa chỉ liên kết trong mạng cục bộ, không thiết lập khóa IPsec.",
+          "Sai: MIME là định dạng nội dung email, không phải giao thức trao đổi khóa."
+        ],
+        "page": 33
+      },
+      {
+        "id": "q6-010",
+        "section": "6.3",
+        "topic": "IPsec: AH, ESP, IKE và hai chế độ",
+        "level": "Thông hiểu",
+        "stem": "Điểm nào phân biệt AH với mã hóa ESP?",
+        "options": [
+          "AH luôn mã hóa toàn bộ",
+          "AH là server cấp vé",
+          "AH là chứng chỉ",
+          "AH không cung cấp bí mật nội dung"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: AH không mã hóa, nên không tạo bí mật nội dung dù có xác thực/toàn vẹn.",
+          "Sai: Máy chủ cấp vé là vai trò TGS trong Kerberos, không phải AH.",
+          "Sai: AH là thành phần bảo vệ gói IPsec, không phải chứng chỉ số.",
+          "AH tập trung xác thực/toàn vẹn, không mã hóa."
+        ],
+        "page": 33
+      },
+      {
+        "id": "q6-011",
+        "section": "6.3",
+        "topic": "IPsec: AH, ESP, IKE và hai chế độ",
+        "level": "Thông hiểu",
+        "stem": "Đặc trưng của tunnel mode là gì?",
+        "options": [
+          "Không cần gateway",
+          "Chỉ đổi port SMTP",
+          "Bọc gói IP gốc vào gói có IP header ngoài",
+          "Xóa mọi địa chỉ định tuyến"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Tunnel có thể triển khai giữa gateway; phát biểu không cần gateway không mô tả đặc trưng đóng gói.",
+          "Sai: Thay cổng SMTP không bọc hay bảo vệ toàn bộ gói IP gốc.",
+          "Header ngoài cho phép gói được định tuyến, gói gốc nằm bên trong.",
+          "Sai: Tunnel vẫn cần IP header ngoài để mạng định tuyến tới đầu đường hầm."
+        ],
+        "page": 41
+      },
+      {
+        "id": "q6-012",
+        "section": "6.3",
+        "topic": "IPsec: AH, ESP, IKE và hai chế độ",
+        "level": "Thông hiểu",
+        "stem": "Transport mode giữ lại thành phần nào để định tuyến?",
+        "options": [
+          "TGT",
+          "IP header gốc",
+          "Chữ ký email",
+          "Mật khẩu client"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: TGT là vé Kerberos ở ứng dụng, không là địa chỉ định tuyến IP.",
+          "Transport bảo vệ phần trên IP và giữ IP header gốc.",
+          "Sai: Chữ ký email không là header IP và không quyết định tuyến gói.",
+          "Sai: Mật khẩu không được giữ trong header để định tuyến."
+        ],
+        "page": 40
+      },
+      {
+        "id": "q6-013",
+        "section": "6.3",
+        "topic": "IPsec: AH, ESP, IKE và hai chế độ",
+        "level": "Vận dụng",
+        "stem": "Hai chi nhánh cần bảo vệ lưu lượng qua Internet ở mức IP. Giải pháp phù hợp?",
+        "options": [
+          "VPN IPsec giữa gateway",
+          "TLS chỉ cho một ứng dụng web riêng lẻ",
+          "S/MIME cho từng email trao đổi",
+          "SSH cho mỗi phiên quản trị máy chủ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "IPsec thường được dùng cho kết nối site-to-site ở lớp IP.",
+          "Sai: TLS của một ứng dụng không tự bảo vệ toàn bộ lưu lượng IP giữa hai mạng.",
+          "Sai: S/MIME bảo vệ từng email, không tạo kết nối VPN cho mọi lưu lượng mạng.",
+          "Sai: SSH phù hợp phiên/kênh cụ thể, không trực tiếp đáp ứng VPN lớp IP giữa gateway như yêu cầu."
+        ],
+        "page": 38
+      },
+      {
+        "id": "q6-014",
+        "section": "6.3",
+        "topic": "IPsec: AH, ESP, IKE và hai chế độ",
+        "level": "Thông hiểu",
+        "stem": "Mã hóa đơn thuần có đủ để ngăn replay không?",
+        "options": [
+          "Có trong mọi trường hợp",
+          "Có nếu port 22",
+          "Có nếu nén ZIP",
+          "Không, cần cơ chế kiểm tra tính tươi/thứ tự"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Bản mã hợp lệ cũ vẫn có thể được gửi lại nếu bên nhận không kiểm tra tính tươi.",
+          "Sai: Cổng 22 nhận diện dịch vụ mặc định, không tự thêm kiểm tra chống phát lại cho mọi dữ liệu.",
+          "Sai: Nén ZIP giảm biểu diễn dữ liệu, không xác minh dữ liệu là mới.",
+          "Gói mã hóa cũ vẫn có thể được phát lại nếu không kiểm tra replay."
+        ],
+        "page": 39
+      },
+      {
+        "id": "q6-015",
+        "section": "6.4",
+        "topic": "SSL/TLS: cấu trúc, record và handshake",
+        "level": "Nhận biết",
+        "stem": "Thành phần SSL nào thiết lập tham số ban đầu?",
+        "options": [
+          "TGS",
+          "Radix-64",
+          "Handshake protocol",
+          "NAT"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: TGS thương lượng vé Kerberos, không phải thành phần SSL.",
+          "Sai: Radix-64 biểu diễn dữ liệu dạng ký tự, không thương lượng tham số phiên.",
+          "Handshake thương lượng mật mã và thiết lập phiên.",
+          "Sai: NAT đổi địa chỉ/cổng, không thực hiện SSL handshake."
+        ],
+        "page": 47
+      },
+      {
+        "id": "q6-016",
+        "section": "6.4",
+        "topic": "SSL/TLS: cấu trúc, record và handshake",
+        "level": "Nhận biết",
+        "stem": "Record protocol chủ yếu làm gì?",
+        "options": [
+          "Đổi địa chỉ IP",
+          "Bảo vệ và đóng gói dữ liệu theo tham số phiên",
+          "Cấp chứng chỉ CA",
+          "Cấp vé TGS"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Dịch địa chỉ là chức năng NAT, không phải record protocol.",
+          "Record xử lý dữ liệu trao đổi sau khi tham số được thiết lập.",
+          "Sai: CA cấp chứng chỉ thông qua PKI, không thông qua thao tác xử lý record.",
+          "Sai: TGS cấp vé trong Kerberos, không thuộc record protocol SSL."
+        ],
+        "page": 51
+      },
+      {
+        "id": "q6-017",
+        "section": "6.4",
+        "topic": "SSL/TLS: cấu trúc, record và handshake",
+        "level": "Nhận biết",
+        "stem": "Alert protocol có vai trò nào?",
+        "options": [
+          "Thông báo vấn đề/trạng thái liên quan bảo mật",
+          "Quản lý pool NAT",
+          "Lưu khóa riêng công khai",
+          "Phát SSID"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Alert mang thông báo cảnh báo của giao thức.",
+          "Sai: Pool NAT quản lý địa chỉ dịch, không là nhiệm vụ alert SSL/TLS.",
+          "Sai: Khóa riêng phải giữ kín; alert không công bố hay lưu công khai khóa riêng.",
+          "Sai: SSID được AP thông báo trong Wi-Fi; alert TLS không điều khiển phát SSID."
+        ],
+        "page": 51
+      },
+      {
+        "id": "q6-018",
+        "section": "6.4",
+        "topic": "SSL/TLS: cấu trúc, record và handshake",
+        "level": "Thông hiểu",
+        "stem": "Chứng chỉ client trong bắt tay theo slide là gì?",
+        "options": [
+          "Bắt buộc trong mọi website",
+          "Thay thế IP header",
+          "Do NAT ký",
+          "Có thể được server yêu cầu"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Nhiều website chỉ xác thực server bằng chứng chỉ; client certificate không bắt buộc mọi trường hợp.",
+          "Sai: Chứng chỉ nhận diện chủ thể/khóa, không thay header phục vụ định tuyến.",
+          "Sai: NAT không là tổ chức ký chứng chỉ; CA hoặc cơ chế tin cậy tương ứng làm việc này.",
+          "Xác thực client bằng chứng chỉ phụ thuộc yêu cầu của server."
+        ],
+        "page": 52
+      },
+      {
+        "id": "q6-019",
+        "section": "6.4",
+        "topic": "SSL/TLS: cấu trúc, record và handshake",
+        "level": "Vận dụng",
+        "stem": "Website có HTTPS nhưng lừa lấy tiền. Kết luận nào đúng?",
+        "options": [
+          "Có vì chứng chỉ chứng minh nội dung kinh doanh đáng tin",
+          "Có vì TLS ngăn người dùng gửi thông tin cho website lừa",
+          "Kênh bảo mật không đảm bảo thiện chí nội dung website",
+          "Có vì mã hóa bảo đảm mọi bên dùng dữ liệu đúng mục đích"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Chứng chỉ xác nhận liên hệ danh tính/tên miền và khóa theo quy trình cấp, không bảo chứng thiện chí kinh doanh.",
+          "Sai: TLS mã hóa dữ liệu người dùng tự gửi tới endpoint; endpoint lừa đảo vẫn có thể nhận dữ liệu đó.",
+          "TLS bảo vệ truyền thông và nhận diện endpoint theo chứng chỉ, không bảo đảm nội dung kinh doanh.",
+          "Sai: Mã hóa trên đường truyền không kiểm soát cách bên nhận sử dụng dữ liệu sau giải mã."
+        ],
+        "page": 44
+      },
+      {
+        "id": "q6-020",
+        "section": "6.5",
+        "topic": "PGP và S/MIME: bảo mật email lai",
+        "level": "Thông hiểu",
+        "stem": "Alice ký email cho Bob thì dùng khóa nào để tạo chữ ký?",
+        "options": [
+          "Khóa công khai CA bất kỳ",
+          "Khóa riêng Alice",
+          "Khóa công khai Bob",
+          "Khóa riêng Bob"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: CA ký chứng chỉ để hỗ trợ tin khóa; khóa CA không thay khóa người gửi ký email.",
+          "Chữ ký được tạo bằng khóa riêng người ký.",
+          "Sai: Khóa công khai Bob dùng để bảo vệ bí mật cho Bob, không tạo chữ ký Alice.",
+          "Sai: Khóa riêng Bob chỉ thuộc Bob, không chứng minh Alice là người ký."
+        ],
+        "page": 56
+      },
+      {
+        "id": "q6-021",
+        "section": "6.5",
+        "topic": "PGP và S/MIME: bảo mật email lai",
+        "level": "Thông hiểu",
+        "stem": "Bob kiểm tra chữ ký Alice bằng khóa nào?",
+        "options": [
+          "Khóa công khai Alice đã được xác thực",
+          "Khóa riêng Alice được gửi kèm",
+          "Mật khẩu router",
+          "Khóa riêng CA"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Khóa công khai người gửi dùng để kiểm tra chữ ký của người gửi.",
+          "Sai: Gửi kèm khóa riêng Alice làm mất bí mật và khả năng quy trách nhiệm; người kiểm tra chỉ cần khóa công khai.",
+          "Sai: Mật khẩu router dùng quản trị thiết bị, không kiểm tra chữ ký mật mã của Alice.",
+          "Sai: Khóa riêng CA dùng CA ký chứng chỉ, không nên được Bob có và không là khóa kiểm tra chữ ký Alice."
+        ],
+        "page": 57
+      },
+      {
+        "id": "q6-022",
+        "section": "6.5",
+        "topic": "PGP và S/MIME: bảo mật email lai",
+        "level": "Vận dụng",
+        "stem": "Để gửi riêng khóa phiên cho Bob, Alice bảo vệ khóa phiên bằng gì?",
+        "options": [
+          "Khóa công khai Alice để Bob xác minh",
+          "Khóa riêng Alice dùng như chữ ký",
+          "Khóa công khai CA thay cho khóa Bob",
+          "Khóa công khai Bob"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Khóa công khai Alice không tạo phần bí mật chỉ Bob mở được; nó phục vụ kiểm tra chữ ký Alice.",
+          "Sai: Dùng khóa riêng Alice để ký chứng minh nguồn gốc, không bảo đảm chỉ Bob đọc được khóa phiên.",
+          "Sai: Khóa công khai CA tương ứng khóa riêng CA, không tương ứng khóa riêng Bob.",
+          "Chỉ khóa riêng tương ứng của Bob có thể mở phần bảo vệ cho Bob trong mô hình lai này."
+        ],
+        "page": 58
+      },
+      {
+        "id": "q6-023",
+        "section": "6.5",
+        "topic": "PGP và S/MIME: bảo mật email lai",
+        "level": "Thông hiểu",
+        "stem": "Radix-64 có tác dụng gì?",
+        "options": [
+          "Tạo chữ ký CA",
+          "Thu hồi chứng chỉ",
+          "Biểu diễn dữ liệu nhị phân dạng ký tự",
+          "Tăng bí mật thành 64 bit"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Chữ ký cần thuật toán ký và khóa riêng; Radix-64 chỉ chuyển biểu diễn.",
+          "Sai: Thu hồi chứng chỉ là hoạt động PKI, không phải mã hóa biểu diễn.",
+          "Đây là mã hóa biểu diễn, không phải mã hóa bảo mật.",
+          "Sai: Số 64 nói về bộ ký tự/cách biểu diễn, không là mức bí mật 64 bit."
+        ],
+        "page": 63
+      },
+      {
+        "id": "q6-024",
+        "section": "6.5",
+        "topic": "PGP và S/MIME: bảo mật email lai",
+        "level": "Nhận biết",
+        "stem": "S/MIME bổ sung chức năng nào cho email?",
+        "options": [
+          "Lọc sóng vô tuyến",
+          "Ký và mã hóa",
+          "Định tuyến IP",
+          "Cấp địa chỉ DHCP"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Lọc sóng thuộc miền vô tuyến, không phải xử lý email MIME.",
+          "S/MIME cung cấp xác thực/chữ ký và mã hóa cho nội dung email MIME.",
+          "Sai: Định tuyến IP thuộc mạng, không là chức năng bảo vệ nội dung email của S/MIME.",
+          "Sai: DHCP cấp cấu hình mạng, không ký/mã hóa email."
+        ],
+        "page": 67
+      },
+      {
+        "id": "q6-025",
+        "section": "6.6",
+        "topic": "Kerberos: AS, TGS, vé và xác thực hai chiều",
+        "level": "Nhận biết",
+        "stem": "TGS là gì?",
+        "options": [
+          "Máy chủ cấp vé",
+          "Một thuật toán mã hóa",
+          "Một NAT gateway",
+          "Máy chủ DNS"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Ticket Granting Server cấp vé cho các dịch vụ theo luồng Kerberos.",
+          "Sai: TGS là một vai trò server sử dụng mật mã, không phải tên thuật toán.",
+          "Sai: NAT gateway dịch địa chỉ, không cấp vé dịch vụ Kerberos.",
+          "Sai: DNS phân giải tên, không cấp vé chứng thực dịch vụ."
+        ],
+        "page": 83
+      },
+      {
+        "id": "q6-026",
+        "section": "6.6",
+        "topic": "Kerberos: AS, TGS, vé và xác thực hai chiều",
+        "level": "Thông hiểu",
+        "stem": "Client có cần giải mã TGT để chuyển đến TGS không?",
+        "options": [
+          "Có bằng khóa riêng CA",
+          "Có bằng SSID",
+          "Có bằng MAC công khai",
+          "Không, vé được bảo vệ cho TGS đọc"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Khóa riêng CA không dùng giải mã TGT; TGT được bảo vệ bằng bí mật của TGS.",
+          "Sai: SSID là tên Wi-Fi, không là khóa mở vé Kerberos.",
+          "Sai: MAC là địa chỉ liên kết, không cung cấp bí mật để giải mã vé.",
+          "Vé được mã hóa bằng khóa nơi nhận; client chuyển vé và chứng minh sở hữu khóa phiên."
+        ],
+        "page": 85
+      },
+      {
+        "id": "q6-027",
+        "section": "6.6",
+        "topic": "Kerberos: AS, TGS, vé và xác thực hai chiều",
+        "level": "Thông hiểu",
+        "stem": "Timestamp trong authenticator hỗ trợ mục tiêu nào?",
+        "options": [
+          "Tăng tốc GPS",
+          "Tạo IP công khai",
+          "Chống sử dụng lại yêu cầu cũ",
+          "Nén dữ liệu"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Timestamp chứng thực không liên quan cải thiện định vị GPS.",
+          "Sai: Cấp IP công khai là vấn đề địa chỉ/NAT, không là chức năng timestamp.",
+          "Thông tin tươi và kiểm tra thời gian hỗ trợ chống replay.",
+          "Sai: Thời gian không phải phép nén dữ liệu; nó hỗ trợ kiểm tra độ tươi yêu cầu."
+        ],
+        "page": 85
+      },
+      {
+        "id": "q6-028",
+        "section": "6.6",
+        "topic": "Kerberos: AS, TGS, vé và xác thực hai chiều",
+        "level": "Vận dụng",
+        "stem": "Client kiểm tra phản hồi bảo vệ từ SS nhằm làm gì?",
+        "options": [
+          "Chỉ xác thực client với TGS",
+          "Xác thực máy chủ ngược lại",
+          "Gia hạn vé dịch vụ mà không xác thực SS",
+          "Kiểm tra chứng chỉ X.509 bắt buộc của SS"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Ở bước này client đang kiểm tra SS; xác thực với TGS đã diễn ra trước.",
+          "Kerberos hỗ trợ xác thực hai chiều chứ không chỉ client với server.",
+          "Sai: Phản hồi xác nhận SS không tự động gia hạn vé; mục tiêu là bằng chứng SS biết khóa phiên.",
+          "Sai: Mô hình Kerberos trong bài dùng vé/khóa đối xứng; không bắt buộc mỗi SS trình X.509 ở bước này."
+        ],
+        "page": 88
+      },
+      {
+        "id": "q6-029",
+        "section": "6.7",
+        "topic": "SSH: kiến trúc và kết nối an toàn",
+        "level": "Nhận biết",
+        "stem": "SSH mặc định dùng cổng nào?",
+        "options": [
+          "TCP 22",
+          "UDP 53",
+          "TCP 25",
+          "UDP 67"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Slide nêu SSH sử dụng TCP 22.",
+          "Sai: UDP 53 thường dùng DNS, không phải cổng SSH mặc định.",
+          "Sai: TCP 25 thường dùng SMTP, không phải SSH.",
+          "Sai: UDP 67 thường dùng DHCP server, không phải SSH."
+        ],
+        "page": 92
+      },
+      {
+        "id": "q6-030",
+        "section": "6.7",
+        "topic": "SSH: kiến trúc và kết nối an toàn",
+        "level": "Thông hiểu",
+        "stem": "SSH Transport Layer được hiểu đúng thế nào?",
+        "options": [
+          "Chính là TCP header",
+          "Là lớp vật lý",
+          "Là RA",
+          "Một thành phần của bộ SSH ở tầng ứng dụng"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Tên lớp nội bộ SSH không đồng nghĩa TCP header; SSH transport chạy trên TCP.",
+          "Sai: Lớp vật lý truyền bit/tín hiệu, không thực hiện kiến trúc bảo mật SSH.",
+          "Sai: RA là vai trò đăng ký PKI, không là SSH Transport.",
+          "Tên nội bộ của SSH không làm nó trở thành lớp TCP transport trong mô hình OSI."
+        ],
+        "page": 93
+      },
+      {
+        "id": "q6-031",
+        "section": "6.7",
+        "topic": "SSH: kiến trúc và kết nối an toàn",
+        "level": "Vận dụng",
+        "stem": "SSH báo host key thay đổi bất ngờ. Việc hợp lý là gì?",
+        "options": [
+          "Bỏ qua nếu IP máy chủ vẫn giống lần trước",
+          "Chấp nhận vì cổng 22 vẫn mở",
+          "Xác minh danh tính host qua kênh tin cậy",
+          "Tin khóa mới nếu kết nối vẫn được mã hóa"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Cùng IP không chứng minh cùng host key/chủ thể; địa chỉ có thể được gán lại hoặc bị can thiệp.",
+          "Sai: Cổng 22 mở chỉ chứng minh có dịch vụ lắng nghe, không chứng minh đúng máy chủ.",
+          "Host key gắn danh tính máy chủ; thay đổi cần được xác minh trước khi tin dùng.",
+          "Sai: Kết nối với kẻ giả mạo vẫn có thể được mã hóa; bí mật với một endpoint không thay xác thực endpoint."
+        ],
+        "page": 98
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Bảo mật mạng không dây",
+    "pages": 146,
+    "file": "Bài 7 - Bảo mật mạng không dây.pdf",
+    "objectives": [
+      "Giải thích được cơ chế bằng lời của mình",
+      "Phân biệt các giải pháp có tên gần nhau",
+      "Chọn biện pháp phù hợp theo tình huống và giới hạn bảo vệ"
+    ],
+    "overview": "Wi-Fi truyền qua môi trường vô tuyến chia sẻ: người không cắm dây vẫn có thể quan sát tín hiệu. Bài đi từ chuẩn và nhận diện mạng đến chứng thực, mã hóa, mối đe dọa và tổ chức phòng thủ. Các mục tấn công được diễn giải để nhận biết rủi ro và kiểm thử có phép, không cung cấp quy trình xâm nhập.",
+    "sections": [
+      {
+        "id": "7.1",
+        "title": "Tổng quan Wi-Fi",
+        "from": 5,
+        "to": 7,
+        "explanation": "Wi-Fi dựa trên họ IEEE 802.11, tạo kết nối linh hoạt ở nhà, cơ quan và điểm công cộng. Ưu thế là cơ động, triển khai thuận tiện; đổi lại băng thông chia sẻ, nhiễu và vùng phủ sóng vượt ra ngoài ranh giới vật lý. Có sóng không có nghĩa được phép truy cập. Cần bảo vệ cả tính bí mật, toàn vẹn và sẵn sàng.",
+        "plain": "Cửa phòng đóng không ngăn sóng Wi-Fi đi ra; cần cơ chế kiểm soát ở mạng.",
+        "example": "Một mạng quán cà phê có thể nghe thấy từ ngoài cửa; mật khẩu và phân vùng vẫn cần thiết.",
+        "pitfalls": [
+          "Phạm vi sóng không phải phạm vi tin cậy",
+          "Tốc độ danh nghĩa không phải tốc độ thực tế"
+        ],
+        "recap": [
+          "Tự giải thích: Tổng quan Wi-Fi",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.2",
+        "title": "Phân loại, chuẩn vô tuyến và SSID",
+        "from": 8,
+        "to": 14,
+        "explanation": "Slide trình bày mạng mở rộng mạng dây, nhiều Access Point (AP), liên kết LAN–LAN và hotspot; bảng chuẩn a/b/g/n/ac/ax/ad/ay/be phân biệt băng tần và tốc độ tối đa lý thuyết. 802.11n dùng Multiple Input Multiple Output (MIMO), ac có Multi-User MIMO (MU-MIMO); Wi-Fi 6E mở rộng sang 6 GHz. SSID (Service Set Identifier) là tên mạng, phân biệt hoa thường; BSSID thường nhận diện một Basic Service Set bằng địa chỉ MAC. Một AP có thể cung cấp nhiều SSID để tách khách và nội bộ, nhưng phải kèm phân vùng/luật thực sự. Ẩn tên không tạo xác thực mạnh. Slide ghi 32 ký tự; cần hiểu giới hạn kỹ thuật là 32 octet nên tiếng Việt nhiều byte không luôn được 32 ký tự.",
+        "plain": "SSID như tên cửa hàng: trùng biển hiệu không chứng minh đó là cửa hàng thật.",
+        "example": "Hai AP cùng SSID có thể là thiết kế roaming hợp lệ hoặc một điểm giả; cần kiểm tra cấu hình và chứng thực.",
+        "pitfalls": [
+          "SSID không phải mật khẩu",
+          "Không suy ra tốc độ Internet từ tốc độ Wi-Fi danh nghĩa",
+          "Ẩn SSID không ngăn người quan sát xác định tên mạng"
+        ],
+        "recap": [
+          "Tự giải thích: Phân loại, chuẩn vô tuyến và SSID",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.3",
+        "title": "Các kiểu chứng thực và cơ chế hỗ trợ",
+        "from": 15,
+        "to": 26,
+        "explanation": "Open System là kiểu chứng thực 802.11 không kiểm tra bí mật ở bước đó; cần phân biệt với kết luận mọi mạng dùng Open System đều truyền bản rõ. Shared Key lịch sử dùng challenge được bảo vệ bởi WEP nhưng WEP yếu. WPA Personal dùng bí mật chia sẻ; Enterprise dùng 802.1X/EAP và máy chủ chứng thực thường là RADIUS. Extensible Authentication Protocol (EAP) là khung hỗ trợ nhiều phương thức; EAP-TLS dùng chứng chỉ, PEAP/EAP-TTLS tạo đường hầm TLS với phương thức bên trong. MAC filtering chỉ dựa địa chỉ có thể giả; captive portal quản lý truy cập qua web không tự thay thế bảo vệ liên kết. Wi-Fi Protected Setup (WPS) giúp thiết lập kết nối, PIN có rủi ro và không đồng nghĩa WPA.",
+        "plain": "Đừng xếp mọi thứ có chữ authentication thành cùng loại: có thứ là phương thức chứng thực, có thứ là giao diện đăng nhập hay cách cài đặt.",
+        "example": "Doanh nghiệp cần thu hồi quyền từng nhân viên nên tài khoản/chứng chỉ riêng phù hợp hơn chia sẻ một mật khẩu cho tất cả.",
+        "pitfalls": [
+          "EAP là khung, không phải một thuật toán mã hóa",
+          "Captive portal không tự mã hóa Wi-Fi",
+          "Lọc MAC không thay thế WPA"
+        ],
+        "recap": [
+          "Tự giải thích: Các kiểu chứng thực và cơ chế hỗ trợ",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.4",
+        "title": "WEP, WPA và WPA2: cơ chế và điểm yếu",
+        "from": 27,
+        "to": 41,
+        "explanation": "Wired Equivalent Privacy (WEP) dùng RC4, khóa dùng chung và Initialization Vector (IV) 24 bit. ICV dựa CRC-32 phát hiện lỗi không phải MAC mật mã mạnh. IV ngắn dễ lặp và quản lý khóa tĩnh kém khiến WEP không thích hợp để bảo vệ thực tế. Nhãn WEP 64 bit gồm 40 bit khóa + 24 bit IV; WEP 128 bit gồm 104 + 24. WPA là bước chuyển dùng Temporal Key Integrity Protocol (TKIP), khóa tạm thời và kiểm tra Michael; WPA2 thường dùng AES-CCMP. Bắt tay bốn bước chứng minh sở hữu bí mật nền và dẫn xuất khóa phiên; mật khẩu không được gửi nguyên văn trong handshake. Mật khẩu PSK yếu có thể bị kiểm tra ngoại tuyến từ dữ liệu phù hợp, vì vậy độ mạnh bí mật vẫn quan trọng. Không coi mọi sơ đồ thuật toán cũ là khuyến nghị triển khai.\n\nLuồng WEP trong hình: tính Integrity Check Value (ICV) trên dữ liệu bằng CRC-32; ghép dữ liệu với ICV; kết hợp IV 24 bit với khóa WEP để tạo đầu vào RC4; XOR dòng khóa với dữ liệu/ICV. IV cần đi kèm để bên nhận tái tạo dòng khóa, nên IV không phải bí mật mới bổ sung cho mật khẩu. Khi cùng cặp khóa–IV được dùng lại, cùng dòng khóa có thể lặp, tạo liên hệ giữa các bản mã. Đây là lỗi cách dùng mật mã, không chỉ vấn đề kẻ xấu đoán từng khóa bằng brute force.\n\nCRC-32 có tính chất phục vụ phát hiện lỗi ngẫu nhiên; nó không chứng minh người gửi biết bí mật theo cách MAC mật mã làm. WEP cũng thiếu cơ chế replay mạnh và dùng khóa chung tĩnh, nên một thiết bị/một người lộ khóa ảnh hưởng cả nhóm. Tăng từ nhãn 64 lên 128 bit vẫn không kéo dài IV 24 bit hoặc thay CRC bằng MAC mạnh; vì vậy không chữa toàn bộ thiết kế.\n\nWPA/TKIP là bước cải tiến chuyển tiếp trên thiết bị thời đó: trộn khóa theo gói, dùng bộ đếm/IV dài hơn và kiểm tra Michael MIC giúp khắc phục một số hạn chế WEP. Không nên nhầm tên Temporal Key Integrity Protocol với một thuật toán mã hóa hoàn toàn độc lập hay xem TKIP là khuyến nghị mới. WPA2 trong bảng sử dụng AES-CCMP: phần counter bảo vệ bí mật dữ liệu và phần CBC-MAC kiểm tra toàn vẹn theo cấu trúc CCMP; không chỉ thay tên RC4 bằng AES mà giữ nguyên mọi thứ khác.\n\nBốn bước trao đổi khóa trong hình dùng nonce hai phía và bí mật nền để dẫn xuất Pairwise Transient Key (PTK), xác nhận khả năng tạo mã kiểm tra và phân phối Group Temporal Key (GTK) theo cơ chế được bảo vệ. PTK dùng cho trao đổi unicast theo cặp, GTK phục vụ lưu lượng nhóm. Với Personal, bí mật nền gắn PSK; với Enterprise, bí mật hình thành từ tiến trình chứng thực EAP phù hợp. Không cần truyền nguyên mật khẩu để hai bên chứng minh cùng biết bí mật.\n\nGiới hạn: dữ liệu bắt tay phù hợp có thể cho phép kiểm tra ngoại tuyến các dự đoán mật khẩu Personal trong mô hình slide. Mật khẩu ngắn/dễ đoán có không gian ứng viên nhỏ; mật khẩu đủ ngẫu nhiên làm công việc dự đoán khó hơn. Điều này khác lỗi IV WEP và không chứng minh AES đã bị phá. Biện pháp phòng thủ phải xét cả bí mật, cấu hình chứng thực, kiểm tra máy chủ Enterprise và quản lý thiết bị; chỉ ghi WPA2 trên nhãn không đủ.",
+        "plain": "Khóa dài hơn không chữa được mọi lỗi thiết kế: IV, cách kết hợp khóa, toàn vẹn và quản lý khóa đều quan trọng.",
+        "example": "Đổi WEP 64 sang WEP 128 vẫn để lại nhược điểm IV và toàn vẹn; nên thay cơ chế thay vì chỉ tăng con số.",
+        "pitfalls": [
+          "CRC không phải MAC mật mã",
+          "WPA2 không làm mật khẩu yếu trở nên mạnh",
+          "Four-way handshake không truyền mật khẩu bản rõ"
+        ],
+        "recap": [
+          "Tự giải thích: WEP, WPA và WPA2: cơ chế và điểm yếu",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.5",
+        "title": "Các mối đe dọa vô tuyến và truy cập",
+        "from": 42,
+        "to": 55,
+        "explanation": "Rogue AP là AP không được phép trong hệ thống; evil twin giả nhận diện mạng để lừa người dùng. Client mis-association là kết nối nhầm; AP cấu hình sai có thể bỏ mã hóa hay lộ quyền quản trị. Unauthorized association, kết nối ad hoc và hotspot giả làm phát sinh đường đi ngoài kiểm soát. MAC spoofing giả địa chỉ để vượt kiểm tra yếu. Denial of Service (DoS) làm gián đoạn; deauthentication giả và jamming vô tuyến là hai cơ chế khác nhau. Mã hóa nội dung không ngăn năng lượng gây nhiễu lấn át tín hiệu. Slide nêu khía cạnh pháp lý jammer nhưng cần kiểm chứng văn bản theo thời điểm, không coi slide là tư vấn pháp luật.",
+        "plain": "Có đúng tên Wi-Fi chưa đủ: kẻ khác cũng có thể treo cùng tên. Và khóa tốt cũng không bảo đảm sóng luôn hoạt động khi môi trường bị nhiễu.",
+        "example": "Người dùng tự cắm AP gia đình vào LAN tạo rogue AP, kể cả khi không có ý xấu.",
+        "pitfalls": [
+          "Rogue AP không nhất thiết cố ý độc hại",
+          "Jamming khác đoán mật khẩu",
+          "Đổi mật khẩu không tự khắc phục nhiễu vô tuyến"
+        ],
+        "recap": [
+          "Tự giải thích: Các mối đe dọa vô tuyến và truy cập",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.6",
+        "title": "Phương pháp tấn công: nhận diện chuỗi rủi ro",
+        "from": 56,
+        "to": 104,
+        "explanation": "Các hình mô tả chuỗi khám phá mạng, gắn vị trí, phân tích lưu lượng, thử khai thác và đánh giá mã hóa. Nhìn theo phòng thủ: discovery lộ SSID/BSSID/kênh; GPS mapping như WiGLE/Skyhook liên hệ mạng với vị trí; traffic analysis cho biết mẫu liên lạc dù chưa đọc được bản rõ. Khả năng bắt frame phụ thuộc card/chipset/driver, không phải laptop nào cũng có mọi chế độ. Các ví dụ fragmentation WEP, MAC spoofing, deauthentication/disassociation, MITM và ARP poisoning cho thấy kiểm soát truy cập yếu, khung quản lý không bảo vệ và tin cậy mạng cục bộ có thể bị lợi dụng. Aircrack-ng là bộ công cụ nhiều chức năng; KisMAC, Cain & Abel, Elcomsoft được nêu trong bối cảnh lịch sử. Phân tích rủi ro không cần sao chép lệnh xâm nhập từ slide.\n\n1. Khám phá mạng (discovery): thiết bị quan sát thông báo/trao đổi vô tuyến để nhận ra SSID, BSSID, kênh, kiểu bảo vệ và mức tín hiệu. Những trường giúp thiết bị tìm mạng cũng có thể giúp người ngoài nhận diện bề mặt tiếp xúc. Ẩn SSID chỉ giảm hiển thị ở một số bước, không ngăn tên xuất hiện trong mọi trao đổi. Phòng thủ dựa kiểm kê AP được phép và cấu hình chứng thực mạnh, không dựa giả định tên mạng là bí mật.\n\n2. GPS mapping/wardriving: kết hợp quan sát mạng với tọa độ để tạo bản đồ phủ sóng/vị trí. WiGLE và Skyhook trong hình là ví dụ dữ liệu nhận diện mạng gắn vị trí; đó không phải bằng chứng người thu thập biết khóa hay đã vào mạng. Trong quản trị, khảo sát giúp phát hiện sóng vượt vùng dự kiến hoặc AP không có trong tài sản. Dữ liệu vị trí và nhận diện cần xử lý đúng phạm vi, tránh công bố thông tin nhạy cảm không cần thiết.\n\n3. Traffic analysis: đo thời điểm, số lượng, kích thước, hướng và trường nhận diện quan sát được để hiểu mẫu hoạt động. Mã hóa nội dung không luôn che các mẫu này, nhưng từ mẫu không thể mặc định suy ra toàn bộ nội dung bản rõ. Công cụ như Wireshark/AirPcap, Wi-Fi Pilot, OmniPeek, CommView hỗ trợ các mức quan sát khác nhau. Phòng thủ kết hợp mã hóa, phân vùng và giám sát bất thường; kết quả cần đối chiếu hoạt động thực tế để tránh báo động giả.\n\n4. Phần cứng bắt frame: chế độ monitor cho phép quan sát các frame vô tuyến phù hợp ngoài những gói chỉ gửi cho máy mình; khác chế độ client kết nối mạng thông thường. Khả năng này phụ thuộc chipset, driver, hệ điều hành, kênh và băng tần. Có card Wi-Fi không bảo đảm mọi tính năng monitor/injection được hỗ trợ. Thu được frame mã hóa cũng không tự giải mã được payload; adapter không thay bí mật mật mã.\n\n5. MAC spoofing: một thiết bị trình địa chỉ giống thiết bị được phép để lợi dụng hệ thống chỉ tin danh sách địa chỉ. MAC là trường nhận diện giao thức có thể quan sát, không là bằng chứng sở hữu một khóa riêng. Do đó allowlist MAC chỉ phụ trợ quản trị; cần chứng thực bằng bí mật/chứng chỉ và theo dõi trùng nhận diện hoặc hành vi bất thường. Không kết luận hai MAC giống nhau chắc chắn là tấn công vì còn trường hợp cấu hình/ảo hóa cần xác minh.\n\n6. Deauthentication và disassociation: khung deauthentication hủy trạng thái chứng thực, disassociation hủy liên kết association. Khi cơ chế quản lý không bảo vệ thích hợp, khung giả có thể làm client rời mạng hoặc phải nối lại, tác động tính sẵn sàng và có thể bị kết hợp với mưu đồ lừa kết nối. Hai tên không đồng nghĩa với phá khóa mã hóa. Phòng thủ cần cấu hình bảo vệ khung quản lý nếu hệ thống hỗ trợ, kiểm tra sự kiện ngắt hàng loạt và phân biệt lỗi sóng với dấu hiệu giả mạo.\n\n7. MITM/evil twin: kẻ trung gian tạo tình huống dữ liệu đi qua vị trí mình kiểm soát, chẳng hạn client tin AP giả cùng tên. Có đường trung gian không tự phá TLS đã xác thực đúng; nguy hiểm tăng khi người dùng bỏ kiểm tra chứng chỉ hoặc ứng dụng dùng bản rõ. Phòng thủ cần xác minh mạng/đầu cuối, cấu hình đúng chứng chỉ server Enterprise, dùng bảo vệ ứng dụng và tránh tự động tin SSID quen. Một VPN có thể bảo vệ kênh của nó nhưng không xác nhận mọi phần mềm trên endpoint đều an toàn.\n\n8. ARP poisoning: trong mạng cục bộ dùng ARP, thông tin gắn IP với MAC sai có thể làm host gửi frame đến địa chỉ của trung gian thay vì đích/gateway thật. Đây là lỗi tin cậy ánh xạ cục bộ, khác việc đổi IP header để định tuyến Internet. Phòng thủ có thể gồm kiểm tra ánh xạ/giám sát, tính năng kiểm tra ARP ở hạ tầng phù hợp và phân vùng; TLS xác thực đúng vẫn bảo vệ nội dung ứng dụng trước trung gian không có khóa. Không suy ra chỉ bắt được frame là đã đọc mọi thông điệp.\n\n9. Fragmentation WEP: ví dụ trong slide khai thác cách WEP xử lý dòng khóa và các mảnh để có thể tạo dữ liệu bảo vệ hợp lệ trong điều kiện nhất định mà không nhất thiết khôi phục toàn bộ khóa dài hạn. Bài học là bí mật khóa chưa lộ không đồng nghĩa tính toàn vẹn/cơ chế đóng gói an toàn. Không chữa bằng đổi SSID hoặc chỉ tăng nhãn bit WEP; cần loại bỏ cơ chế yếu và kiểm tra cấu hình sau thay đổi.\n\n10. Đoán mật khẩu ngoại tuyến: với dữ liệu kiểm chứng phù hợp từ mô hình WPA-Personal trong slide, bên phân tích thử các ứng viên cục bộ và so khớp kết quả mật mã. Không cần liên tục hỏi server cho mỗi lần thử, nên giới hạn đăng nhập online không tự ngăn toàn bộ dạng này. Mật khẩu đủ mạnh và tránh chia sẻ không kiểm soát là trọng tâm; phân biệt việc tìm được mật khẩu yếu với việc phá toán học của AES. Các hình Aircrack-ng/KisMAC/Cain & Abel/Elcomsoft là ví dụ công cụ theo thời điểm, không bảo đảm áp dụng được mọi mạng hay mọi phiên bản.\n\nCách tự học: với mỗi cơ chế, vẽ ba ô điều kiện có trước → thông tin/quyền bị lợi dụng → tác động. Sau đó chọn kiểm soát làm mất điều kiện đó và chỉ ra điều kiểm soát không giải quyết. Đây là cách suy luận tình huống trắc nghiệm thay vì ghi nhớ chuỗi nút bấm hoặc lệnh.",
+        "plain": "Hãy chuyển mỗi sơ đồ thành: đầu vào kẻ xấu quan sát được, giả định yếu và biện pháp làm giả định đó không còn đúng.",
+        "example": "Nếu mạng có thể bị giả SSID, huấn luyện người dùng và kiểm tra chứng chỉ máy chủ Enterprise quan trọng hơn chỉ đổi tên mạng.",
+        "pitfalls": [
+          "Công cụ phát hiện mạng không đồng nghĩa công cụ giải mã mọi mạng",
+          "Không suy ra có file capture là đọc được mọi nội dung",
+          "Chỉ kiểm thử hệ thống trong phạm vi được phép"
+        ],
+        "recap": [
+          "Tự giải thích: Phương pháp tấn công: nhận diện chuỗi rủi ro",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.7",
+        "title": "Công cụ tấn công và phân tích mạng",
+        "from": 105,
+        "to": 110,
+        "explanation": "Slide phân nhóm Kismet (phát hiện mạng, thu thập frame và hỗ trợ phát hiện bất thường), wardriving, giám sát RF, quản lý kết nối, phân tích traffic, bắt gói thô và phân tích phổ. Phân tích phổ quan sát năng lượng vô tuyến, khác phân tích packet chỉ hiểu frame giải mã được ở tầng tương ứng. Kết quả công cụ là bằng chứng cần diễn giải, không tự kết luận xâm nhập thành công. Danh sách gồm công cụ cũ: học chức năng trước khi học thương hiệu.",
+        "plain": "Giống nhiều loại kính đo: kính nhìn sóng và kính đọc gói không đo cùng thứ.",
+        "example": "Khi Wi-Fi chậm, đo phổ có thể tìm nguồn nhiễu mà packet capture không chỉ ra rõ.",
+        "pitfalls": [
+          "Tên sản phẩm không phải cơ chế bảo mật",
+          "Không đồng nhất RSSI mạnh với mạng tin cậy"
+        ],
+        "recap": [
+          "Tự giải thích: Công cụ tấn công và phân tích mạng",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.8",
+        "title": "Tấn công Bluetooth: ngăn rò rỉ và ghép cặp trái phép",
+        "from": 111,
+        "to": 118,
+        "explanation": "Bluetooth kết nối cự ly ngắn với các lớp như radio/baseband, link manager, L2CAP và dịch vụ phía trên. Discoverable quyết định khả năng được phát hiện, pairable quyết định chấp nhận ghép cặp: hai thuộc tính khác nhau. Bluejacking gửi thông điệp không mong muốn; bluesnarfing lấy thông tin trái phép; bluesmacking làm gián đoạn. Slide còn minh họa phần mềm độc hại và công cụ điều khiển thiết bị cũ, không phải mọi Bluetooth hiện đại đều chịu cùng lỗ hổng. Rủi ro phụ thuộc bản vá, dịch vụ, quyền và ghép cặp.",
+        "plain": "Ở gần là điều kiện liên lạc chứ không là bằng chứng đáng tin. Không nhận ghép cặp chỉ vì tên thiết bị quen.",
+        "example": "Tắt Bluetooth khi không cần, kiểm tra thiết bị đã ghép và xóa liên kết không rõ nguồn gốc.",
+        "pitfalls": [
+          "Bluejacking khác trộm dữ liệu",
+          "Không discoverable không có nghĩa miễn nhiễm mọi tấn công",
+          "Không chấp nhận yêu cầu ghép cặp bất ngờ"
+        ],
+        "recap": [
+          "Tự giải thích: Tấn công Bluetooth: ngăn rò rỉ và ghép cặp trái phép",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.9",
+        "title": "Biện pháp phòng chống nhiều lớp",
+        "from": 119,
+        "to": 125,
+        "explanation": "Phòng thủ kết hợp bảo mật thiết bị, tín hiệu, kết nối, dữ liệu, mạng và người dùng. Quản lý AP được phép, kiểm tra cổng dây và cảm biến RF giúp tìm rogue AP; đối chiếu tài sản trước khi xử lý. Cấu hình quản trị mạnh, hạn chế quản trị từ xa, vá firmware, phân vùng khách, cơ chế chứng thực và mã hóa phù hợp phải phối hợp. Các slide cũ còn đề xuất ẩn SSID/lọc MAC: chỉ xem là phụ trợ, không thay thế bảo vệ mật mã. Bluetooth cần giới hạn phát hiện, theo dõi ghép cặp và tắt khi không dùng.",
+        "plain": "Không có một nút bảo mật đủ cho tất cả: khóa cửa, quản lý chìa, ghi nhận ra vào và phát hiện cửa lạ đều có vai trò.",
+        "example": "Nhân viên nghỉ việc cần thu hồi tài khoản/chứng chỉ Enterprise; chỉ tắt broadcast SSID không thu hồi quyền.",
+        "pitfalls": [
+          "Ẩn SSID không phải bảo vệ mạnh",
+          "Chặn rogue AP cần nhận diện đúng để không tác động mạng ngoài phạm vi",
+          "VPN không khắc phục mọi rủi ro thiết bị đầu cuối"
+        ],
+        "recap": [
+          "Tự giải thích: Biện pháp phòng chống nhiều lớp",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.10",
+        "title": "Công cụ bảo mật Wi-Fi: WIDS/WIPS và quy hoạch",
+        "from": 126,
+        "to": 134,
+        "explanation": "Wireless Intrusion Detection System (WIDS) giám sát/phát hiện; Wireless Intrusion Prevention System (WIPS) bổ sung phản ứng ngăn chặn theo chính sách. Cảm biến phát hiện AP lạ, giả danh, DoS và thay đổi cấu hình, nhưng có thể có báo động giả. AirMagnet, AirDefense, Adaptive Wireless IPS, Aruba RFProtect là ví dụ trong slide. Công cụ predictive planning/site survey giúp quy hoạch và kiểm chứng phủ sóng; vulnerability scanning tìm cấu hình/lỗ hổng; ba việc có liên hệ nhưng khác mục tiêu.",
+        "plain": "Máy báo động phát hiện không đồng nghĩa đã chặn; có chặn cũng cần chính sách để tránh chặn nhầm.",
+        "example": "WIPS phát hiện SSID giống mạng công ty: đội quản trị cần xác minh BSSID, vị trí và tài sản trước khi phản ứng.",
+        "pitfalls": [
+          "Detection khác prevention",
+          "Không lấy danh sách thương hiệu cũ làm cam kết tính năng hiện tại",
+          "Phủ sóng tốt không đồng nghĩa bảo mật tốt"
+        ],
+        "recap": [
+          "Tự giải thích: Công cụ bảo mật Wi-Fi: WIDS/WIPS và quy hoạch",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "7.11",
+        "title": "Kiểm thử hệ thống và bài tập",
+        "from": 135,
+        "to": 146,
+        "explanation": "Kiểm thử là đánh giá biện pháp bảo vệ, tìm điểm yếu và báo cáo cho quản trị. Các sơ đồ chia nhánh theo mã hóa WEP/WPA, LEAP hoặc mạng không mã hóa; mục đích học là hiểu cấu hình yếu dẫn đến rủi ro gì và chứng minh khắc phục bằng kiểm tra lại. Một kế hoạch cần phạm vi được phép, thời gian, giới hạn tác động, tiêu chí thành công và bảo vệ dữ liệu thu thập. Bài tập yêu cầu so sánh WEP/WPA/WPA2, tổng hợp công cụ, mối đe dọa, SSID và chứng thực. Thay vì lặp lệnh phá khóa, dùng bảng điểm yếu–bằng chứng–tác động–khuyến nghị–kết quả kiểm tra lại.",
+        "plain": "Kiểm thử xong mà không có báo cáo và xác nhận sửa thì chưa tạo được giá trị phòng thủ.",
+        "example": "Một bản rà soát chỉ rõ AP dùng WEP, khuyến nghị thay cấu hình và kiểm chứng lại sau sửa có ích hơn ảnh chụp công cụ đơn lẻ.",
+        "pitfalls": [
+          "Không đồng nhất phát hiện mạng với xâm nhập",
+          "Không thử phá dịch vụ trên mạng ngoài phạm vi",
+          "Không công khai dữ liệu nhạy cảm trong báo cáo"
+        ],
+        "recap": [
+          "Tự giải thích: Kiểm thử hệ thống và bài tập",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "title": "Cơ chế không thay thế nhau",
+        "headers": [
+          "Cơ chế",
+          "Chức năng",
+          "Giới hạn"
+        ],
+        "rows": [
+          [
+            "SSID",
+            "Tên mạng",
+            "Có thể bị sao chép"
+          ],
+          [
+            "MAC filtering",
+            "Lọc địa chỉ",
+            "Địa chỉ có thể giả"
+          ],
+          [
+            "Captive portal",
+            "Kiểm soát đăng nhập web",
+            "Không tự mã hóa liên kết"
+          ],
+          [
+            "Personal",
+            "Bí mật chia sẻ",
+            "Khó thu hồi từng người"
+          ],
+          [
+            "Enterprise",
+            "Danh tính riêng qua 802.1X/EAP",
+            "Cần quản lý chứng thực đúng"
+          ]
+        ]
+      },
+      {
+        "title": "WEP / WPA / WPA2 theo slide",
+        "headers": [
+          "Cơ chế",
+          "Mật mã điển hình",
+          "Ý nghĩa"
+        ],
+        "rows": [
+          [
+            "WEP",
+            "RC4, IV 24 bit, CRC-32",
+            "Thiết kế yếu"
+          ],
+          [
+            "WPA",
+            "TKIP, Michael",
+            "Giải pháp chuyển tiếp lịch sử"
+          ],
+          [
+            "WPA2",
+            "AES-CCMP",
+            "Không chữa mật khẩu yếu"
+          ]
+        ]
+      }
+    ],
+    "study": [
+      "Đọc mục tiêu, tự vẽ luồng dữ liệu hoặc vùng mạng trước khi nhớ tên giao thức.",
+      "Đóng bài học rồi giải thích mỗi cơ chế theo ba câu: giải quyết gì, làm thế nào, không bảo vệ được gì.",
+      "Làm câu hỏi theo bài; ghi nguyên nhân câu sai và ôn lại sau 1, 3, 7 ngày."
+    ],
+    "terms": [
+      {
+        "en": "SSID",
+        "vi": "Tên mạng không dây",
+        "meaning": "Service Set Identifier nhận diện tên mạng, không phải bí mật."
+      },
+      {
+        "en": "BSSID",
+        "vi": "Định danh một BSS",
+        "meaning": "Basic Service Set Identifier thường là MAC của giao diện AP."
+      },
+      {
+        "en": "WEP",
+        "vi": "Bảo mật tương đương mạng dây",
+        "meaning": "Wired Equivalent Privacy là cơ chế Wi-Fi lịch sử có điểm yếu thiết kế."
+      },
+      {
+        "en": "WPA",
+        "vi": "Truy cập Wi-Fi được bảo vệ",
+        "meaning": "Wi-Fi Protected Access là họ cơ chế bảo vệ Wi-Fi."
+      },
+      {
+        "en": "EAP",
+        "vi": "Giao thức chứng thực mở rộng",
+        "meaning": "Extensible Authentication Protocol là khung nhiều phương thức."
+      },
+      {
+        "en": "WPS",
+        "vi": "Thiết lập Wi-Fi bảo vệ",
+        "meaning": "Wi-Fi Protected Setup hỗ trợ thêm thiết bị, không là thuật toán mã hóa."
+      },
+      {
+        "en": "Rogue AP",
+        "vi": "Điểm truy cập trái phép",
+        "meaning": "AP không được tổ chức chấp thuận."
+      },
+      {
+        "en": "Evil twin",
+        "vi": "Điểm giả mạo mạng quen",
+        "meaning": "AP sao chép nhận diện mạng để lừa kết nối."
+      },
+      {
+        "en": "WIPS",
+        "vi": "Hệ thống ngăn xâm nhập không dây",
+        "meaning": "Wireless Intrusion Prevention System phát hiện và phản ứng theo chính sách."
+      },
+      {
+        "en": "TKIP",
+        "vi": "Temporal Key Integrity Protocol — giao thức toàn vẹn khóa tạm thời",
+        "meaning": "Cơ chế dùng trong WPA lịch sử, có trộn khóa theo gói và Michael MIC."
+      },
+      {
+        "en": "CCMP",
+        "vi": "Counter Mode with CBC-MAC Protocol — giao thức bảo vệ dùng AES",
+        "meaning": "Cung cấp mã hóa và toàn vẹn trong WPA2 điển hình theo slide."
+      },
+      {
+        "en": "PSK",
+        "vi": "Pre-Shared Key — khóa chia sẻ trước",
+        "meaning": "Bí mật nền dùng chung trong cấu hình Personal; cần quản lý và mật khẩu đủ mạnh."
+      },
+      {
+        "en": "802.1X",
+        "vi": "Kiểm soát truy cập theo cổng",
+        "meaning": "Khung kiểm soát truy cập mạng dựa chứng thực, thường cùng EAP/RADIUS trong Enterprise."
+      },
+      {
+        "en": "RADIUS",
+        "vi": "Remote Authentication Dial-In User Service — dịch vụ chứng thực từ xa",
+        "meaning": "Máy chủ backend hỗ trợ kiểm tra danh tính/chính sách truy cập Enterprise."
+      },
+      {
+        "en": "EAP-TLS",
+        "vi": "Extensible Authentication Protocol–Transport Layer Security",
+        "meaning": "Phương thức EAP sử dụng TLS và chứng chỉ để chứng thực."
+      },
+      {
+        "en": "PEAP",
+        "vi": "Protected Extensible Authentication Protocol — EAP được bảo vệ",
+        "meaning": "Tạo đường hầm TLS để bảo vệ phương thức chứng thực bên trong."
+      },
+      {
+        "en": "IV",
+        "vi": "Initialization Vector — vector khởi tạo",
+        "meaning": "Giá trị tham gia mã hóa từng gói; IV WEP 24 bit có nguy cơ lặp."
+      },
+      {
+        "en": "CRC",
+        "vi": "Cyclic Redundancy Check — kiểm tra dư vòng",
+        "meaning": "Phát hiện lỗi truyền, không thay thế cơ chế toàn vẹn mật mã."
+      },
+      {
+        "en": "AP",
+        "vi": "Access Point — điểm truy cập",
+        "meaning": "Kết nối client Wi-Fi với mạng phân phối, có thể phát nhiều SSID."
+      },
+      {
+        "en": "MIMO",
+        "vi": "Multiple Input Multiple Output — nhiều đầu vào/đầu ra",
+        "meaning": "Dùng nhiều đường truyền/anten để cải thiện truyền vô tuyến."
+      },
+      {
+        "en": "WIDS",
+        "vi": "Wireless Intrusion Detection System — phát hiện xâm nhập không dây",
+        "meaning": "Giám sát và cảnh báo dấu hiệu bất thường; phân biệt với khả năng ngăn chặn."
+      },
+      {
+        "en": "DoS",
+        "vi": "Denial of Service — từ chối dịch vụ",
+        "meaning": "Làm người dùng không sử dụng được dịch vụ, ảnh hưởng tính sẵn sàng."
+      },
+      {
+        "en": "MITM",
+        "vi": "Man-in-the-Middle — người xen giữa",
+        "meaning": "Vị trí cho phép trung gian quan sát/chuyển tiếp hoặc sửa trao đổi khi kiểm tra tin cậy yếu."
+      },
+      {
+        "en": "RF",
+        "vi": "Radio Frequency — tần số vô tuyến",
+        "meaning": "Miền tín hiệu được đo bởi công cụ phân tích phổ/giám sát vô tuyến."
+      },
+      {
+        "en": "Bluejacking",
+        "vi": "Gửi thông điệp Bluetooth không mong muốn",
+        "meaning": "Khác với bluesnarfing lấy cắp thông tin; không đồng nhất mọi kiểu tấn công Bluetooth."
+      },
+      {
+        "en": "Bluesnarfing",
+        "vi": "Lấy thông tin Bluetooth trái phép",
+        "meaning": "Rủi ro truy cập dữ liệu qua điểm yếu dịch vụ/thiết bị."
+      },
+      {
+        "en": "Jamming",
+        "vi": "Gây nhiễu vô tuyến",
+        "meaning": "Làm gián đoạn tín hiệu; mã hóa không ngăn được nhiễu năng lượng thuần túy."
+      }
+    ],
+    "issues": [
+      {
+        "page": 13,
+        "note": "Slide ghi SSID tối đa 32 ký tự; giới hạn kỹ thuật là 32 octet, không luôn tương ứng 32 ký tự Unicode."
+      },
+      {
+        "page": 19,
+        "note": "Open System là bước chứng thực 802.11; diễn đạt không có bảo mật trong slide giản lược, không áp dụng cho mọi cấu hình dùng Open System."
+      },
+      {
+        "page": 54,
+        "note": "Nhận xét pháp luật cần đối chiếu nguồn pháp lý hiện hành; mã hóa/đổi mật khẩu không ngăn được nhiễu vô tuyến thuần túy."
+      },
+      {
+        "page": 122,
+        "note": "Ẩn SSID và lọc MAC chỉ là phụ trợ, không thay thế chứng thực/mã hóa."
+      },
+      {
+        "page": 146,
+        "note": "Ảnh quy trình/lệnh tấn công được chuyển thành phân tích cơ chế và phòng thủ; không đưa quy trình xâm nhập hoạt động vào website."
+      }
+    ],
+    "questions": [
+      {
+        "id": "q7-001",
+        "section": "7.1",
+        "topic": "Tổng quan Wi-Fi",
+        "level": "Thông hiểu",
+        "stem": "Vì sao ranh giới phòng không đủ bảo vệ Wi-Fi?",
+        "options": [
+          "Sóng có thể lan ra ngoài phòng",
+          "Mật khẩu quản trị AP luôn truyền trên sóng",
+          "Wi-Fi không hỗ trợ phân vùng người dùng",
+          "Mọi frame đều được truyền dưới dạng bản rõ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Vùng phủ sóng không trùng ranh giới vật lý và ranh giới tin cậy.",
+          "Sai: Mật khẩu quản trị không bắt buộc luôn truyền qua sóng và có thể được bảo vệ; đây không là lý do tổng quát của ranh giới sóng.",
+          "Sai: Wi-Fi hỗ trợ tổ chức nhiều nhóm và phân vùng; cần cấu hình thực thi chứ không phải không hỗ trợ.",
+          "Sai: Frame có thể chứa dữ liệu được mã hóa; rủi ro lan sóng vẫn tồn tại ngay cả khi có mã hóa."
+        ],
+        "page": 5
+      },
+      {
+        "id": "q7-002",
+        "section": "7.2",
+        "topic": "Phân loại, chuẩn vô tuyến và SSID",
+        "level": "Nhận biết",
+        "stem": "Chuẩn 802.11n được slide gắn với công nghệ nào?",
+        "options": [
+          "NAT",
+          "PGP",
+          "CRL",
+          "MIMO"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: NAT là dịch địa chỉ, không là công nghệ nhiều anten của 802.11n.",
+          "Sai: PGP bảo vệ thông điệp, không là kỹ thuật truyền vô tuyến 802.11n.",
+          "Sai: CRL là danh sách thu hồi chứng chỉ, không cải thiện truyền nhiều anten.",
+          "MIMO sử dụng nhiều đầu vào/đầu ra để cải thiện truyền vô tuyến."
+        ],
+        "page": 10
+      },
+      {
+        "id": "q7-003",
+        "section": "7.2",
+        "topic": "Phân loại, chuẩn vô tuyến và SSID",
+        "level": "Thông hiểu",
+        "stem": "Hai SSID Home và home có giống nhau không?",
+        "options": [
+          "Có nếu cùng port",
+          "Luôn là một AP",
+          "Không, SSID phân biệt hoa thường",
+          "Có vì DNS không phân biệt"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Cổng TCP/UDP thuộc luồng dịch vụ, không thay đổi quy tắc phân biệt tên SSID.",
+          "Sai: Một AP có thể phát nhiều SSID và nhiều AP có thể dùng cùng SSID; tên không xác định duy nhất AP.",
+          "SSID phân biệt chữ hoa chữ thường.",
+          "Sai: Quy tắc tên DNS không áp dụng cho SSID; SSID phân biệt hoa thường."
+        ],
+        "page": 13
+      },
+      {
+        "id": "q7-004",
+        "section": "7.2",
+        "topic": "Phân loại, chuẩn vô tuyến và SSID",
+        "level": "Thông hiểu",
+        "stem": "Một AP có thể phát nhiều SSID nhằm mục đích gì?",
+        "options": [
+          "Bảo đảm không có rogue AP",
+          "Tách các nhóm truy cập khi kèm cấu hình phân vùng",
+          "Tự tạo mã hóa end-to-end",
+          "Bỏ mọi luật firewall"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Nhiều SSID không loại bỏ khả năng có AP trái phép ngoài quản lý.",
+          "Nhiều SSID hỗ trợ tổ chức truy cập nhưng phân tách phải được thực thi bằng cấu hình mạng.",
+          "Sai: SSID là tên mạng, không tự tạo mã hóa end-to-end giữa các ứng dụng.",
+          "Sai: Phân nhóm SSID vẫn cần luật kiểm soát lưu lượng; bỏ firewall làm mất kiểm soát giữa vùng."
+        ],
+        "page": 14
+      },
+      {
+        "id": "q7-005",
+        "section": "7.2",
+        "topic": "Phân loại, chuẩn vô tuyến và SSID",
+        "level": "Vận dụng",
+        "stem": "Một điểm Wi-Fi có cùng tên mạng công ty. Có thể kết luận gì?",
+        "options": [
+          "Tên giống chưa chứng minh AP hợp lệ",
+          "Chắc chắn là AP hợp lệ nếu tín hiệu mạnh nhất",
+          "Chắc chắn an toàn nếu SSID bị ẩn",
+          "Chắc chắn cùng chủ quản nếu dùng cùng kênh"
+        ],
+        "correct": 0,
+        "explanations": [
+          "SSID có thể được sao chép nên cần kiểm tra danh tính và chính sách.",
+          "Sai: Công suất/tín hiệu mạnh không là bằng chứng danh tính AP; AP giả có thể phát mạnh.",
+          "Sai: SSID ẩn không cung cấp chứng thực mật mã và vẫn có thể bị phát hiện/sao chép.",
+          "Sai: Các tổ chức khác có thể dùng cùng kênh; kênh không chứng minh quyền sở hữu."
+        ],
+        "page": 12
+      },
+      {
+        "id": "q7-006",
+        "section": "7.3",
+        "topic": "Các kiểu chứng thực và cơ chế hỗ trợ",
+        "level": "Nhận biết",
+        "stem": "Shared Key Authentication lịch sử gắn với cơ chế nào?",
+        "options": [
+          "KDC",
+          "PGP",
+          "NAT tĩnh",
+          "WEP challenge-response"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: KDC cấp khóa/vé Kerberos, không phải challenge-response WEP trong 802.11.",
+          "Sai: PGP bảo vệ thông điệp/email, không phải Shared Key Authentication Wi-Fi.",
+          "Sai: NAT tĩnh dịch địa chỉ một-một, không chứng thực client bằng challenge WEP.",
+          "Slide mô tả challenge được client bảo vệ bằng khóa WEP dùng chung."
+        ],
+        "page": 20
+      },
+      {
+        "id": "q7-007",
+        "section": "7.3",
+        "topic": "Các kiểu chứng thực và cơ chế hỗ trợ",
+        "level": "Thông hiểu",
+        "stem": "Lợi ích của Enterprise so với một PSK chung là gì?",
+        "options": [
+          "Chia sẻ cùng một mật khẩu nhưng đổi SSID riêng",
+          "Chỉ cho phép các MAC trong danh sách",
+          "Quản lý chứng thực riêng cho từng người",
+          "Ẩn tên mạng để nhân viên không tìm được"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Đổi SSID trong khi vẫn chia sẻ cùng bí mật không tạo danh tính riêng cho từng người.",
+          "Sai: Lọc MAC nhận diện địa chỉ có thể giả, không thay hệ thống chứng thực riêng theo người.",
+          "Enterprise hỗ trợ danh tính riêng, thuận tiện quản lý và thu hồi theo người.",
+          "Sai: Ẩn tên chỉ ảnh hưởng hiển thị mạng, không cấp/thu hồi tài khoản riêng."
+        ],
+        "page": 21
+      },
+      {
+        "id": "q7-008",
+        "section": "7.3",
+        "topic": "Các kiểu chứng thực và cơ chế hỗ trợ",
+        "level": "Nhận biết",
+        "stem": "EAP được hiểu là gì?",
+        "options": [
+          "Một SSID",
+          "Khung hỗ trợ nhiều phương thức chứng thực",
+          "Một khóa Wi-Fi duy nhất",
+          "Thuật toán CRC"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: SSID là tên mạng, không là khung chứng thực.",
+          "EAP là Extensible Authentication Protocol, khung chứng thực mở rộng.",
+          "Sai: EAP hỗ trợ nhiều phương thức và danh tính, không là một bí mật dùng chung duy nhất.",
+          "Sai: CRC phát hiện lỗi, không là khung trao đổi chứng thực."
+        ],
+        "page": 24
+      },
+      {
+        "id": "q7-009",
+        "section": "7.3",
+        "topic": "Các kiểu chứng thực và cơ chế hỗ trợ",
+        "level": "Thông hiểu",
+        "stem": "Hạn chế chính của lọc MAC là gì?",
+        "options": [
+          "Địa chỉ MAC có thể bị giả",
+          "MAC không phân biệt được hai băng tần",
+          "MAC chỉ dùng cho kết nối Internet",
+          "MAC không thể được ghi vào danh sách cho phép"
+        ],
+        "correct": 0,
+        "explanations": [
+          "MAC không phải bí mật và có thể bị giả mạo.",
+          "Sai: Không phân biệt băng tần không phải nguyên nhân bảo mật chính; lọc MAC dựa địa chỉ chứ không cần MAC đại diện băng tần.",
+          "Sai: MAC dùng trên liên kết cục bộ, không chỉ cho kết nối Internet.",
+          "Sai: Danh sách cho phép MAC chính là cách triển khai phổ biến; vấn đề là địa chỉ trong danh sách có thể bị giả."
+        ],
+        "page": 22
+      },
+      {
+        "id": "q7-010",
+        "section": "7.3",
+        "topic": "Các kiểu chứng thực và cơ chế hỗ trợ",
+        "level": "Vận dụng",
+        "stem": "Trang đăng nhập captive portal có tự chứng minh Wi-Fi đã mã hóa không?",
+        "options": [
+          "Có nếu người dùng đã nhập mật khẩu trên portal",
+          "Có nếu đã chấp nhận điều khoản sử dụng",
+          "Có nếu portal hiển thị đúng tên khách sạn",
+          "Không, portal và mã hóa liên kết là hai vấn đề"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Nhập mật khẩu vào trang web không chứng minh frame Wi-Fi được mã hóa; đó là bước truy cập ở lớp khác.",
+          "Sai: Chấp nhận điều khoản là chính sách sử dụng, không thỏa thuận mã hóa liên kết.",
+          "Sai: Tên/logo trang có thể bị sao chép và không chứng minh cấu hình bảo vệ vô tuyến.",
+          "Portal kiểm soát truy cập qua web, không tự bảo vệ tất cả frame trên liên kết."
+        ],
+        "page": 23
+      },
+      {
+        "id": "q7-011",
+        "section": "7.3",
+        "topic": "Các kiểu chứng thực và cơ chế hỗ trợ",
+        "level": "Thông hiểu",
+        "stem": "WPS chủ yếu phục vụ việc nào?",
+        "options": [
+          "Cấp chứng chỉ X.509 cho Internet",
+          "Định tuyến IPsec",
+          "Hỗ trợ thiết lập kết nối",
+          "Thay thế mọi mã hóa Wi-Fi"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: WPS thêm thiết bị vào mạng, không đóng vai CA cấp chứng chỉ Internet.",
+          "Sai: IPsec bảo vệ gói IP; WPS không định tuyến hoặc thiết lập VPN IPsec.",
+          "WPS đơn giản hóa thiết lập bằng nút/PIN, không phải thuật toán mã hóa thay WPA.",
+          "Sai: WPS hỗ trợ thiết lập, còn WPA/WPA2 và tổ hợp mật mã thực sự bảo vệ dữ liệu."
+        ],
+        "page": 25
+      },
+      {
+        "id": "q7-012",
+        "section": "7.4",
+        "topic": "WEP, WPA và WPA2: cơ chế và điểm yếu",
+        "level": "Nhận biết",
+        "stem": "Trong WEP 64 bit, phần khóa bí mật theo slide dài bao nhiêu?",
+        "options": [
+          "128 bit",
+          "40 bit",
+          "64 bit",
+          "24 bit"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: 128 bit là nhãn một cấu hình WEP khác, không là phần bí mật của WEP 64.",
+          "Tên 64 bit cộng 40 bit khóa và 24 bit IV.",
+          "Sai: 64 bit là tổng nhãn gồm 40 bit khóa và 24 bit IV, không toàn bộ là bí mật.",
+          "Sai: 24 bit là IV trong WEP, không là phần khóa bí mật của cấu hình 64 bit."
+        ],
+        "page": 35
+      },
+      {
+        "id": "q7-013",
+        "section": "7.4",
+        "topic": "WEP, WPA và WPA2: cơ chế và điểm yếu",
+        "level": "Thông hiểu",
+        "stem": "Vì sao IV WEP 24 bit là điểm yếu?",
+        "options": [
+          "Không gian nhỏ dẫn đến lặp IV khi có nhiều gói",
+          "IV chính là mật khẩu rõ",
+          "IV là khóa công khai CA",
+          "IV luôn tăng vô hạn"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Lặp IV ảnh hưởng cách sử dụng dòng khóa và tạo điều kiện phân tích.",
+          "Sai: IV được truyền kèm để xử lý mã hóa, không đồng nghĩa gửi mật khẩu bản rõ.",
+          "Sai: IV không là chứng chỉ hay khóa công khai của CA; nó là tham số cho mã hóa.",
+          "Sai: Trường 24 bit hữu hạn chỉ có 2^24 giá trị, không thể tăng vô hạn mà không lặp."
+        ],
+        "page": 36
+      },
+      {
+        "id": "q7-014",
+        "section": "7.4",
+        "topic": "WEP, WPA và WPA2: cơ chế và điểm yếu",
+        "level": "Thông hiểu",
+        "stem": "CRC-32 trong WEP không thay thế được gì?",
+        "options": [
+          "Định tuyến IP",
+          "Tên mạng",
+          "Cổng TCP",
+          "Cơ chế toàn vẹn mật mã mạnh"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: CRC không có nhiệm vụ định tuyến nên đây không phải cơ chế nó được dùng để thay trong WEP.",
+          "Sai: Tên mạng là SSID, không cùng chức năng kiểm tra toàn vẹn với CRC.",
+          "Sai: Cổng TCP nhận diện luồng dịch vụ, không phải mục tiêu CRC được dùng để kiểm tra trong WEP.",
+          "CRC chủ yếu phát hiện lỗi, không được thiết kế chống sửa đổi cố ý như MAC mật mã."
+        ],
+        "page": 36
+      },
+      {
+        "id": "q7-015",
+        "section": "7.4",
+        "topic": "WEP, WPA và WPA2: cơ chế và điểm yếu",
+        "level": "Nhận biết",
+        "stem": "WPA2 thường gắn với tổ hợp nào trong bảng slide?",
+        "options": [
+          "RSA và SMTP",
+          "DES và NAT",
+          "AES-CCMP",
+          "RC4 và IV 24 bit"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: RSA là thuật toán bất đối xứng và SMTP là giao thức email; không là tổ hợp bảo vệ frame WPA2 trong bảng.",
+          "Sai: DES và NAT không là tổ hợp mã hóa/toàn vẹn Wi-Fi WPA2 trong slide.",
+          "Bảng so sánh nêu WPA2 dùng AES-CCMP.",
+          "Sai: RC4 và IV 24 bit là mô tả WEP, không phải AES-CCMP của WPA2 điển hình."
+        ],
+        "page": 34
+      },
+      {
+        "id": "q7-016",
+        "section": "7.4",
+        "topic": "WEP, WPA và WPA2: cơ chế và điểm yếu",
+        "level": "Thông hiểu",
+        "stem": "Four-way handshake được học nhằm hiểu điều gì?",
+        "options": [
+          "Tạo tên SSID",
+          "Dẫn xuất khóa phiên và chứng minh sở hữu bí mật nền",
+          "Gửi nguyên mật khẩu cho mọi người",
+          "Cấp địa chỉ public"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: SSID do cấu hình mạng/AP quyết định, không được tạo bởi four-way handshake.",
+          "Handshake thống nhất khóa tạm thời mà không cần gửi mật khẩu bản rõ.",
+          "Sai: Handshake không cần phát mật khẩu nguyên văn; nó trao đổi bằng chứng và dữ liệu dẫn xuất khóa.",
+          "Sai: Cấp địa chỉ là công việc như DHCP; handshake Wi-Fi giải quyết khóa và chứng thực sở hữu bí mật."
+        ],
+        "page": 31
+      },
+      {
+        "id": "q7-017",
+        "section": "7.4",
+        "topic": "WEP, WPA và WPA2: cơ chế và điểm yếu",
+        "level": "Vận dụng",
+        "stem": "Mạng WPA2-Personal dùng mật khẩu rất dễ đoán. Đánh giá nào đúng?",
+        "options": [
+          "Cơ chế mạnh vẫn chịu rủi ro từ bí mật yếu",
+          "Chỉ cần tên SSID khó đoán để bù mật khẩu yếu",
+          "Ẩn SSID là đủ ngăn kiểm tra mật khẩu ngoại tuyến",
+          "Lọc MAC khiến mật khẩu PSK yếu không còn quan trọng"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Mật khẩu PSK yếu làm giảm độ an toàn dù mã hóa dữ liệu mạnh.",
+          "Sai: SSID không phải bí mật đủ mạnh để bù một PSK dễ đoán.",
+          "Sai: Tên ẩn vẫn có thể được nhận biết qua trao đổi vô tuyến; nó không ngăn kiểm tra dự đoán PSK từ dữ liệu phù hợp.",
+          "Sai: MAC có thể giả và không làm PSK khó đoán hơn, nên không loại bỏ điểm yếu bí mật."
+        ],
+        "page": 40
+      },
+      {
+        "id": "q7-018",
+        "section": "7.5",
+        "topic": "Các mối đe dọa vô tuyến và truy cập",
+        "level": "Nhận biết",
+        "stem": "Rogue AP là gì?",
+        "options": [
+          "Mọi AP phát mạnh",
+          "Mọi AP dùng 5 GHz",
+          "AP có DNS",
+          "AP không được tổ chức cho phép"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Công suất mạnh là đặc tính RF, không xác định AP có được tổ chức cho phép hay không.",
+          "Sai: 5 GHz chỉ là băng tần; AP hợp lệ lẫn trái phép đều có thể dùng.",
+          "Sai: Có DNS không là tiêu chí rogue; quyền triển khai/quản lý của tổ chức mới là tiêu chí.",
+          "Rogue AP nằm ngoài quản lý/cho phép, có thể do vô tình hoặc cố ý."
+        ],
+        "page": 43
+      },
+      {
+        "id": "q7-019",
+        "section": "7.5",
+        "topic": "Các mối đe dọa vô tuyến và truy cập",
+        "level": "Thông hiểu",
+        "stem": "Evil twin nguy hiểm vì đặc điểm nào?",
+        "options": [
+          "Tự động đổi kênh của mọi AP hợp lệ",
+          "Làm dài khóa mã hóa bằng cách thêm SSID",
+          "Giả nhận diện mạng để lừa người dùng kết nối",
+          "Chỉ làm giảm hiệu năng nhưng không lừa được client"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Evil twin sao chép nhận diện để lừa client, không có đặc quyền tự điều khiển kênh mọi AP hợp lệ.",
+          "Sai: Tên SSID không được cộng vào để làm khóa dài hơn theo nghĩa lựa chọn này.",
+          "Điểm giả khai thác sự tin cậy vào nhận diện mạng quen thuộc.",
+          "Sai: Mối nguy chính có thể là người dùng kết nối vào điểm giả và lộ dữ liệu, không chỉ giảm tốc."
+        ],
+        "page": 48
+      },
+      {
+        "id": "q7-020",
+        "section": "7.5",
+        "topic": "Các mối đe dọa vô tuyến và truy cập",
+        "level": "Vận dụng",
+        "stem": "Đổi mật khẩu có tự loại bỏ jamming vô tuyến không?",
+        "options": [
+          "Có vì khóa mới làm máy gây nhiễu không nhận được frame",
+          "Không, gây nhiễu tác động môi trường tín hiệu",
+          "Có nếu đổi SSID đồng thời với mật khẩu",
+          "Có nếu chỉ cho phép các MAC tin cậy"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Máy gây nhiễu thuần túy không cần hiểu hay giải mã frame để lấn át tín hiệu.",
+          "Mã hóa không ngăn năng lượng gây nhiễu lấn át tín hiệu.",
+          "Sai: Đổi tên không thay đổi thực tế năng lượng gây nhiễu trên băng tần.",
+          "Sai: Danh sách MAC điều khiển truy cập giao thức, không chặn năng lượng RF gây nhiễu."
+        ],
+        "page": 51
+      },
+      {
+        "id": "q7-021",
+        "section": "7.5",
+        "topic": "Các mối đe dọa vô tuyến và truy cập",
+        "level": "Thông hiểu",
+        "stem": "Deauthentication giả thường tác động trực tiếp mục tiêu nào?",
+        "options": [
+          "Tính sẵn sàng của kết nối",
+          "Độ dài khóa RSA",
+          "Danh sách CA gốc",
+          "Độ nén ZIP"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Làm ngắt kết nối là tác động DoS đến tính sẵn sàng.",
+          "Sai: Ngắt kết nối không thay tham số độ dài khóa RSA.",
+          "Sai: Deauthentication giả tác động liên kết, không sửa danh sách CA gốc của thiết bị.",
+          "Sai: Độ nén ZIP thuộc dữ liệu/ứng dụng, không là mục tiêu trực tiếp của việc ngắt kết nối."
+        ],
+        "page": 50
+      },
+      {
+        "id": "q7-022",
+        "section": "7.6",
+        "topic": "Phương pháp tấn công: nhận diện chuỗi rủi ro",
+        "level": "Nhận biết",
+        "stem": "WiGLE gắn thông tin mạng với dữ liệu nào?",
+        "options": [
+          "Khóa mã hóa của từng mạng được quan sát",
+          "Lịch sử duyệt web của từng client",
+          "Danh tính chủ sở hữu đã được CA xác minh",
+          "Vị trí địa lý"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Quan sát SSID/BSSID không tự khôi phục bí mật mã hóa mạng.",
+          "Sai: WiGLE bản đồ hóa nhận diện mạng, không mặc định ghi lịch sử duyệt web từng người.",
+          "Sai: Dữ liệu quan sát cộng đồng không tương đương xác minh pháp lý chủ sở hữu qua CA.",
+          "WiGLE bản đồ hóa quan sát mạng và tọa độ."
+        ],
+        "page": 68
+      },
+      {
+        "id": "q7-023",
+        "section": "7.6",
+        "topic": "Phương pháp tấn công: nhận diện chuỗi rủi ro",
+        "level": "Thông hiểu",
+        "stem": "Traffic analysis có thể hữu ích khi chưa giải mã được nội dung không?",
+        "options": [
+          "Không vì mã hóa luôn che cả thời gian và kích thước",
+          "Chỉ hữu ích sau khi đã khôi phục được PSK",
+          "Có, vẫn có mẫu thời gian/lưu lượng/nhận diện",
+          "Chỉ hữu ích khi AP đã cung cấp nội dung bản rõ"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Mã hóa nội dung thường vẫn để lộ thời điểm, kích thước hoặc một phần metadata để phân tích.",
+          "Sai: Phân tích mẫu liên lạc không luôn cần biết PSK; giải mã nội dung là nhu cầu khác.",
+          "Mẫu liên lạc và metadata vẫn có giá trị phân tích.",
+          "Sai: Không cần AP cung cấp bản rõ để đo tần suất, dung lượng hay mẫu lưu lượng quan sát được."
+        ],
+        "page": 73
+      },
+      {
+        "id": "q7-024",
+        "section": "7.7",
+        "topic": "Công cụ tấn công và phân tích mạng",
+        "level": "Thông hiểu",
+        "stem": "Phân tích phổ khác bắt gói ở điểm nào?",
+        "options": [
+          "Đọc plaintext ứng dụng thay vì header Wi-Fi",
+          "Đo năng lượng vô tuyến thay vì chỉ diễn giải frame",
+          "Tự chứng thực client thay cho máy chủ RADIUS",
+          "Khôi phục mọi khóa Wi-Fi thay vì đo tín hiệu"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Đo phổ nhìn năng lượng theo tần số, không tự giải mã plaintext ứng dụng.",
+          "Phân tích phổ nhìn môi trường RF, packet capture nhìn các đơn vị giao thức thu được.",
+          "Sai: Phân tích phổ không là dịch vụ chứng thực EAP/RADIUS.",
+          "Sai: Quan sát năng lượng không suy ra mọi bí mật mã hóa; đo RF khác phá mã."
+        ],
+        "page": 110
+      },
+      {
+        "id": "q7-025",
+        "section": "7.8",
+        "topic": "Tấn công Bluetooth: ngăn rò rỉ và ghép cặp trái phép",
+        "level": "Thông hiểu",
+        "stem": "Discoverable và pairable có quan hệ nào?",
+        "options": [
+          "Là hai trạng thái khác nhau",
+          "Luôn đồng nghĩa",
+          "Là hai loại mã hóa email",
+          "Là hai cổng TCP"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Khả năng được phát hiện khác khả năng chấp nhận ghép cặp.",
+          "Sai: Thiết bị có thể giới hạn phát hiện và ghép cặp khác nhau; hai khả năng không đồng nghĩa.",
+          "Sai: Đây là trạng thái Bluetooth, không phải cơ chế mã hóa email.",
+          "Sai: Bluetooth discoverable/pairable không được định nghĩa là hai cổng TCP."
+        ],
+        "page": 112
+      },
+      {
+        "id": "q7-026",
+        "section": "7.8",
+        "topic": "Tấn công Bluetooth: ngăn rò rỉ và ghép cặp trái phép",
+        "level": "Nhận biết",
+        "stem": "Bluesnarfing chủ yếu nói đến rủi ro nào?",
+        "options": [
+          "Cấp SSID mới",
+          "Nén ZIP",
+          "Định tuyến gateway",
+          "Lấy dữ liệu Bluetooth trái phép"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: SSID thuộc Wi-Fi; bluesnarfing nói về lấy thông tin qua Bluetooth trái phép.",
+          "Sai: Nén ZIP không mô tả hành vi truy xuất dữ liệu Bluetooth.",
+          "Sai: Định tuyến gateway là chức năng mạng, không là thuật ngữ trộm thông tin Bluetooth.",
+          "Bluesnarfing liên quan truy xuất thông tin trái phép."
+        ],
+        "page": 111
+      },
+      {
+        "id": "q7-027",
+        "section": "7.8",
+        "topic": "Tấn công Bluetooth: ngăn rò rỉ và ghép cặp trái phép",
+        "level": "Vận dụng",
+        "stem": "Có yêu cầu ghép cặp bất ngờ từ thiết bị lạ. Cách xử lý đúng?",
+        "options": [
+          "Chấp nhận nếu tên Bluetooth giống thiết bị quen",
+          "Chấp nhận nếu yêu cầu chỉ xuất hiện một lần",
+          "Từ chối và kiểm tra nhu cầu kết nối",
+          "Ghép cặp rồi mới xác minh qua người sở hữu"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Tên thiết bị có thể bị đặt giống thiết bị quen; cần xác minh người sở hữu và nhu cầu.",
+          "Sai: Số lần xuất hiện không chứng minh yêu cầu hợp lệ; một yêu cầu duy nhất vẫn có thể nguy hiểm.",
+          "Ghép cặp phải dựa nhu cầu và xác minh thiết bị.",
+          "Sai: Ghép trước mở quyền/tin cậy trước khi biết đối tác; nên xác minh trước khi chấp thuận."
+        ],
+        "page": 119
+      },
+      {
+        "id": "q7-028",
+        "section": "7.9",
+        "topic": "Biện pháp phòng chống nhiều lớp",
+        "level": "Vận dụng",
+        "stem": "Thu hồi quyền riêng một nhân viên thuận lợi hơn với cấu hình nào?",
+        "options": [
+          "Personal dùng một PSK cho cả công ty",
+          "Enterprise có danh tính riêng",
+          "Ẩn SSID và giữ nguyên mật khẩu chung",
+          "Lọc MAC và không quản lý tài khoản riêng"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Một PSK chung không tạo bí mật riêng để chỉ thu hồi một nhân viên mà giữ nguyên quyền người khác.",
+          "Danh tính riêng cho phép quản lý/thu hồi riêng từng người.",
+          "Sai: Ẩn SSID không xóa việc nhân viên vẫn biết mật khẩu chung.",
+          "Sai: Lọc địa chỉ không gắn chắc với cá nhân, địa chỉ có thể thay đổi/giả và không thay quản lý danh tính."
+        ],
+        "page": 124
+      },
+      {
+        "id": "q7-029",
+        "section": "7.10",
+        "topic": "Công cụ bảo mật Wi-Fi: WIDS/WIPS và quy hoạch",
+        "level": "Thông hiểu",
+        "stem": "Khác biệt cốt lõi giữa WIDS và WIPS là gì?",
+        "options": [
+          "WIPS bổ sung khả năng phản ứng/ngăn chặn",
+          "WIDS chỉ quản lý tài khoản còn WIPS chỉ đo phủ sóng",
+          "WIPS chỉ phát hiện còn WIDS luôn chủ động chặn",
+          "Hai hệ thống luôn có cùng khả năng và cách phản ứng"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Detection là phát hiện; prevention có cơ chế ngăn chặn theo chính sách.",
+          "Sai: WIDS/WIPS tập trung xâm nhập vô tuyến; quản lý tài khoản và đo phủ sóng không là định nghĩa phân biệt hai loại.",
+          "Sai: Lựa chọn đảo vai trò: detection tập trung phát hiện, prevention bổ sung phản ứng.",
+          "Sai: Hai tên nhấn mạnh khả năng khác nhau; sản phẩm cụ thể có thể tích hợp nhưng không nên đồng nhất mặc định."
+        ],
+        "page": 126
+      },
+      {
+        "id": "q7-030",
+        "section": "7.10",
+        "topic": "Công cụ bảo mật Wi-Fi: WIDS/WIPS và quy hoạch",
+        "level": "Thông hiểu",
+        "stem": "Công cụ quy hoạch phủ sóng có tự chứng minh mạng an toàn không?",
+        "options": [
+          "Có nếu tín hiệu mạnh ở mọi vị trí",
+          "Có nếu không có vùng chết trong văn phòng",
+          "Có nếu mọi AP đều phát cùng công suất",
+          "Không, phủ sóng và an ninh là tiêu chí khác"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Tín hiệu mạnh chỉ đo khả năng kết nối, không kiểm tra cơ chế chứng thực/mã hóa.",
+          "Sai: Không có vùng chết là kết quả quy hoạch, không chứng minh chính sách truy cập an toàn.",
+          "Sai: Cùng công suất không kiểm tra danh tính AP, khóa hoặc phân vùng mạng.",
+          "Chất lượng tín hiệu không chứng minh chứng thực và cấu hình bảo mật đúng."
+        ],
+        "page": 133
+      },
+      {
+        "id": "q7-031",
+        "section": "7.11",
+        "topic": "Kiểm thử hệ thống và bài tập",
+        "level": "Vận dụng",
+        "stem": "Nhóm kiểm thử chỉ nộp ảnh công cụ và số SSID nhìn thấy. Cần bổ sung gì để quản trị viên ưu tiên xử lý rủi ro và xác nhận khắc phục?",
+        "options": [
+          "Chỉ liệt kê công cụ đã cài và phiên bản",
+          "Chỉ đếm số mạng phát hiện mà không đánh giá",
+          "Bằng chứng, tác động, khuyến nghị và kiểm tra lại",
+          "Chỉ xác nhận kết nối Internet thành công"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Danh sách công cụ không chứng minh điểm yếu, tác động hay hướng khắc phục.",
+          "Sai: Số lượng mạng phát hiện không đánh giá mức an toàn từng mạng hoặc kết quả sửa.",
+          "Kiểm thử cần giúp xác định và khắc phục rủi ro có căn cứ.",
+          "Sai: Có Internet chỉ chứng minh một chức năng hoạt động, không chứng minh kiểm soát bảo mật đúng."
+        ],
+        "page": 135
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Bảo mật mạng ngoại vi",
+    "pages": 68,
+    "file": "Bài 8 - Bảo mật  mạng ngoại vi.pdf",
+    "objectives": [
+      "Giải thích được cơ chế bằng lời của mình",
+      "Phân biệt các giải pháp có tên gần nhau",
+      "Chọn biện pháp phù hợp theo tình huống và giới hạn bảo vệ"
+    ],
+    "overview": "Bài 6 bảo vệ truyền thông, bài 7 bảo vệ truy cập vô tuyến; bài 8 tổ chức các ranh giới và chính sách cho lưu lượng vào/ra. Mạng công khai cần truy cập được nhưng không được trở thành đường đi tự do vào LAN.",
+    "sections": [
+      {
+        "id": "8.1",
+        "title": "Tổng quan: ranh giới, mối đe dọa và nguyên tắc",
+        "from": 5,
+        "to": 14,
+        "explanation": "Bảo mật ngoại vi phối hợp firewall, DMZ, VPN, proxy, NAT và IDS/IPS. Nguy cơ từ Internet gồm malware/ransomware, dò cổng, đoán mật khẩu, DDoS và khai thác dịch vụ. Default Deny là chỉ cho phép điều đã xác định cần thiết; Least Privilege cấp quyền tối thiểu; segmentation chia vùng giảm phạm vi ảnh hưởng; logging/monitoring tạo khả năng phát hiện và điều tra. Firewall là tuyến phòng thủ quan trọng nhưng không là toàn bộ bảo mật. IDS phát hiện, IPS có thể ngăn chặn; VPN bảo vệ kênh chứ không tự xác nhận thiết bị đầu cuối sạch.",
+        "plain": "Ranh giới mạng giống các cửa có quy định ra vào; cần cả phân phòng, người quản lý và nhật ký. Giới hạn: hệ thống mạng có nhiều đường đi và phiên hoạt động, không chỉ một cổng vật lý.",
+        "example": "Máy chủ web công khai được tách khỏi máy kế toán; chỉ mở các luồng ứng dụng cần thiết giữa chúng.",
+        "pitfalls": [
+          "NAT không đồng nghĩa firewall",
+          "Có VPN không đồng nghĩa người dùng được phép mọi tài nguyên",
+          "Không tin tuyệt đối mọi thiết bị bên trong"
+        ],
+        "recap": [
+          "Tự giải thích: Tổng quan: ranh giới, mối đe dọa và nguyên tắc",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.2",
+        "title": "Cơ bản tường lửa: định nghĩa, triển khai và kiểm tra",
+        "from": 15,
+        "to": 23,
+        "explanation": "Firewall giám sát và cho phép/chặn lưu lượng theo luật: IP nguồn/đích, port, giao thức và có thể trạng thái/nội dung. Mật mã giữ dữ liệu bí mật không tự quyết định lưu lượng nào được phép vào mạng. Firewall có thể là phần cứng, phần mềm hoặc tích hợp thiết bị; hiệu năng và cập nhật tùy sản phẩm, không tuyệt đối phần cứng luôn khó cập nhật. Slide dùng HTTP TCP 80, HTTPS TCP 443, SSH TCP 22, Telnet TCP 23 làm cổng mặc định. Kiểm tra port không chắc chắn nhận diện đúng ứng dụng.",
+        "plain": "Mã hóa trả lời ai đọc được; firewall trả lời luồng nào được phép đi. Đây là hai câu hỏi khác nhau.",
+        "example": "Cho HTTPS vào web server không có nghĩa cần cho cùng port tới mọi máy nội bộ.",
+        "pitfalls": [
+          "Cổng mặc định không đảm bảo đó là đúng ứng dụng",
+          "Không mặc định mọi phần cứng an toàn hơn phần mềm"
+        ],
+        "recap": [
+          "Tự giải thích: Cơ bản tường lửa: định nghĩa, triển khai và kiểm tra",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.3",
+        "title": "Packet Filtering Firewall",
+        "from": 24,
+        "to": 25,
+        "explanation": "Lọc gói xem header: địa chỉ, cổng, giao thức; quyết định từng gói theo rule. Ưu điểm nhanh và đơn giản, hạn chế là ít ngữ cảnh phiên và không hiểu đầy đủ nội dung ứng dụng. Một rule phải nêu đúng chiều, địa chỉ đích, cổng và hành động; chỉ thấy port dịch vụ không chứng minh gói là lưu lượng hợp lệ.",
+        "plain": "Nhìn nhãn gói trước khi cho qua, chưa đọc được câu chuyện bên trong.",
+        "example": "Rule cho SMTP đến mọi host nội bộ rộng hơn nhiều so với chỉ cho đến mail server được phép.",
+        "pitfalls": [
+          "Đừng đảo cổng nguồn và đích",
+          "Header hợp lệ không chứng minh payload an toàn"
+        ],
+        "recap": [
+          "Tự giải thích: Packet Filtering Firewall",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.4",
+        "title": "Stateful Firewall",
+        "from": 26,
+        "to": 28,
+        "explanation": "Stateful firewall duy trì bảng phiên và kiểm tra gói trong ngữ cảnh kết nối. Khi client tạo luồng được phép ra Internet, thiết bị ghi thông tin rồi cho phản hồi phù hợp quay lại, thay vì mở mọi lưu lượng chiều vào. Theo dõi phiên cần bộ nhớ/tài nguyên và vẫn không bảo đảm mọi nội dung trong phiên là lành tính.",
+        "plain": "Nó nhớ đang có cuộc hội thoại nào, thay vì nhìn từng câu độc lập.",
+        "example": "Phản hồi của website khớp phiên ra trước có thể được cho qua; gói tự đến không khớp không tự động được phép.",
+        "pitfalls": [
+          "Theo dõi trạng thái không tương đương quét mọi mã độc",
+          "Bảng phiên tiêu tốn tài nguyên"
+        ],
+        "recap": [
+          "Tự giải thích: Stateful Firewall",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.5",
+        "title": "Proxy Firewall",
+        "from": 29,
+        "to": 31,
+        "explanation": "Proxy đứng giữa client và server, kiểm tra yêu cầu rồi tạo kết nối thay mặt phía phù hợp. Nó có thể lọc nội dung, kiểm soát web, cache và log. Forward proxy phục vụ client truy cập ra; reverse proxy đứng trước dịch vụ để phục vụ người truy cập vào. Kiểm tra ứng dụng sâu hơn đánh đổi hiệu năng, tài nguyên và độ phức tạp. Cache không đồng nghĩa mã hóa, và proxy không bảo vệ nội dung ngoài khả năng quan sát của nó.",
+        "plain": "Giống bộ phận tiếp nhận yêu cầu: người ngoài không cần nói trực tiếp với nhân viên bên trong. Giới hạn là hệ thống vẫn cần xác thực và kiểm soát dữ liệu riêng.",
+        "example": "Công ty dùng forward proxy để quản lý web; website dùng reverse proxy để đặt cổng kiểm soát trước máy chủ web.",
+        "pitfalls": [
+          "Forward khác reverse",
+          "Proxy không tự bảo đảm mọi nội dung là an toàn"
+        ],
+        "recap": [
+          "Tự giải thích: Proxy Firewall",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.6",
+        "title": "Next Generation Firewall",
+        "from": 32,
+        "to": 35,
+        "explanation": "Next Generation Firewall (NGFW) kết hợp stateful inspection, Deep Packet Inspection (DPI), kiểm soát ứng dụng, tích hợp IDS/IPS, URL filtering và có thể TLS inspection. Chức năng sâu giúp nhìn vượt port nhưng cần cấu hình, tài nguyên, cập nhật và phạm vi tin cậy. Lưu lượng mã hóa không tự trở nên đọc được chỉ vì thiết bị có tên NGFW: cần cơ chế kiểm tra thích hợp và điều kiện triển khai. Slide đưa ví dụ nhà cung cấp, không phải xếp hạng hiện tại được kiểm chứng.",
+        "plain": "Thông minh hơn nghĩa là có thêm khả năng phân tích; vẫn phải định nghĩa chính sách và quản trị đúng.",
+        "example": "Nhận diện ứng dụng giúp tránh chỉ dựa port 443 để cho mọi ứng dụng đi qua.",
+        "pitfalls": [
+          "Có tính năng không nghĩa đang bật và cấu hình đúng",
+          "TLS inspection có điều kiện và ảnh hưởng hiệu năng",
+          "Không học giá hoặc xếp hạng sản phẩm như kiến thức bất biến"
+        ],
+        "recap": [
+          "Tự giải thích: Next Generation Firewall",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.7",
+        "title": "Firewall rules và giới hạn của tường lửa",
+        "from": 36,
+        "to": 38,
+        "explanation": "Rule thường gồm IP nguồn/đích, port, giao thức, hành động. Với first-match, thiết bị duyệt từ trên xuống và dùng rule khớp đầu tiên: allow rộng đặt trước deny hẹp có thể che khuất deny. Cần Default Deny, chỉ mở dịch vụ cần, tránh Any–Any và ghi log quan trọng. Firewall không thay antivirus, không xử lý trọn social engineering hay insider dùng quyền hợp lệ; lưu lượng mã hóa hạn chế quan sát của lọc truyền thống.",
+        "plain": "Thứ tự luật giống chuỗi điều kiện trong chương trình: đã khớp và kết thúc thì luật dưới không còn tác dụng.",
+        "example": "Allow toàn bộ đặt đầu rồi deny Telnet ở dưới không chặn được Telnet trên hệ thống first-match.",
+        "pitfalls": [
+          "Xác định cơ chế xét luật trước khi suy luận",
+          "Không có luật cho phép cụ thể khác với mọi trường hợp tự động cho phép",
+          "Một firewall không thay phòng thủ nhiều lớp"
+        ],
+        "recap": [
+          "Tự giải thích: Firewall rules và giới hạn của tường lửa",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.8",
+        "title": "NAT: động, tĩnh và PAT",
+        "from": 39,
+        "to": 42,
+        "explanation": "Network Address Translation (NAT) đổi địa chỉ khi đi qua ranh giới. NAT tĩnh gán ánh xạ ổn định một–một; NAT động chọn từ pool theo nhu cầu; Port Address Translation (PAT) dùng cổng để nhiều luồng/máy chia sẻ địa chỉ ngoài. Thiết bị phải nhớ ánh xạ để chuyển phản hồi về đúng máy. NAT có thể giảm lộ địa chỉ nội bộ nhưng không tự cung cấp mã hóa, xác thực hay lọc chính sách đầy đủ. Slide dùng nhãn N–N/N–1 để ghi nhớ, cần hiểu cơ chế thay vì chỉ nhớ số.",
+        "plain": "PAT như nhiều người cùng dùng số tổng đài nhưng có mã nhánh để trả lời đúng người. Giới hạn là cổng không phải danh tính người dùng và có thể đổi theo phiên.",
+        "example": "Hai laptop cùng dùng một IP công khai nhờ ánh xạ cổng khác nhau.",
+        "pitfalls": [
+          "NAT không mã hóa",
+          "NAT tĩnh khác PAT",
+          "Không suy ra NAT thay firewall"
+        ],
+        "recap": [
+          "Tự giải thích: NAT: động, tĩnh và PAT",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.9",
+        "title": "DMZ và kiểm soát luồng giữa các vùng",
+        "from": 43,
+        "to": 46,
+        "explanation": "Demilitarized Zone (DMZ) chứa dịch vụ công khai như web/mail/DNS và được tách khỏi LAN. Mục đích là giới hạn hậu quả khi máy chủ công khai bị xâm nhập. Internet chỉ vào dịch vụ công bố; DMZ vào LAN chỉ những kết nối thật sự cần, đúng máy đích và port; quản trị, backup, monitoring có nguồn được kiểm soát. DMZ có thể là một nhánh riêng của firewall, không bắt buộc mọi gói Internet phải đi xuyên một server DMZ mới tới LAN. VLAN tách miền nhưng phải kèm chính sách kiểm soát giữa vùng.",
+        "plain": "DMZ là vùng tiếp khách riêng, không phải phòng chờ được tự do mở cửa vào kho dữ liệu.",
+        "example": "Web ở DMZ cần database nội bộ: chỉ cho IP web đến IP database trên cổng cần thiết, không allow cả DMZ vào LAN.",
+        "pitfalls": [
+          "DMZ không là vùng tin cậy hoàn toàn",
+          "Không mở mọi port chỉ vì server công khai",
+          "VLAN không tự thay rule firewall"
+        ],
+        "recap": [
+          "Tự giải thích: DMZ và kiểm soát luồng giữa các vùng",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.10",
+        "title": "TMG: yêu cầu, tính năng, mô hình và client",
+        "from": 47,
+        "to": 58,
+        "explanation": "Forefront Threat Management Gateway (TMG) 2010 thay ISA 2006 trong bối cảnh lịch sử slide. Yêu cầu trong bảng gồm hệ điều hành Windows Server phù hợp, CPU 64 bit, bộ nhớ, đĩa và card mạng theo mô hình; không dùng làm đề xuất triển khai mới. Tính năng minh họa firewall, web protection, email protection, intrusion prevention, remote access và quản trị. Edge firewall phân tách trong/ngoài; 3-Leg Perimeter có thêm nhánh DMZ; front/back firewall là hai lớp quanh vùng ngoại vi; Single Network Adapter không là thiết bị định tuyến nhiều giao diện. SecureNAT client không cài phần mềm, TMG client yêu cầu phần mềm Windows, web proxy client cấu hình proxy trình duyệt; hỗ trợ giao thức và xác thực khác nhau theo bảng.",
+        "plain": "Học TMG để hiểu mô hình và chính sách; đừng đồng nhất tên sản phẩm cũ với mọi firewall.",
+        "example": "3-Leg Perimeter minh họa ba vùng: internal, external và perimeter.",
+        "pitfalls": [
+          "TMG là ngữ cảnh lịch sử",
+          "Single adapter không tương đương router nhiều vùng",
+          "System policy khác access rule cho truy cập người dùng"
+        ],
+        "recap": [
+          "Tự giải thích: TMG: yêu cầu, tính năng, mô hình và client",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.11",
+        "title": "Tường lửa ngày nay: đọc ví dụ sản phẩm có phê phán",
+        "from": 59,
+        "to": 62,
+        "explanation": "Slide phân nhóm cá nhân/doanh nghiệp, miễn phí/trả phí và nêu Windows Defender Firewall, Comodo, ZoneAlarm, Norton, Bitdefender, pfSense, OPNsense, Cisco, FortiGate, Palo Alto và Sophos. Giá và tên gói phụ thuộc thời điểm; nội dung này là danh sách ví dụ từ tài liệu, chưa phải báo giá hay khuyến nghị mua hiện tại. So sánh hữu ích theo quy mô, thông lượng khi bật đầy đủ kiểm tra, tính năng VPN/IDS/IPS, khả năng vận hành, cập nhật và tổng chi phí.",
+        "plain": "Chọn firewall giống chọn công cụ theo công việc và người quản trị, không chỉ theo nhãn mạnh hay miễn phí.",
+        "example": "Thiết bị thông lượng cao khi lọc đơn giản có thể giảm hiệu năng khi bật TLS inspection/IPS; cần so đúng cấu hình.",
+        "pitfalls": [
+          "Miễn phí giấy phép không có nghĩa không cần chi phí vận hành",
+          "Không lấy giá slide làm giá hiện tại"
+        ],
+        "recap": [
+          "Tự giải thích: Tường lửa ngày nay: đọc ví dụ sản phẩm có phê phán",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      },
+      {
+        "id": "8.12",
+        "title": "Bài tập ACL, screened subnet và so sánh giải pháp",
+        "from": 63,
+        "to": 68,
+        "explanation": "Bài ACL SMTP cho mọi địa chỉ nội bộ ở port 25 quá rộng nếu chỉ một server mail cần công khai. Sơ đồ screened subnet có router ngoài, DMZ và router trong: dùng luật tách quyền vào dịch vụ DMZ khỏi quyền vào LAN. Bảng dịch vụ nội bộ yêu cầu chặn ra ngoại vi liệt kê DHCP 67/68 UDP, TFTP 69 UDP, NetBIOS, CIFS 445, LPR 515 TCP và NFS 2049 UDP trong ngữ cảnh slide; khi thiết kế thực tế phải đối chiếu giao thức và nhu cầu. Bài TMG yêu cầu phân biệt System Policy/Access Rule; bài khảo sát sản phẩm cần ghi ngày và tiêu chí.",
+        "plain": "Trước khi viết ACL, vẽ mũi tên ai cần nói với ai, bằng dịch vụ nào; mọi mũi tên khác mặc định không cần mở.",
+        "example": "Internet được tới web DMZ TCP 443, không được tới laptop LAN; quản trị DMZ chỉ từ máy quản trị đã chỉ định.",
+        "pitfalls": [
+          "Không cho toàn subnet chỉ vì một server cần dịch vụ",
+          "Phải xét chiều phản hồi và trạng thái",
+          "Không dùng giá sản phẩm cũ để so sánh hiện tại"
+        ],
+        "recap": [
+          "Tự giải thích: Bài tập ACL, screened subnet và so sánh giải pháp",
+          "Nêu một tình huống sử dụng và một giới hạn của cơ chế."
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "title": "Phân loại firewall",
+        "headers": [
+          "Loại",
+          "Căn cứ quyết định",
+          "Đánh đổi"
+        ],
+        "rows": [
+          [
+            "Packet filtering",
+            "Header gói",
+            "Nhanh; ít ngữ cảnh"
+          ],
+          [
+            "Stateful",
+            "Header và phiên",
+            "Cần lưu trạng thái"
+          ],
+          [
+            "Proxy",
+            "Yêu cầu ứng dụng",
+            "Sâu hơn; tốn tài nguyên"
+          ],
+          [
+            "NGFW",
+            "Ứng dụng/nội dung, tích hợp nhiều cơ chế",
+            "Chi phí và quản trị, hiệu năng"
+          ]
+        ]
+      },
+      {
+        "title": "Các thành phần ngoại vi",
+        "headers": [
+          "Thành phần",
+          "Vai trò",
+          "Không tự thay thế"
+        ],
+        "rows": [
+          [
+            "NAT/PAT",
+            "Dịch địa chỉ/cổng",
+            "Mã hóa hoặc firewall"
+          ],
+          [
+            "DMZ",
+            "Tách dịch vụ công khai",
+            "Luật giữa vùng"
+          ],
+          [
+            "VPN",
+            "Bảo vệ kênh",
+            "Phân quyền mọi tài nguyên"
+          ],
+          [
+            "IDS/IPS",
+            "Phát hiện/ngăn chặn",
+            "Vá lỗi và bảo vệ endpoint"
+          ]
+        ]
+      }
+    ],
+    "study": [
+      "Đọc mục tiêu, tự vẽ luồng dữ liệu hoặc vùng mạng trước khi nhớ tên giao thức.",
+      "Đóng bài học rồi giải thích mỗi cơ chế theo ba câu: giải quyết gì, làm thế nào, không bảo vệ được gì.",
+      "Làm câu hỏi theo bài; ghi nguyên nhân câu sai và ôn lại sau 1, 3, 7 ngày."
+    ],
+    "terms": [
+      {
+        "en": "Firewall",
+        "vi": "Tường lửa",
+        "meaning": "Thiết bị/phần mềm thực thi chính sách cho phép/chặn lưu lượng."
+      },
+      {
+        "en": "DMZ",
+        "vi": "Vùng mạng dịch vụ công khai",
+        "meaning": "Demilitarized Zone tách dịch vụ public khỏi LAN."
+      },
+      {
+        "en": "NAT",
+        "vi": "Chuyển dịch địa chỉ mạng",
+        "meaning": "Network Address Translation ánh xạ địa chỉ giữa các mạng."
+      },
+      {
+        "en": "PAT",
+        "vi": "Chuyển dịch địa chỉ và cổng",
+        "meaning": "Port Address Translation dùng cổng để phân biệt nhiều luồng."
+      },
+      {
+        "en": "NGFW",
+        "vi": "Tường lửa thế hệ mới",
+        "meaning": "Next Generation Firewall tích hợp kiểm soát ứng dụng/kiểm tra sâu."
+      },
+      {
+        "en": "DPI",
+        "vi": "Kiểm tra gói sâu",
+        "meaning": "Deep Packet Inspection phân tích sâu hơn trường header cơ bản."
+      },
+      {
+        "en": "Default Deny",
+        "vi": "Mặc định từ chối",
+        "meaning": "Chỉ mở ngoại lệ lưu lượng thật sự cần thiết."
+      },
+      {
+        "en": "Least Privilege",
+        "vi": "Quyền tối thiểu",
+        "meaning": "Chỉ cấp quyền đủ thực hiện công việc cần thiết."
+      },
+      {
+        "en": "TMG",
+        "vi": "Threat Management Gateway — cổng quản lý đe dọa",
+        "meaning": "Sản phẩm Forefront TMG 2010 được dùng làm ví dụ lịch sử trong slide."
+      },
+      {
+        "en": "VPN",
+        "vi": "Virtual Private Network — mạng riêng ảo",
+        "meaning": "Bảo vệ kết nối qua mạng chia sẻ/công cộng; không thay thế mọi phân quyền."
+      },
+      {
+        "en": "IDS",
+        "vi": "Intrusion Detection System — hệ thống phát hiện xâm nhập",
+        "meaning": "Quan sát và cảnh báo dấu hiệu tấn công hoặc vi phạm."
+      },
+      {
+        "en": "IPS",
+        "vi": "Intrusion Prevention System — hệ thống ngăn xâm nhập",
+        "meaning": "Có khả năng phản ứng/ngăn chặn theo chính sách ngoài phát hiện."
+      },
+      {
+        "en": "ACL",
+        "vi": "Access Control List — danh sách kiểm soát truy cập",
+        "meaning": "Tập luật cho phép/chặn theo nguồn, đích, dịch vụ và chiều áp dụng."
+      },
+      {
+        "en": "Stateful inspection",
+        "vi": "Kiểm tra có trạng thái",
+        "meaning": "Đánh giá gói theo thông tin phiên đã ghi nhận."
+      },
+      {
+        "en": "Proxy",
+        "vi": "Máy trung gian ứng dụng",
+        "meaning": "Nhận yêu cầu và tạo kết nối thay mặt client hoặc server theo vai trò."
+      },
+      {
+        "en": "Forward proxy",
+        "vi": "Proxy phục vụ truy cập ra",
+        "meaning": "Đại diện phía client đi tới dịch vụ bên ngoài."
+      },
+      {
+        "en": "Reverse proxy",
+        "vi": "Proxy đứng trước dịch vụ",
+        "meaning": "Đại diện phía server nhận yêu cầu từ người truy cập."
+      },
+      {
+        "en": "Segmentation",
+        "vi": "Phân vùng mạng",
+        "meaning": "Tách vùng và kiểm soát luồng giữa vùng nhằm giảm phạm vi ảnh hưởng."
+      },
+      {
+        "en": "Logging & Monitoring",
+        "vi": "Ghi nhật ký và giám sát",
+        "meaning": "Thu thập, theo dõi và phân tích sự kiện để phát hiện/điều tra."
+      },
+      {
+        "en": "Screened subnet",
+        "vi": "Mạng con được che chắn",
+        "meaning": "Vùng ngoại vi tách giữa các lớp lọc nhằm công khai dịch vụ nhưng hạn chế đi vào LAN."
+      }
+    ],
+    "issues": [
+      {
+        "page": 18,
+        "note": "So sánh phần cứng/phần mềm trong slide mang tính khái quát; khả năng cập nhật và hiệu năng phụ thuộc thiết kế sản phẩm."
+      },
+      {
+        "page": 35,
+        "note": "Bảng tên nhà cung cấp/xếp hạng minh họa không được xem là đánh giá thị trường hiện tại."
+      },
+      {
+        "page": 60,
+        "note": "Giá sản phẩm chỉ là số liệu trong slide, chưa được xác minh theo thời điểm hiện tại."
+      },
+      {
+        "page": 66,
+        "note": "Bảng cổng/giao thức là ngữ cảnh bài tập; giao thức có thể có nhiều transport/phiên bản, cần kiểm tra khi triển khai."
+      }
+    ],
+    "questions": [
+      {
+        "id": "q8-001",
+        "section": "8.1",
+        "topic": "Tổng quan: ranh giới, mối đe dọa và nguyên tắc",
+        "level": "Nhận biết",
+        "stem": "Default Deny nghĩa là gì?",
+        "options": [
+          "Chỉ cho phép luồng đã xác định cần thiết",
+          "Mặc định cho mọi luồng",
+          "Chỉ chặn IP riêng",
+          "Không ghi log"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Chính sách mặc định từ chối và mở ngoại lệ cần thiết giảm bề mặt truy cập.",
+          "Sai: Mặc định cho phép là Default Allow, ngược Default Deny.",
+          "Sai: Default Deny áp dụng lưu lượng theo chính sách, không chỉ một loại địa chỉ riêng.",
+          "Sai: Ghi log là kiểm soát quan sát độc lập; Default Deny không có nghĩa tắt log."
+        ],
+        "page": 13
+      },
+      {
+        "id": "q8-002",
+        "section": "8.1",
+        "topic": "Tổng quan: ranh giới, mối đe dọa và nguyên tắc",
+        "level": "Thông hiểu",
+        "stem": "Segmentation chủ yếu giúp gì?",
+        "options": [
+          "Ngăn tuyệt đối mọi xâm nhập từ Internet",
+          "Thay thế việc xác thực tại dịch vụ",
+          "Tự mã hóa mọi lưu lượng giữa các VLAN",
+          "Giảm phạm vi lây lan và kiểm soát giữa vùng"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Phân vùng giảm phạm vi ảnh hưởng nhưng không bảo đảm ngăn tuyệt đối mọi khai thác vào một vùng.",
+          "Sai: Dịch vụ vẫn cần xác thực và phân quyền; ranh giới mạng không thay danh tính người dùng.",
+          "Sai: VLAN/phân vùng không tự mã hóa dữ liệu; bảo vệ mật mã cần cơ chế riêng.",
+          "Phân vùng tạo ranh giới kiểm soát và giới hạn tác động."
+        ],
+        "page": 13
+      },
+      {
+        "id": "q8-003",
+        "section": "8.1",
+        "topic": "Tổng quan: ranh giới, mối đe dọa và nguyên tắc",
+        "level": "Thông hiểu",
+        "stem": "VPN có thay thế hoàn toàn firewall không?",
+        "options": [
+          "Có nếu VPN mã hóa toàn bộ gói IP gốc",
+          "Có nếu tài khoản VPN đã được xác thực",
+          "Không, bảo vệ kênh khác kiểm soát quyền lưu lượng",
+          "Có nếu gateway VPN cũng có NAT"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Mã hóa cả gói gốc bảo vệ truyền thông nhưng vẫn cần quyết định luồng/người nào được vào tài nguyên nào.",
+          "Sai: Đã xác thực VPN không nghĩa được truy cập mọi dịch vụ; cần thực thi quyền tối thiểu.",
+          "VPN và firewall giải quyết các yêu cầu khác nhau và cần phối hợp.",
+          "Sai: NAT đổi địa chỉ, không bù toàn bộ chính sách kiểm soát hay phân tích firewall."
+        ],
+        "page": 12
+      },
+      {
+        "id": "q8-004",
+        "section": "8.2",
+        "topic": "Cơ bản tường lửa: định nghĩa, triển khai và kiểm tra",
+        "level": "Nhận biết",
+        "stem": "Firewall quyết định allow/deny chủ yếu theo gì?",
+        "options": [
+          "Chỉ dung lượng file",
+          "Chính sách và luật bảo mật",
+          "Chỉ màu dây mạng",
+          "Chỉ tên hãng"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Dung lượng có thể là một tiêu chí phụ trong chính sách, nhưng không là căn cứ duy nhất định nghĩa firewall.",
+          "Firewall thực thi quy tắc cho phép/chặn lưu lượng.",
+          "Sai: Màu dây không là trường bảo mật của gói hay chính sách truy cập.",
+          "Sai: Thương hiệu thiết bị không quyết định từng gói được phép hay chặn; luật mới làm việc đó."
+        ],
+        "page": 16
+      },
+      {
+        "id": "q8-005",
+        "section": "8.2",
+        "topic": "Cơ bản tường lửa: định nghĩa, triển khai và kiểm tra",
+        "level": "Thông hiểu",
+        "stem": "Vì sao mã hóa không thay firewall?",
+        "options": [
+          "Mã hóa không tự quyết định luồng nào được phép",
+          "Vì dữ liệu mã hóa luôn không thể xác thực",
+          "Vì firewall chỉ áp dụng cho lưu lượng bản rõ",
+          "Vì mã hóa chỉ dùng trong mạng nội bộ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Bí mật truyền thông khác kiểm soát truy cập lưu lượng.",
+          "Sai: Dữ liệu mã hóa có thể đi cùng xác thực/toàn vẹn; nói luôn không thể xác thực là sai.",
+          "Sai: Firewall vẫn có thể lọc địa chỉ/cổng/trạng thái của lưu lượng mã hóa dù không thấy toàn bộ nội dung.",
+          "Sai: Mã hóa được dùng cả Internet và mạng nội bộ, không chỉ nội bộ."
+        ],
+        "page": 17
+      },
+      {
+        "id": "q8-006",
+        "section": "8.2",
+        "topic": "Cơ bản tường lửa: định nghĩa, triển khai và kiểm tra",
+        "level": "Nhận biết",
+        "stem": "Cổng HTTPS mặc định trong slide là gì?",
+        "options": [
+          "TCP 23",
+          "UDP 67",
+          "TCP 25",
+          "TCP 443"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: TCP 23 là cổng Telnet mặc định, không HTTPS.",
+          "Sai: UDP 67 thường là DHCP server, không HTTPS TCP.",
+          "Sai: TCP 25 là SMTP mặc định, không HTTPS.",
+          "Slide dùng HTTPS TCP 443 làm ví dụ cổng mặc định."
+        ],
+        "page": 21
+      },
+      {
+        "id": "q8-007",
+        "section": "8.3",
+        "topic": "Packet Filtering Firewall",
+        "level": "Nhận biết",
+        "stem": "Packet filtering truyền thống chủ yếu kiểm tra gì?",
+        "options": [
+          "Danh tính pháp lý mọi người",
+          "Khóa riêng CA",
+          "Header IP/port/protocol",
+          "Toàn bộ ý nghĩa ứng dụng"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Header không trực tiếp chứng minh danh tính pháp lý của người gửi.",
+          "Sai: Khóa riêng CA phải được giữ kín và không là dữ liệu firewall đọc trong packet header.",
+          "Lọc gói dùng các trường header để xét luật.",
+          "Sai: Lọc header truyền thống không hiểu trọn ngữ nghĩa/nội dung ứng dụng; đó là giới hạn cần phân biệt."
+        ],
+        "page": 24
+      },
+      {
+        "id": "q8-008",
+        "section": "8.3",
+        "topic": "Packet Filtering Firewall",
+        "level": "Vận dụng",
+        "stem": "Chỉ mail server cần SMTP công khai. Rule cho SMTP đến mọi host có nhược điểm gì?",
+        "options": [
+          "Không sao vì port 25 tự xác thực người gửi",
+          "Rộng hơn nhu cầu và tăng bề mặt truy cập",
+          "An toàn vì tất cả host dùng địa chỉ riêng",
+          "Tương đương rule chỉ đến mail server vì cùng port"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Cổng 25 chỉ nhận diện dịch vụ theo quy ước, không tự xác thực nguồn SMTP.",
+          "Least privilege cần giới hạn đúng host và dịch vụ thay vì toàn mạng.",
+          "Sai: Địa chỉ riêng không làm host an toàn khi đã có đường cho phép truy cập dịch vụ.",
+          "Sai: Cùng cổng không tương đương cùng phạm vi: mọi host rộng hơn một mail server cụ thể."
+        ],
+        "page": 25
+      },
+      {
+        "id": "q8-009",
+        "section": "8.4",
+        "topic": "Stateful Firewall",
+        "level": "Thông hiểu",
+        "stem": "Điểm bổ sung của stateful so với lọc từng gói là gì?",
+        "options": [
+          "Ngữ cảnh phiên kết nối",
+          "Mật khẩu Wi-Fi",
+          "Ký chứng chỉ",
+          "Băng tần RF"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Stateful giữ trạng thái và xét gói theo phiên.",
+          "Sai: Mật khẩu Wi-Fi phục vụ truy cập vô tuyến, không là phần bổ sung cốt lõi của stateful firewall.",
+          "Sai: Ký chứng chỉ là nhiệm vụ PKI, không phải lưu bảng session.",
+          "Sai: Băng tần RF không là thông tin phiên TCP/IP mà firewall stateful theo dõi."
+        ],
+        "page": 26
+      },
+      {
+        "id": "q8-010",
+        "section": "8.4",
+        "topic": "Stateful Firewall",
+        "level": "Vận dụng",
+        "stem": "Gói phản hồi khớp phiên ra trước có thể được phép vì sao?",
+        "options": [
+          "Vì mọi gói có cổng nguồn 443 đều được tin",
+          "Vì IP bên ngoài đã được NAT thành IP tin cậy",
+          "Vì client chỉ có thể nhận dữ liệu không chứa mã độc",
+          "Firewall đã ghi nhận phiên hợp lệ"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Cổng nguồn 443 có thể xuất hiện ở gói không thuộc phiên hợp lệ; không đủ để tin mọi gói.",
+          "Sai: Dịch địa chỉ không tạo sự tin cậy hay chứng minh gói phản hồi thuộc phiên.",
+          "Sai: Client vẫn có thể nhận nội dung độc trong một phiên hợp lệ; stateful không đảm bảo payload lành tính.",
+          "Stateful phân biệt phản hồi thuộc phiên với kết nối đến không được yêu cầu."
+        ],
+        "page": 26
+      },
+      {
+        "id": "q8-011",
+        "section": "8.4",
+        "topic": "Stateful Firewall",
+        "level": "Thông hiểu",
+        "stem": "Đánh đổi khi duy trì bảng phiên là gì?",
+        "options": [
+          "Không còn nguy cơ payload độc",
+          "Tự tăng tốc vô hạn",
+          "Cần thêm tài nguyên và quản trị trạng thái",
+          "Không cần bộ nhớ"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Một phiên được phép vẫn có thể chứa payload độc; ghi nhớ trạng thái không quét mọi nội dung.",
+          "Sai: Duy trì trạng thái cần xử lý và bộ nhớ, không tạo tăng tốc vô hạn.",
+          "Theo dõi session tiêu tốn bộ nhớ/xử lý và không bảo đảm nội dung an toàn.",
+          "Sai: Bảng phiên phải lưu thông tin nên không thể kết luận không cần bộ nhớ."
+        ],
+        "page": 28
+      },
+      {
+        "id": "q8-012",
+        "section": "8.5",
+        "topic": "Proxy Firewall",
+        "level": "Nhận biết",
+        "stem": "Proxy làm việc như gì?",
+        "options": [
+          "Khóa riêng client",
+          "Trung gian nhận và chuyển yêu cầu",
+          "Máy phát GPS",
+          "CA cấp mọi chứng chỉ"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Khóa riêng là dữ liệu mật mã, không phải máy trung gian tạo kết nối ứng dụng.",
+          "Proxy thay mặt phía liên quan tạo/kết thúc kết nối ứng dụng.",
+          "Sai: GPS định vị địa lý, không tiếp nhận/chuyển yêu cầu web như proxy.",
+          "Sai: CA ký chứng chỉ; proxy không tự có thẩm quyền cấp mọi chứng chỉ."
+        ],
+        "page": 29
+      },
+      {
+        "id": "q8-013",
+        "section": "8.5",
+        "topic": "Proxy Firewall",
+        "level": "Thông hiểu",
+        "stem": "Reverse proxy thường đứng ở đâu về vai trò?",
+        "options": [
+          "Trước dịch vụ để phục vụ truy cập vào",
+          "Trong bàn phím client",
+          "Thay IV WEP",
+          "Chỉ giữa AS và TGS"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Reverse proxy đại diện cho server với người truy cập.",
+          "Sai: Reverse proxy là thành phần mạng/dịch vụ, không nằm trong bàn phím client.",
+          "Sai: IV WEP là tham số mật mã Wi-Fi, không phải vị trí đặt reverse proxy.",
+          "Sai: AS/TGS thuộc Kerberos; reverse proxy không chỉ tồn tại trong luồng Kerberos này."
+        ],
+        "page": 31
+      },
+      {
+        "id": "q8-014",
+        "section": "8.5",
+        "topic": "Proxy Firewall",
+        "level": "Thông hiểu",
+        "stem": "Cache proxy có đồng nghĩa mã hóa dữ liệu không?",
+        "options": [
+          "Có nếu proxy lưu bản sao nội dung trên đĩa",
+          "Có nếu proxy kết nối tới website bằng HTTP",
+          "Có vì client không trực tiếp nối tới server",
+          "Không, lưu đệm khác bảo mật mật mã"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Lưu bản sao trên đĩa là cache, dữ liệu lưu có thể còn nguyên dạng nếu không có cơ chế mã hóa riêng.",
+          "Sai: HTTP không có TLS không tự mã hóa đường truyền; proxy không biến cache thành mật mã.",
+          "Sai: Trung gian tạo hai kết nối nhưng từng kết nối vẫn cần bảo vệ phù hợp; không trực tiếp không nghĩa đã mã hóa.",
+          "Cache tối ưu truy xuất không tự tạo bí mật hay xác thực."
+        ],
+        "page": 29
+      },
+      {
+        "id": "q8-015",
+        "section": "8.6",
+        "topic": "Next Generation Firewall",
+        "level": "Nhận biết",
+        "stem": "DPI viết đầy đủ là gì?",
+        "options": [
+          "Data Public Identity",
+          "Default Packet Internet",
+          "Deep Packet Inspection",
+          "Dynamic Port Issuer"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Data Public Identity không là tên đầy đủ DPI trong ngữ cảnh firewall.",
+          "Sai: Default Packet Internet không là thuật ngữ DPI được dùng cho kiểm tra sâu.",
+          "DPI là kiểm tra sâu nội dung gói/lưu lượng.",
+          "Sai: Dynamic Port Issuer không là tên đầy đủ của khả năng kiểm tra nội dung gói."
+        ],
+        "page": 32
+      },
+      {
+        "id": "q8-016",
+        "section": "8.6",
+        "topic": "Next Generation Firewall",
+        "level": "Thông hiểu",
+        "stem": "Có NGFW có nghĩa mọi TLS tự đọc được không?",
+        "options": [
+          "Có vì DPI tự vượt mọi cơ chế mã hóa",
+          "Không, cần cơ chế và điều kiện triển khai phù hợp",
+          "Có nếu chỉ cần biết cổng nguồn và đích",
+          "Có vì kiểm soát ứng dụng không cần khóa hay ngữ cảnh"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: DPI phân tích dữ liệu quan sát được, không tự phá mọi mã hóa mạnh.",
+          "Mã hóa đặt giới hạn quan sát; TLS inspection không tự xảy ra chỉ từ tên sản phẩm.",
+          "Sai: Header/cổng giúp quyết định metadata nhưng không tự lộ nội dung TLS đã mã hóa.",
+          "Sai: Nhận diện ứng dụng có thể dùng dấu hiệu nhưng không đồng nghĩa đọc mọi TLS mà không có khóa/ngữ cảnh thích hợp."
+        ],
+        "page": 34
+      },
+      {
+        "id": "q8-017",
+        "section": "8.6",
+        "topic": "Next Generation Firewall",
+        "level": "Vận dụng",
+        "stem": "So hiệu năng firewall khi bật IPS nên làm gì?",
+        "options": [
+          "Đo trong cấu hình kiểm tra thực sự cần dùng",
+          "Chỉ lấy tốc độ tối đa khi tắt toàn bộ kiểm tra",
+          "So số cổng vật lý mà bỏ qua xử lý nội dung",
+          "Dùng thông lượng VPN làm thông lượng IPS trong mọi trường hợp"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Tính năng kiểm tra sâu ảnh hưởng hiệu năng nên phải so cùng cấu hình.",
+          "Sai: Thông lượng khi tắt kiểm tra không phản ánh chi phí IPS trong cấu hình vận hành.",
+          "Sai: Số cổng không phản ánh khả năng xử lý chữ ký/nội dung và tải đồng thời.",
+          "Sai: VPN và IPS có đường xử lý/tải khác nhau; một số đo không tự thay số đo kia trong mọi trường hợp."
+        ],
+        "page": 34
+      },
+      {
+        "id": "q8-018",
+        "section": "8.7",
+        "topic": "Firewall rules và giới hạn của tường lửa",
+        "level": "Vận dụng",
+        "stem": "First-match có allow mọi luồng trước deny Telnet. Điều gì xảy ra với Telnet?",
+        "options": [
+          "Deny dưới vẫn luôn được ưu tiên vì cụ thể hơn",
+          "Firewall tự gộp hai rule thành chặn Telnet",
+          "Luật cuối luôn ghi đè các luật trước trong first-match",
+          "Khớp allow trước nên deny dưới bị che"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: First-match không tự ưu tiên rule cụ thể hơn ở dưới; rule khớp đầu đã kết thúc xét.",
+          "Sai: Thiết bị không tự suy luận gộp thành chặn khi chính sách nêu first-match theo thứ tự.",
+          "Sai: Luật cuối ghi đè là cơ chế khác, trái giả định first-match của đề.",
+          "First-match kết thúc xét ở rule khớp đầu tiên."
+        ],
+        "page": 36
+      },
+      {
+        "id": "q8-019",
+        "section": "8.7",
+        "topic": "Firewall rules và giới hạn của tường lửa",
+        "level": "Thông hiểu",
+        "stem": "Any-Any allow thường đi ngược nguyên tắc nào?",
+        "options": [
+          "Nén dữ liệu",
+          "MIMO",
+          "Least Privilege",
+          "Mã hóa khóa công khai"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Nén dữ liệu xử lý kích thước biểu diễn, không là nguyên tắc giới hạn quyền truy cập.",
+          "Sai: MIMO là kỹ thuật truyền vô tuyến, không là nguyên tắc quyền tối thiểu.",
+          "Cho phép quá rộng không giới hạn quyền theo nhu cầu.",
+          "Sai: Mã hóa bất đối xứng bảo vệ/xác thực mật mã; Any-Any vi phạm chính sách quyền, không định nghĩa loại mã hóa."
+        ],
+        "page": 36
+      },
+      {
+        "id": "q8-020",
+        "section": "8.7",
+        "topic": "Firewall rules và giới hạn của tường lửa",
+        "level": "Thông hiểu",
+        "stem": "Firewall có thay antivirus trên máy đầu cuối không?",
+        "options": [
+          "Có nếu mọi máy cùng đi qua một gateway",
+          "Không, hai cơ chế có phạm vi khác nhau",
+          "Có nếu firewall dùng stateful inspection",
+          "Có nếu mọi cổng chiều vào đều bị chặn"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Đi chung gateway không giúp firewall quét mọi trạng thái/file độc trong endpoint.",
+          "Firewall không quét và xử lý đầy đủ mọi mã độc trên endpoint.",
+          "Sai: Theo dõi session không thay phân tích file, tiến trình và hành vi mã độc trên máy.",
+          "Sai: Chặn chiều vào không ngăn mọi nguy cơ như tải file qua kết nối chiều ra hợp lệ hoặc thiết bị lưu trữ."
+        ],
+        "page": 38
+      },
+      {
+        "id": "q8-021",
+        "section": "8.7",
+        "topic": "Firewall rules và giới hạn của tường lửa",
+        "level": "Vận dụng",
+        "stem": "Nhân viên có quyền hợp lệ sao chép dữ liệu sai mục đích. Firewall có đủ bảo vệ không?",
+        "options": [
+          "Không, cần kiểm soát nội bộ và giám sát phù hợp",
+          "Có vì firewall biết mọi mục đích sử dụng dữ liệu",
+          "Có nếu người dùng đã được xác thực bằng VPN",
+          "Có nếu mạng nội bộ dùng địa chỉ riêng"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Insider có thể dùng quyền hợp lệ nên cần phòng thủ nhiều lớp.",
+          "Sai: Firewall quan sát dấu hiệu và thực thi luật, không biết chắc ý định thật đằng sau mọi truy cập hợp lệ.",
+          "Sai: VPN xác thực/bảo vệ kênh không chứng minh mọi hành động sau đó đúng mục đích.",
+          "Sai: IP riêng chỉ là cách đánh địa chỉ, không ngăn người có quyền sử dụng sai dữ liệu."
+        ],
+        "page": 38
+      },
+      {
+        "id": "q8-022",
+        "section": "8.8",
+        "topic": "NAT: động, tĩnh và PAT",
+        "level": "Nhận biết",
+        "stem": "NAT tĩnh có đặc điểm nào?",
+        "options": [
+          "Nhiều máy bắt buộc cùng port",
+          "Tự mã hóa mọi gói",
+          "Tạo chữ ký số",
+          "Ánh xạ ổn định một-một"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Một-một NAT tĩnh không yêu cầu nhiều máy bắt buộc cùng port; đó cũng không mô tả ánh xạ tĩnh.",
+          "Sai: Đổi địa chỉ không mã hóa payload.",
+          "Sai: NAT không dùng khóa ký để tạo chữ ký số cho dữ liệu.",
+          "Static NAT ánh xạ cố định địa chỉ trong–ngoài."
+        ],
+        "page": 39
+      },
+      {
+        "id": "q8-023",
+        "section": "8.8",
+        "topic": "NAT: động, tĩnh và PAT",
+        "level": "Thông hiểu",
+        "stem": "PAT cho nhiều máy dùng chung IP ngoài nhờ gì?",
+        "options": [
+          "IV WEP",
+          "TGT",
+          "Phân biệt các ánh xạ bằng cổng",
+          "Chứng chỉ X.509"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: IV WEP thuộc mã hóa Wi-Fi, không phân biệt luồng PAT.",
+          "Sai: TGT thuộc Kerberos, không là khóa phân biệt bảng NAT/PAT.",
+          "PAT lưu ánh xạ địa chỉ/cổng cho các luồng.",
+          "Sai: Chứng chỉ X.509 nhận diện khóa/chủ thể, không thay cổng trong ánh xạ PAT."
+        ],
+        "page": 42
+      },
+      {
+        "id": "q8-024",
+        "section": "8.8",
+        "topic": "NAT: động, tĩnh và PAT",
+        "level": "Thông hiểu",
+        "stem": "NAT động khác NAT tĩnh ở điểm nào?",
+        "options": [
+          "Luôn chặn mọi luồng",
+          "Chọn ánh xạ từ pool theo nhu cầu",
+          "Luôn ký email",
+          "Không đổi địa chỉ"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: NAT động là cơ chế ánh xạ, không định nghĩa chính sách chặn mọi lưu lượng.",
+          "NAT động cấp ánh xạ khả dụng trong pool thay cho gán ổn định cố định.",
+          "Sai: Ký email thuộc PGP/S/MIME, không phải cấp ánh xạ NAT động.",
+          "Sai: NAT động vẫn dịch địa chỉ; điểm khác là lấy địa chỉ từ pool theo nhu cầu."
+        ],
+        "page": 40
+      },
+      {
+        "id": "q8-025",
+        "section": "8.8",
+        "topic": "NAT: động, tĩnh và PAT",
+        "level": "Thông hiểu",
+        "stem": "NAT tự cung cấp điều gì dưới đây?",
+        "options": [
+          "Chuyển dịch địa chỉ",
+          "Mã hóa nội dung giữa client và server",
+          "Chứng thực danh tính người dùng ứng dụng",
+          "Phân tích nội dung và chặn mọi mã độc"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Chức năng cốt lõi là dịch địa chỉ/cổng, không thay mật mã hay mọi chính sách firewall.",
+          "Sai: NAT thay header địa chỉ/cổng chứ không biến payload thành bản mã end-to-end.",
+          "Sai: NAT không xác minh danh tính tài khoản ứng dụng chỉ bằng ánh xạ địa chỉ.",
+          "Sai: Lọc nội dung/malware là chức năng khác; NAT không tự phát hiện hay chặn mọi mã độc."
+        ],
+        "page": 39
+      },
+      {
+        "id": "q8-026",
+        "section": "8.9",
+        "topic": "DMZ và kiểm soát luồng giữa các vùng",
+        "level": "Nhận biết",
+        "stem": "DMZ thường đặt loại máy chủ nào?",
+        "options": [
+          "Mọi laptop nhân viên",
+          "Chỉ máy không có mạng",
+          "Chỉ KDC của Internet",
+          "Dịch vụ công khai như web/mail"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Laptop người dùng thường thuộc vùng nội bộ/nhóm client, không phải mục tiêu công khai dịch vụ của DMZ.",
+          "Sai: Máy không có mạng không thể cung cấp dịch vụ public qua DMZ.",
+          "Sai: Không có vai trò KDC chung của Internet trong mô hình này; DMZ có thể chứa nhiều dịch vụ public khác.",
+          "DMZ tách dịch vụ public khỏi mạng nội bộ."
+        ],
+        "page": 43
+      },
+      {
+        "id": "q8-027",
+        "section": "8.9",
+        "topic": "DMZ và kiểm soát luồng giữa các vùng",
+        "level": "Vận dụng",
+        "stem": "Web DMZ cần database LAN. Rule nào hợp lý nhất?",
+        "options": [
+          "Cho toàn bộ DMZ đến subnet LAN trên mọi cổng",
+          "Cho mọi Internet đến database để tránh proxy",
+          "Chỉ web đó đến database đó qua dịch vụ cần",
+          "Cho web DMZ truy cập toàn LAN vì web đã có firewall"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Allow toàn subnet/mọi port rộng hơn kết nối web–database cần thiết và tạo đường lan vào LAN.",
+          "Sai: Mở database cho toàn Internet làm tăng bề mặt tấn công, không cần để web DMZ kết nối có giới hạn.",
+          "Least privilege giới hạn nguồn, đích, dịch vụ và giám sát.",
+          "Sai: Có firewall chỉ hữu ích khi rule đúng; cho web toàn LAN phá nguyên tắc quyền tối thiểu."
+        ],
+        "page": 46
+      },
+      {
+        "id": "q8-028",
+        "section": "8.9",
+        "topic": "DMZ và kiểm soát luồng giữa các vùng",
+        "level": "Thông hiểu",
+        "stem": "DMZ nhằm giảm điều gì khi web public bị xâm nhập?",
+        "options": [
+          "Ngăn mọi xâm nhập vào chính server DMZ",
+          "Khả năng lan trực tiếp vào LAN",
+          "Bảo đảm mọi dữ liệu DMZ luôn bí mật",
+          "Thay thế hoàn toàn việc vá lỗi server public"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Máy chủ DMZ vẫn có thể bị khai thác; mục tiêu là giảm tác động đến vùng khác.",
+          "Tách vùng và kiểm soát giữa vùng giới hạn tác động xâm nhập.",
+          "Sai: Phân vùng không tự mã hóa mọi dữ liệu lưu hay truyền trong DMZ.",
+          "Sai: Server public vẫn phải vá lỗi; DMZ không khắc phục lỗ hổng phần mềm của server."
+        ],
+        "page": 43
+      },
+      {
+        "id": "q8-029",
+        "section": "8.10",
+        "topic": "TMG: yêu cầu, tính năng, mô hình và client",
+        "level": "Nhận biết",
+        "stem": "3-Leg Perimeter thể hiện các vùng nào?",
+        "options": [
+          "Internal, External và Perimeter",
+          "AS, TGS và SS",
+          "WEP, WPA và WPA2",
+          "TCP, UDP và ICMP"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Ba nhánh mạng phục vụ LAN, Internet và vùng DMZ/perimeter.",
+          "Sai: AS/TGS/SS là vai trò Kerberos, không phải ba vùng của mô hình TMG.",
+          "Sai: WEP/WPA/WPA2 là cơ chế bảo mật Wi-Fi, không phải các nhánh mạng của perimeter.",
+          "Sai: TCP/UDP/ICMP là giao thức, không là vùng Internal/External/Perimeter."
+        ],
+        "page": 53
+      },
+      {
+        "id": "q8-030",
+        "section": "8.10",
+        "topic": "TMG: yêu cầu, tính năng, mô hình và client",
+        "level": "Thông hiểu",
+        "stem": "SecureNAT client trong bảng TMG có yêu cầu cài TMG client không?",
+        "options": [
+          "Có trên mọi hệ điều hành",
+          "Chỉ nếu dùng DNS",
+          "Chỉ nếu port 25",
+          "Không"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Bảng TMG nêu SecureNAT không cần cài client; không có yêu cầu cài cho mọi hệ điều hành.",
+          "Sai: Sử dụng DNS không biến SecureNAT thành loại bắt buộc cài phần mềm TMG client.",
+          "Sai: Cổng dịch vụ 25 không thay cơ chế hoạt động SecureNAT hay yêu cầu cài phần mềm.",
+          "Bảng phân biệt SecureNAT không cài phần mềm với TMG client phải cài phần mềm."
+        ],
+        "page": 57
+      },
+      {
+        "id": "q8-031",
+        "section": "8.11",
+        "topic": "Tường lửa ngày nay: đọc ví dụ sản phẩm có phê phán",
+        "level": "Vận dụng",
+        "stem": "Đề xuất mua firewall dùng giá từ slide cũ để lập ngân sách năm nay. Trước khi duyệt chi phí, cần xử lý số liệu này thế nào?",
+        "options": [
+          "Dùng làm giá cố định cho năm hiện tại",
+          "Chỉ cần đổi đơn vị tiền là dùng được",
+          "Số liệu theo thời điểm, cần xác minh trước khi mua",
+          "Dùng để xếp hạng chất lượng bảo mật tuyệt đối"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Giá theo slide có thời điểm và điều kiện riêng, không là báo giá cố định hiện nay.",
+          "Sai: Đổi tỷ giá không cập nhật thay đổi sản phẩm, gói tính năng, giấy phép hoặc mức giá gốc.",
+          "Giá/gói thay đổi theo thời điểm và không nên suy thành báo giá hiện hành.",
+          "Sai: Giá không đo đầy đủ hiệu quả bảo mật hay độ phù hợp, nên không dùng xếp hạng tuyệt đối."
+        ],
+        "page": 60
+      },
+      {
+        "id": "q8-032",
+        "section": "8.12",
+        "topic": "Bài tập ACL, screened subnet và so sánh giải pháp",
+        "level": "Vận dụng",
+        "stem": "Internet cần truy cập web trong DMZ nhưng không được kết nối trực tiếp máy LAN. Khi rà soát ACL screened subnet, mục tiêu nào đáp ứng yêu cầu này?",
+        "options": [
+          "Cho mọi host Internet vào LAN nếu biết port",
+          "Cho dịch vụ DMZ cần thiết nhưng chặn truy cập trực tiếp LAN",
+          "Chỉ dựa NAT để tách quyền DMZ và LAN",
+          "Cho DMZ truy cập LAN tự do vì có router ngoài"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Biết port không tạo quyền truy cập LAN; bài yêu cầu chỉ công khai dịch vụ DMZ cần thiết.",
+          "Mô hình tách dịch vụ công khai và kiểm soát ranh giới LAN.",
+          "Sai: NAT không thay luật giới hạn truy cập giữa DMZ và LAN.",
+          "Sai: Router ngoài không bảo đảm máy DMZ đáng tin; vẫn phải chặn/giới hạn đường từ DMZ vào LAN."
+        ],
+        "page": 65
+      }
+    ]
+  }
+]

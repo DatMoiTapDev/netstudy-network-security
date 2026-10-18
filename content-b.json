@@ -1,0 +1,3260 @@
+[
+  {
+    "id": "3",
+    "title": "Các giải thuật mã hoá dữ liệu",
+    "pages": 107,
+    "file": "Bài 3 - Các giải thuật mã hoá dữ liệu.pdf",
+    "objectives": [
+      "Giải thích cơ chế bằng lời của mình và nêu giới hạn áp dụng.",
+      "Phân biệt thuật toán, khóa, mục tiêu bảo mật và loại tấn công.",
+      "Vận dụng công thức và nhận diện phương án nhiễu trong trắc nghiệm."
+    ],
+    "overview": "Mật mã biến dữ liệu dễ đọc thành dữ liệu chỉ người có khóa phù hợp khôi phục được. Bài đi từ mã cổ điển tới DES/AES rồi phân loại thám mã; Bài 4 giải thích RSA, Bài 5 bổ sung toàn vẹn và xác thực.",
+    "sections": [
+      {
+        "id": "3.1",
+        "title": "Giới thiệu về mật mã hoá",
+        "from": 5,
+        "to": 10,
+        "explanation": "Trong tài liệu: Thông báo m là chuỗi hữu hạn trên bảng chữ cái Z; khóa ke là đầu vào mã hóa, kd cho giải mã. c=e(m,ke), d(c,kd)=m. m và c là dữ liệu; khóa là tham số lựa chọn phép biến đổi. Độ dài khóa đo bằng bit; biểu thức không có đơn vị vật lý. Bảo mật nội dung không tự bảo đảm nguồn gốc hoặc chống sửa đổi.",
+        "plain": "Thuật toán giống cách khóa hộp, khóa là thứ quyết định ai mở được. Giới hạn ví von: dữ liệu có thể sao chép, còn hộp vật lý không mô tả được các tấn công toán học.",
+        "example": "Mã hóa một hồ sơ trước khi gửi giúp người nghe lén khó đọc; người nhận vẫn phải xác minh ai đã gửi.",
+        "pitfalls": [
+          "Không đồng nhất encoding với encryption.",
+          "Không kết luận ciphertext chưa bị sửa chỉ vì không đọc được."
+        ],
+        "recap": [
+          "Nhận diện m,c,ke,kd.",
+          "Nêu mục đích bí mật và giới hạn của mã hóa."
+        ]
+      },
+      {
+        "id": "3.2",
+        "title": "Lịch sử mật mã",
+        "from": 11,
+        "to": 20,
+        "explanation": "Trong tài liệu: Mật mã cổ điển gồm Atbash, Caesar; cơ điện có Enigma, TypeX, SIGABA. Shannon đặt nền tảng mật mã hiện đại; DES và mật mã công khai đưa mật mã tới ứng dụng rộng rãi. DES dùng khóa hiệu dụng 56 bit, dễ bị vét cạn so với khóa dài. Slide nêu các mốc công bố, phê chuẩn và thay thế ở các trang khác nhau; cần phân biệt sự kiện thay vì học một năm chung.",
+        "plain": "Lịch sử cho thấy cách giấu tin phát triển cùng cách phá mã. Máy phức tạp vẫn không bảo đảm an toàn nếu thiết kế hoặc vận hành sai.",
+        "example": "DESCHALL và Deep Crack minh họa rằng phần cứng có thể biến vét cạn từ lý thuyết thành thực tế.",
+        "pitfalls": [
+          "Không lấy năm đề xuất làm năm chuẩn có hiệu lực.",
+          "Không hiểu máy rotor là mật mã khóa công khai."
+        ],
+        "recap": [
+          "Phân biệt cổ điển, cơ điện và hiện đại.",
+          "Giải thích vì sao độ dài khóa quan trọng."
+        ]
+      },
+      {
+        "id": "3.3.1",
+        "title": "Mã thay thế đơn giản và n-gram",
+        "from": 21,
+        "to": 25,
+        "explanation": "Trong tài liệu: Khóa thay thế đơn là hoán vị 26 chữ cái, có 26! khóa. Mỗi chữ luôn được ánh xạ theo cùng bảng nên giữ dấu vết thống kê ngôn ngữ. n-gram thay cả cụm n ký tự; có 26^n cụm đầu vào, một bảng thay thế là hoán vị trên các cụm đó. Digram có 26²=676 cặp; không nhầm số cặp với số khóa là (26²)!.",
+        "plain": "Đổi tên từng chữ vẫn giữ cách chữ đó lặp lại; thay cả cụm che cấu trúc từng chữ tốt hơn nhưng không tự thành mật mã hiện đại an toàn.",
+        "example": "Nếu A luôn thành U, AAA thành UUU. Dấu lặp vẫn còn dù không biết bảng thay thế.",
+        "pitfalls": [
+          "26^n là số n-gram, không phải số hoán vị khóa.",
+          "Không cho rằng khóa nhiều tự động chống phân tích tần suất."
+        ],
+        "recap": [
+          "Thay thế đổi ký hiệu.",
+          "Mã đơn bảng giữ nhiều cấu trúc ngôn ngữ."
+        ]
+      },
+      {
+        "id": "3.3.2",
+        "title": "Mã hoán vị bậc d",
+        "from": 26,
+        "to": 27,
+        "explanation": "Trong tài liệu: Chia m thành khối d ký tự rồi dùng cùng hoán vị vị trí trên từng khối. Khóa là hoán vị 1..d; các ký hiệu vẫn giữ nguyên nhưng đổi chỗ. Cần quy ước xử lý khoảng trắng và khối cuối; ví dụ slide tính cả ký tự trắng nên không tự bỏ chúng khi kiểm tra.",
+        "plain": "Xáo chỗ chữ trong từng nhóm, chứ không đổi chữ này thành chữ khác.",
+        "example": "Khối ABCDE với thứ tự lấy (4,1,3,2,5) cho DACBE.",
+        "pitfalls": [
+          "Không nhầm hoán vị vị trí với bảng thay thế.",
+          "Thống nhất cách đệm và xử lý dấu cách."
+        ],
+        "recap": [
+          "Hoán vị giữ số lần xuất hiện ký tự.",
+          "Giải mã dùng hoán vị ngược."
+        ]
+      },
+      {
+        "id": "3.3.3",
+        "title": "Caesar và Vigenère",
+        "from": 28,
+        "to": 31,
+        "explanation": "Trong tài liệu: Với quy ước A=0..Z=25, Caesar c=(p+k) mod 26, p=(c−k) mod 26. Vigenère dùng khóa nhiều chữ lặp theo vị trí: ci=(pi+ki) mod 26. p,c,k là số nguyên không đơn vị trong Z26. Khi độ dài khóa d=1, Vigenère trở thành Caesar. Slide giữ nguyên dấu cách.",
+        "plain": "Caesar dịch mọi chữ cùng số bước; Vigenère thay số bước tùy chữ khóa.",
+        "example": "Caesar k=5: C=2 thành H=7. Vigenère: V=21 cộng C=2 thành X=23.",
+        "pitfalls": [
+          "Phải thống nhất A=0 và A=1.",
+          "Không cộng dấu cách nếu quy ước slide giữ nguyên.",
+          "Khóa lặp không phải one-time pad."
+        ],
+        "recap": [
+          "Giải mã là trừ khóa modulo.",
+          "Khóa một chữ là Caesar."
+        ]
+      },
+      {
+        "id": "3.3.4",
+        "title": "One-time Pad",
+        "from": 32,
+        "to": 32,
+        "explanation": "Trong tài liệu: Slide minh họa XOR: C=P⊕K, giải mã P=C⊕K vì K⊕K=0. P,K,C là chuỗi bit cùng chiều dài. Giải thích mở rộng: điều kiện bảo mật hoàn hảo của one-time pad là khóa ngẫu nhiên thật, độc lập, dài bằng thông điệp, bí mật và chỉ sử dụng một lần; thiếu một điều kiện không được kết luận an toàn tuyệt đối.",
+        "plain": "Tấm khóa dùng xong bỏ; XOR lại cùng khóa trả về bản gốc. Đây là tính chất đại số, không phải mọi cách XOR đều an toàn.",
+        "example": "P=1010, K=0110 cho C=1100; 1100⊕0110=1010. Nếu dùng lại khóa, C1⊕C2=P1⊕P2.",
+        "pitfalls": [
+          "Khóa ngắn lặp lại không là OTP.",
+          "Không tái sử dụng khóa dù hai thông điệp khác nhau."
+        ],
+        "recap": [
+          "XOR tự nghịch đảo.",
+          "Nêu đủ điều kiện khóa OTP."
+        ]
+      },
+      {
+        "id": "3.3.5",
+        "title": "Affine Cipher",
+        "from": 33,
+        "to": 33,
+        "explanation": "Trong tài liệu: e(x)=(ax+b) mod 26; d(y)=a⁻¹(y−b) mod 26. a,b thuộc Z26; a⁻¹ là nghịch đảo nhân modulo, chỉ tồn tại khi gcd(a,26)=1. Điều kiện này là giải thích toán học cần thiết cho công thức trên slide. a=1 trở thành mã dịch.",
+        "plain": "Nhân rồi dịch chữ, nhưng phép nhân phải có đường quay về duy nhất.",
+        "example": "a=5,b=8,x=0 cho y=8. Nghịch đảo của 5 modulo 26 là 21 vì 5×21=105≡1; 21(8−8)=0.",
+        "pitfalls": [
+          "Không lấy nghịch đảo là 1/a số thực.",
+          "a=2 không hợp lệ vì không nguyên tố cùng nhau với 26."
+        ],
+        "recap": [
+          "Kiểm tra gcd trước khi giải mã.",
+          "a=1 là Caesar."
+        ]
+      },
+      {
+        "id": "3.3.6",
+        "title": "Playfair",
+        "from": 34,
+        "to": 37,
+        "explanation": "Trong tài liệu: Playfair mã hóa từng cặp; ma trận khóa không chứa ký tự trùng, thường 5×5 gộp I/J. Cùng hàng lấy bên phải, cùng cột lấy bên dưới, có vòng lại; khác hàng/cột lấy hai góc còn lại trên cùng hàng từng chữ. Slide quy định thêm x khi dư một chữ. Phải công bố thêm quy ước nếu xử lý cặp chữ trùng; tài liệu trích xuất chưa nêu rõ quy tắc này.",
+        "plain": "Hai chữ quyết định cách di chuyển trong bảng. Giải mã đảo hướng hàng/cột, giữ quy tắc hình chữ nhật.",
+        "example": "Với hàng A B C D E, cặp AB mã thành BC; EA thành AB nhờ vòng lại.",
+        "pitfalls": [
+          "Không tự áp dụng quy ước chữ trùng chưa công bố.",
+          "Không đổi thứ tự hai chữ ở quy tắc chữ nhật."
+        ],
+        "recap": [
+          "Playfair làm việc trên digram.",
+          "Ma trận khóa loại ký tự lặp."
+        ]
+      },
+      {
+        "id": "3.3.7",
+        "title": "Hill và phá mã cổ điển",
+        "from": 38,
+        "to": 43,
+        "explanation": "Trong tài liệu: Hill gom n ký tự thành vector P, khóa H là ma trận vuông n×n: C=HP mod 26 và P=H⁻¹C mod 26. Slide dùng A=01..Z=26; cần giữ cùng quy ước, trong modulo 26 thì 26 tương đương 0. H phải khả nghịch modulo 26, tương đương gcd(det H,26)=1. Phá mã cổ điển khai thác tần suất chữ, cụm chữ và ngữ cảnh; bản mã càng đủ dài càng có dữ liệu thống kê.",
+        "plain": "Hill trộn nhiều chữ bằng phép nhân ma trận; khóa phải có ma trận nghịch đảo hợp lệ để gỡ trộn.",
+        "example": "H=[[3,3],[2,5]] có định thức 9, gcd(9,26)=1 nên đảo được; H có định thức 2 thì không.",
+        "pitfalls": [
+          "Không dùng nghịch đảo ma trận số thực thay nghịch đảo modulo.",
+          "Không nhầm bảo mật tính toán với che mắt thống kê."
+        ],
+        "recap": [
+          "Điều kiện định thức quyết định khả năng giải mã.",
+          "Tần suất là điểm yếu của nhiều mã cổ điển."
+        ]
+      },
+      {
+        "id": "3.4.1",
+        "title": "Phân loại mã hóa hiện đại",
+        "from": 44,
+        "to": 45,
+        "explanation": "Trong tài liệu: Mã hiện đại thường nhiều vòng, kết hợp thay thế/hoán vị, dùng các khóa vòng sinh từ khóa chính. Đối xứng dùng khóa bí mật chung; block cipher xử lý khối cố định, stream cipher xử lý dòng. Slide nêu DES/AES là mã khối, RC4 là mã dòng, RSA là bất đối xứng. Độ dài khối và độ dài khóa là hai đại lượng khác nhau, đều đo bằng bit.",
+        "plain": "Khối là lượng dữ liệu xử lý một lần; khóa là thông tin điều khiển phép biến đổi.",
+        "example": "AES-256 dùng khóa 256 bit nhưng khối vẫn 128 bit.",
+        "pitfalls": [
+          "Không suy ra AES-256 có khối 256 bit.",
+          "Không xếp RSA vào mã dòng đối xứng."
+        ],
+        "recap": [
+          "Phân loại theo loại khóa và đơn vị dữ liệu.",
+          "Khóa vòng không phải khóa người dùng độc lập."
+        ]
+      },
+      {
+        "id": "3.4.2",
+        "title": "DES: cấu trúc, lịch khóa, hàm vòng và lịch sử phá mã",
+        "from": 46,
+        "to": 71,
+        "explanation": "Trong tài liệu: DES xử lý khối 64 bit, khóa hiệu dụng 56 bit (biểu diễn thường 64 bit kể cả parity). Sơ đồ ảnh trang 51–71: IP hoán vị đầu; PC-1 bỏ parity và tạo 56 bit; chia C,D mỗi nửa 28 bit, dịch vòng và PC-2 tạo 16 khóa con 48 bit. Dữ liệu chia L,R 32 bit; Li=Ri−1, Ri=Li−1⊕f(Ri−1,Ki). f mở rộng E từ 32 lên 48 bit, XOR khóa vòng, 8 S-box biến mỗi 6 bit thành 4 bit, rồi hoán vị P. S-box dùng hai bit ngoài chọn hàng, bốn bit giữa chọn cột. Sau 16 vòng có đổi nửa và IP⁻¹. Giải mã dùng cùng cấu trúc với thứ tự khóa con đảo ngược. Slide cho lịch sử DESCHALL, Deep Crack, 3DES; không dùng đánh giá lịch sử “3DES an toàn” làm khuyến nghị triển khai mới.",
+        "plain": "DES là máy trộn hai nửa: một nửa đi qua hàm f rồi XOR nửa kia; nhờ XOR nên đảo được mà không cần đảo riêng S-box.",
+        "example": "Đầu vào S-box 011011: hàng 01₂=1, cột 1101₂=13 (đánh số từ 0). Phải tra đúng bảng S-box tương ứng, không đoán giá trị đầu ra.",
+        "pitfalls": [
+          "56 bit khóa khác 64 bit khối.",
+          "S-box 6→4 khác phép mở rộng 32→48.",
+          "Không lấy độ dài 168 bit của 3DES làm độ an toàn thực tế tương đương 168 bit."
+        ],
+        "recap": [
+          "Mô tả đường dữ liệu IP→16 vòng→IP⁻¹.",
+          "Giải thích chức năng PC-1, PC-2, E, S-box, P."
+        ]
+      },
+      {
+        "id": "3.4.3",
+        "title": "AES: state và bốn phép biến đổi",
+        "from": 72,
+        "to": 80,
+        "explanation": "Trong tài liệu: Advanced Encryption Standard (AES) xuất phát từ Rijndael; khối AES luôn 128 bit=16 byte, state là 4×4 byte; khóa 128/192/256 bit. SubBytes thay byte qua S-box; ShiftRows dịch trái lần lượt 0,1,2,3 vị trí; MixColumns trộn tuyến tính từng cột trong GF(2^8); AddRoundKey XOR state với khóa vòng. Giải thích mở rộng để sửa diễn đạt slide: một word khóa là 4 byte, nhưng khóa vòng đầy đủ là 16 byte; số vòng 10/12/14 tương ứng các cỡ khóa, có AddRoundKey đầu và vòng cuối bỏ MixColumns. 11 khóa vòng chỉ đúng AES-128.",
+        "plain": "Thay giá trị byte, chuyển chỗ byte, trộn cột, rồi đưa khóa vào: các phép phối hợp làm một thay đổi nhỏ lan rộng.",
+        "example": "AES-128 có 10 vòng nhưng dùng 11 khóa vòng tính cả bước cộng khóa ban đầu.",
+        "pitfalls": [
+          "Không nhầm mỗi word 4 byte với toàn bộ khóa vòng.",
+          "Không áp dụng 11 khóa vòng cho AES-256.",
+          "GF(2^8) không phải phép nhân số nguyên modulo 256 thông thường."
+        ],
+        "recap": [
+          "Bốn bước có vai trò khác nhau.",
+          "Khối 128 bit với mọi kích thước khóa AES."
+        ]
+      },
+      {
+        "id": "3.4.4",
+        "title": "RC4, RC5, RC6; RSA và hệ lai",
+        "from": 81,
+        "to": 89,
+        "explanation": "Trong tài liệu: Hình trang 81 mô tả RC4 là mã dòng xử lý theo byte, khóa độ dài biến đổi, dựa trên hoán vị; RC5 là mã tham số hóa với kích thước khối, khóa và số vòng có thể thay đổi; RC6 là mã khối đối xứng phát triển từ RC5, bổ sung phép nhân số nguyên và dùng bốn thanh ghi làm việc thay vì hai. Trong hình RC5 vừa ghi khóa biến đổi vừa ghi 128 bit; hiểu 128 bit là một cấu hình, không phải giới hạn duy nhất. Kích thước thanh ghi RC6 trong ảnh ghi “4-bit/2-bit” là mô tả đáng ngờ, không dùng làm kiến thức đã xác minh; không có đủ mô tả để tái dựng toàn bộ thuật toán từ sơ đồ này. RSA có khóa công khai để mã hóa và khóa riêng để giải mã; khóa riêng ký, khóa công khai kiểm tra. Hệ lai dùng đối xứng cho nội dung và bất đối xứng bảo vệ khóa đối xứng nhằm tận dụng tốc độ và phân phối khóa. Slide minh họa DES+RSA theo bối cảnh lịch sử.",
+        "plain": "Gửi cả kiện hàng bằng xe nhanh, còn chìa khóa kiện hàng đi theo cơ chế khác: hệ lai kết hợp vai trò chứ không bắt một thuật toán làm mọi việc. Giới hạn ví von: cách đóng gói, xác thực khóa và ngẫu nhiên vẫn quyết định an toàn.",
+        "example": "Khóa công khai Alice giống ổ khóa mở để ai cũng đóng hộp gửi Alice; điều này không chứng minh người gửi là Bob.",
+        "pitfalls": [
+          "Không coi mã hóa public key tự xác thực người gửi.",
+          "Không diễn giải DES tạo chữ ký số công khai.",
+          "Không lấy con số độ rộng thanh ghi đáng ngờ trong hình làm thông số chuẩn RC6."
+        ],
+        "recap": [
+          "Hệ lai giải quyết hiệu năng và phân phối khóa.",
+          "Bài 4 trình bày RSA chi tiết."
+        ]
+      },
+      {
+        "id": "3.5",
+        "title": "Bẻ gãy hệ mật mã",
+        "from": 90,
+        "to": 97,
+        "explanation": "Trong tài liệu: Giả thiết đối phương biết thuật toán nhưng thiếu khóa. Ciphertext-only chỉ có bản mã; known-plaintext có cặp rõ–mã đã biết; chosen-plaintext tự chọn rõ để lấy mã; chosen-ciphertext tự chọn mã để hỏi bản rõ theo mô hình tấn công. Vét cạn khóa k bit có 2^k khả năng, trung bình khoảng 2^(k−1) thử khi khóa đều và dừng khi tìm được; thời gian t≈2^(k−1)/r giây nếu r thử/giây. Đây là mô hình lý tưởng, không khẳng định mọi thuật toán cùng khóa dài đều an toàn như nhau. Hình trang 92 còn nêu chosen-key, adaptive chosen-plaintext và timing attack: phân biệt quyền chọn khóa theo mô hình, chọn truy vấn bản rõ tiếp theo dựa trên kết quả trước, và khai thác thời gian xử lý làm kênh kề. Không nên đồng nhất timing attack với thử nhanh nhiều khóa; nó sử dụng rò rỉ từ triển khai.",
+        "plain": "Phân loại dựa vào quyền mà đối phương có, không dựa vào họ muốn làm hại tới đâu.",
+        "example": "Khóa 32 bit, tốc độ 10^6 thử/giây: thời gian trung bình 2^31/10^6≈2147 giây≈35,8 phút.",
+        "pitfalls": [
+          "Known không có quyền tự chọn dữ liệu.",
+          "Chosen-plaintext không có khóa giải mã.",
+          "Không quên đổi μs sang giây."
+        ],
+        "recap": [
+          "Phân biệt bốn mô hình.",
+          "Tính số phép thử với điều kiện rõ ràng."
+        ]
+      },
+      {
+        "id": "3.6",
+        "title": "Bài tập và thực hành",
+        "from": 98,
+        "to": 107,
+        "explanation": "Trong tài liệu: Bài tập gồm phân tích hệ minh họa, mã hóa chữ số, dùng CrypTool, cài đặt Vigenère/Hill/Affine/Playfair/Solitaire, mô tả DES/RC2/RC4/RC6/RSA, mô phỏng Diffie–Hellman, AES/DES và khảo sát TrueCrypt/EFS. Bài thực hành cụ thể: Vigenère họ tên với MAYTINH; Playfair BAOMATTHONGTIN với khóa họ tên. Phiên bản công cụ và tên phần mềm trong slide là thông tin lịch sử, không coi là phiên bản hiện hành. Ảnh trang 98 cho adversary cung cấp khóa mã hóa e′ giả cho A, giữ d′ để đọc c′ thành m rồi mã hóa lại bằng e thật của B; B vẫn đọc được m, minh họa thay khóa/MITM khi phân phối khóa không được xác thực. Trang 99 là bảng các biểu tượng thay chữ số; chưa có quy tắc phép toán và miền giá trị đủ rõ trong trang này để chốt duy nhất ánh xạ, cần xác nhận đề gốc trước khi chấm.",
+        "plain": "Bắt đầu bằng ví dụ 2–3 chữ để kiểm tra chiều mã/giải; khi đúng mới thử họ tên dài.",
+        "example": "Kiểm tra d(e(m,k),k)=m với Caesar và Affine; Hill phải xác minh nghịch đảo modulo trước.",
+        "pitfalls": [
+          "Không tự chọn quy ước đệm mà không ghi lại.",
+          "Không tải phần mềm cũ theo tên mà bỏ qua nguồn và môi trường thử nghiệm."
+        ],
+        "recap": [
+          "Lập bảng đầu vào→biến đổi→đầu ra.",
+          "Đối chiếu phép mã và giải có khôi phục đúng."
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "title": "Mục tiêu và cơ chế",
+        "headers": [
+          "Cơ chế",
+          "Mục tiêu",
+          "Giới hạn"
+        ],
+        "rows": [
+          [
+            "Mã hóa",
+            "Giữ bí mật nội dung",
+            "Không tự xác thực nguồn"
+          ],
+          [
+            "Hash không khóa",
+            "Tạo digest, hỗ trợ kiểm tra dữ liệu",
+            "Không tự chống giả mạo nguồn"
+          ],
+          [
+            "MAC",
+            "Toàn vẹn và nguồn từ người biết khóa chung",
+            "Không chống chối bỏ giữa hai người cùng khóa"
+          ],
+          [
+            "Chữ ký số",
+            "Xác thực, toàn vẹn, hỗ trợ chống chối bỏ",
+            "Không tự giấu nội dung"
+          ]
+        ]
+      }
+    ],
+    "study": [
+      "Đọc theo thứ tự mục; sau mỗi mục đóng tài liệu và giải thích cơ chế trong 60 giây.",
+      "Tự làm ví dụ nhỏ bằng tay, sau đó kiểm tra phép tính; không học công thức thiếu điều kiện.",
+      "Luyện câu hỏi và ghi lý do từng phương án sai; ôn lại sau 1, 3 và 7 ngày."
+    ],
+    "terms": [
+      {
+        "en": "Plaintext",
+        "vi": "Bản rõ",
+        "meaning": "Dữ liệu trước mã hóa."
+      },
+      {
+        "en": "Ciphertext",
+        "vi": "Bản mã",
+        "meaning": "Dữ liệu đã được mã hóa."
+      },
+      {
+        "en": "Substitution",
+        "vi": "Thay thế",
+        "meaning": "Đổi ký hiệu theo bảng."
+      },
+      {
+        "en": "Transposition",
+        "vi": "Hoán vị",
+        "meaning": "Đổi vị trí ký hiệu."
+      },
+      {
+        "en": "S-box",
+        "vi": "Hộp thay thế",
+        "meaning": "Phép thay thế phi tuyến trong thuật toán mã."
+      },
+      {
+        "en": "Brute force",
+        "vi": "Vét cạn",
+        "meaning": "Thử các khóa có thể."
+      },
+      {
+        "en": "State",
+        "vi": "Trạng thái",
+        "meaning": "Ma trận 4×4 byte của AES."
+      },
+      {
+        "en": "DES — Data Encryption Standard",
+        "vi": "Chuẩn mã hóa dữ liệu",
+        "meaning": "Mã khối đối xứng khối 64 bit, khóa hiệu dụng 56 bit; bài học lịch sử, không phải lựa chọn triển khai mới."
+      },
+      {
+        "en": "AES — Advanced Encryption Standard",
+        "vi": "Chuẩn mã hóa tiên tiến",
+        "meaning": "Mã khối 128 bit, khóa 128/192/256 bit; xuất phát từ Rijndael."
+      },
+      {
+        "en": "3DES — Triple Data Encryption Standard",
+        "vi": "DES ba lần",
+        "meaning": "Kết hợp các phép DES theo sơ đồ ba lần; số bit vật liệu khóa không bằng trực tiếp độ an toàn hiệu dụng."
+      },
+      {
+        "en": "RSA — Rivest–Shamir–Adleman",
+        "vi": "Hệ mật mã RSA",
+        "meaning": "Tên từ ba tác giả; hệ bất đối xứng được học kỹ ở Bài 4."
+      },
+      {
+        "en": "RC4 — Rivest Cipher 4",
+        "vi": "Mã dòng RC4",
+        "meaning": "Xử lý theo byte, khóa biến đổi, dựa trên hoán vị trạng thái; phân biệt RC5/RC6 là mã khối."
+      },
+      {
+        "en": "RC5 — Rivest Cipher 5",
+        "vi": "Mã khối RC5",
+        "meaning": "Thuật toán tham số hóa kích thước word, số vòng và độ dài khóa."
+      },
+      {
+        "en": "RC6 — Rivest Cipher 6",
+        "vi": "Mã khối RC6",
+        "meaning": "Phát triển từ RC5, thêm phép nhân số nguyên và bốn thanh ghi làm việc."
+      },
+      {
+        "en": "OTP — One-time Pad",
+        "vi": "Mật mã dùng khóa một lần",
+        "meaning": "XOR với khóa ngẫu nhiên độc lập dài bằng thông điệp, bí mật và chỉ dùng một lần."
+      },
+      {
+        "en": "XOR — Exclusive OR",
+        "vi": "Hoặc loại trừ",
+        "meaning": "Phép bit cho 1 khi hai đầu vào khác nhau; a XOR a=0."
+      },
+      {
+        "en": "Affine cipher",
+        "vi": "Mã tuyến tính affine",
+        "meaning": "e(x)=ax+b mod26, cần gcd(a,26)=1 để đảo."
+      },
+      {
+        "en": "Vigenère cipher",
+        "vi": "Mã dịch đa bảng",
+        "meaning": "Lặp chuỗi khóa rồi cộng modulo26 từng vị trí."
+      },
+      {
+        "en": "Caesar cipher",
+        "vi": "Mã dịch Caesar",
+        "meaning": "Một độ dịch cố định cho cả bảng chữ."
+      },
+      {
+        "en": "Playfair cipher",
+        "vi": "Mã cặp chữ",
+        "meaning": "Dùng ma trận khóa và quy tắc cùng hàng/cột/chữ nhật."
+      },
+      {
+        "en": "Hill cipher",
+        "vi": "Mã Hill",
+        "meaning": "Nhân vector ký tự với ma trận khóa khả nghịch modulo26."
+      },
+      {
+        "en": "N-gram",
+        "vi": "Cụm n ký tự",
+        "meaning": "Đơn vị xử lý gồm n ký tự liên tiếp; digram có 2, trigram có 3."
+      },
+      {
+        "en": "Key schedule",
+        "vi": "Lịch sinh khóa",
+        "meaning": "Thuật toán biến khóa chính thành dãy khóa vòng."
+      },
+      {
+        "en": "Round key",
+        "vi": "Khóa vòng",
+        "meaning": "Phần khóa sử dụng tại một vòng xử lý; AES mỗi khóa vòng đầy đủ 16 byte."
+      },
+      {
+        "en": "Feistel network",
+        "vi": "Mạng Feistel",
+        "meaning": "Cấu trúc đổi nửa dữ liệu và XOR hàm vòng, dùng trong DES."
+      },
+      {
+        "en": "IP — Initial Permutation",
+        "vi": "Hoán vị đầu",
+        "meaning": "Bảng sắp xếp lại 64 bit đầu vào DES; không phải địa chỉ Internet Protocol trong ngữ cảnh này."
+      },
+      {
+        "en": "PC — Permuted Choice",
+        "vi": "Phép chọn hoán vị",
+        "meaning": "PC-1 chọn 56 bit khóa DES; PC-2 chọn 48 bit tạo khóa vòng."
+      },
+      {
+        "en": "GF — Galois Field",
+        "vi": "Trường hữu hạn",
+        "meaning": "Cấu trúc đại số hữu hạn; AES tính byte trong GF(2^8), không là modulo256 thông thường."
+      },
+      {
+        "en": "SubBytes",
+        "vi": "Thay byte",
+        "meaning": "Thay từng byte state AES bằng tra S-box."
+      },
+      {
+        "en": "ShiftRows",
+        "vi": "Dịch hàng",
+        "meaning": "Hoán vị byte AES bằng dịch vòng hàng 0,1,2,3 vị trí."
+      },
+      {
+        "en": "MixColumns",
+        "vi": "Trộn cột",
+        "meaning": "Biến đổi tuyến tính từng cột AES trong GF(2^8)."
+      },
+      {
+        "en": "AddRoundKey",
+        "vi": "Cộng khóa vòng",
+        "meaning": "XOR từng bit state với khóa vòng AES."
+      },
+      {
+        "en": "Ciphertext-only attack",
+        "vi": "Tấn công chỉ biết bản mã",
+        "meaning": "Mô hình đối phương chỉ quan sát ciphertext."
+      },
+      {
+        "en": "Known-plaintext attack",
+        "vi": "Tấn công bản rõ đã biết",
+        "meaning": "Có cặp rõ–mã từ trước nhưng không tự chọn đầu vào."
+      },
+      {
+        "en": "Chosen-plaintext attack",
+        "vi": "Tấn công bản rõ được chọn",
+        "meaning": "Được chọn plaintext và nhận ciphertext tương ứng."
+      },
+      {
+        "en": "Chosen-ciphertext attack",
+        "vi": "Tấn công bản mã được chọn",
+        "meaning": "Được hỏi giải mã ciphertext tự chọn theo mô hình."
+      },
+      {
+        "en": "Timing attack",
+        "vi": "Tấn công thời gian",
+        "meaning": "Kênh kề khai thác chênh lệch thời gian xử lý, khác vét cạn nhanh."
+      },
+      {
+        "en": "EFS — Encrypting File System",
+        "vi": "Hệ thống tệp mã hóa",
+        "meaning": "Cơ chế mã hóa tệp của Windows được giao khảo sát trong bài tập; slide ghi Encrypt File System."
+      },
+      {
+        "en": "CrypTool",
+        "vi": "Công cụ học mật mã",
+        "meaning": "Phần mềm minh họa và phân tích thuật toán; phiên bản trên slide là lịch sử."
+      }
+    ],
+    "issues": [
+      {
+        "page": 73,
+        "note": "Slide gọi mỗi khóa con 4 byte; cần phân biệt word 4 byte và khóa vòng đầy đủ 16 byte."
+      },
+      {
+        "page": 76,
+        "note": "11 khóa vòng chỉ đúng AES-128, không đúng mọi biến thể AES."
+      },
+      {
+        "page": 86,
+        "note": "Câu tổ hợp hai khóa bí mật dễ bị hiểu là RSA tự trao đổi khóa; xem riêng giao thức DH ở Bài 4."
+      },
+      {
+        "page": 81,
+        "note": "Đã đọc ảnh RC4/RC5/RC6. RC5 vừa ghi khóa biến đổi vừa ghi 128 bit; độ rộng thanh ghi RC6 ghi 4-bit/2-bit đáng ngờ, cần đối chiếu nguồn/giảng viên."
+      },
+      {
+        "page": 99,
+        "note": "Đã xem bảng hình, nhưng quy tắc các phép toán/miền chữ số không được nêu rõ trong trang; chưa chốt ánh xạ ký hiệu để tránh đoán."
+      }
+    ],
+    "questions": [
+      {
+        "id": "3-q1",
+        "section": "3.1",
+        "topic": "Giới thiệu về mật mã hoá",
+        "level": "Nhận biết",
+        "stem": "Trong c=e(m,ke), c là gì?",
+        "options": [
+          "Bản mã",
+          "Khóa giải mã",
+          "Bảng chữ cái",
+          "Bản rõ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: c là thông điệp sau phép mã hóa.",
+          "Sai: Khóa giải mã ký hiệu kd, là tham số để khôi phục m từ c.",
+          "Sai: Bảng chữ cái ký hiệu Z, chứa tập ký hiệu có thể dùng trong thông báo.",
+          "Sai: Bản rõ ký hiệu m; sau biến đổi mới có c."
+        ],
+        "page": 8
+      },
+      {
+        "id": "3-q2",
+        "section": "3.1",
+        "topic": "Giới thiệu về mật mã hoá",
+        "level": "Thông hiểu",
+        "stem": "Điều kiện đúng cơ bản của hệ mã là gì?",
+        "options": [
+          "Bản mã luôn ngắn hơn bản rõ",
+          "d(e(m,ke),kd)=m",
+          "e(m,ke)=m với mọi khóa",
+          "kd luôn công khai"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Mã hóa không nhằm nén; padding và dữ liệu phụ có thể làm bản mã dài hơn.",
+          "Đúng: Giải mã đúng khóa phải khôi phục m.",
+          "Sai: Nếu e(m,ke)=m mọi lúc, phép biến đổi không che nội dung; yêu cầu đúng là giải mã trả về m.",
+          "Sai: Khóa giải mã phải giữ bí mật trong hệ cần bảo mật; tính công khai không phải điều kiện đúng đại số."
+        ],
+        "page": 8
+      },
+      {
+        "id": "3-q3",
+        "section": "3.3.1",
+        "topic": "Mã thay thế đơn giản và n-gram",
+        "level": "Nhận biết",
+        "stem": "Thay thế đơn bảng trên 26 chữ có bao nhiêu khóa hoán vị?",
+        "options": [
+          "26²",
+          "2²⁶",
+          "26!",
+          "26"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: 26² đếm các cặp ký tự có thứ tự, không đếm cách sắp xếp 26 chữ.",
+          "Sai: 2²⁶ đếm chuỗi nhị phân 26 bit, không đếm hoán vị bảng chữ cái.",
+          "Đúng: Khóa là một hoán vị của toàn bộ bảng chữ cái.",
+          "Sai: 26 chỉ đếm các chữ hoặc khóa dịch, không phải tất cả bảng thay thế."
+        ],
+        "page": 22
+      },
+      {
+        "id": "3-q4",
+        "section": "3.3.1",
+        "topic": "Mã thay thế đơn giản và n-gram",
+        "level": "Thông hiểu",
+        "stem": "Vì sao thay thế đơn bảng dễ lộ cấu trúc ngôn ngữ?",
+        "options": [
+          "Mọi khóa đều dài 1 bit",
+          "Nó xóa hết chữ lặp",
+          "Nó không có khóa",
+          "Một chữ luôn ánh xạ sang cùng chữ"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Khóa là cả hoán vị bảng chữ, không phải khóa 1 bit; điểm yếu nằm ở thống kê ngôn ngữ.",
+          "Sai: Mỗi lần gặp cùng chữ sẽ thay bằng cùng ảnh nên mẫu lặp còn nguyên.",
+          "Sai: Hệ có khóa hoán vị; biết thuật toán không đồng nghĩa không có khóa.",
+          "Đúng: Tần suất và mẫu lặp được bảo toàn dưới phép đổi nhãn."
+        ],
+        "page": 22
+      },
+      {
+        "id": "3-q5",
+        "section": "3.3.1",
+        "topic": "Mã thay thế đơn giản và n-gram",
+        "level": "Nhận biết",
+        "stem": "Có bao nhiêu digram trên bảng 26 chữ?",
+        "options": [
+          "676",
+          "52",
+          "26!",
+          "13"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: 26×26=676 cặp có thứ tự.",
+          "Sai: 52 là 26+26, nhưng hai vị trí phải nhân số lựa chọn.",
+          "Sai: 26! đếm hoán vị một bảng 26 chữ; không đếm số cặp hai chữ.",
+          "Sai: 13 không đếm đủ 26 khả năng ở từng vị trí của cặp."
+        ],
+        "page": 22
+      },
+      {
+        "id": "3-q6",
+        "section": "3.3.2",
+        "topic": "Mã hoán vị bậc d",
+        "level": "Vận dụng",
+        "stem": "Hoán vị lấy vị trí (4,1,3,2,5) biến ABCDE thành gì?",
+        "options": [
+          "BACDE",
+          "DACBE",
+          "ABCDE",
+          "EDCBA"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: BACDE tương ứng lấy (2,1,3,4,5), không phải hoán vị đã cho.",
+          "Đúng: Lấy ký tự thứ 4,1,3,2,5 theo thứ tự.",
+          "Sai: ABCDE là giữ nguyên vị trí (1,2,3,4,5).",
+          "Sai: EDCBA là đảo toàn bộ (5,4,3,2,1)."
+        ],
+        "page": 26
+      },
+      {
+        "id": "3-q7",
+        "section": "3.3.2",
+        "topic": "Mã hoán vị bậc d",
+        "level": "Thông hiểu",
+        "stem": "Mã hoán vị vị trí giữ nguyên đặc điểm nào?",
+        "options": [
+          "Luôn giữ nguyên từ",
+          "Khóa công khai",
+          "Số lượng từng ký tự",
+          "Vị trí mọi chữ"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Xáo vị trí trong khối có thể phá ranh giới và nội dung từ.",
+          "Sai: Khóa công khai là khái niệm của hệ bất đối xứng, không phải đại lượng được phép hoán vị bảo toàn.",
+          "Đúng: Nó đổi vị trí chứ không thay ký hiệu.",
+          "Sai: Mục tiêu của hoán vị là thay vị trí; chỉ đa tập ký tự giữ nguyên."
+        ],
+        "page": 26
+      },
+      {
+        "id": "3-q8",
+        "section": "3.3.3",
+        "topic": "Caesar và Vigenère",
+        "level": "Vận dụng",
+        "stem": "Caesar A=0, k=5 mã hóa C thành gì?",
+        "options": [
+          "G",
+          "I",
+          "X",
+          "H"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: G=6 tương ứng dịch C=2 thêm 4, thiếu một bước.",
+          "Sai: I=8 tương ứng cộng 6, thừa một bước.",
+          "Sai: X=23 là kết quả trừ 5 modulo 26, tức dùng chiều giải mã thay mã hóa.",
+          "Đúng: C=2; (2+5) mod 26=7=H."
+        ],
+        "page": 29
+      },
+      {
+        "id": "3-q9",
+        "section": "3.3.3",
+        "topic": "Caesar và Vigenère",
+        "level": "Thông hiểu",
+        "stem": "Vigenère trở thành Caesar khi nào?",
+        "options": [
+          "Khóa có một ký tự",
+          "Khối 128 bit",
+          "Khóa là ma trận 2×2",
+          "Không có bản rõ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Khóa một ký tự tạo cùng phép dịch mọi vị trí.",
+          "Sai: 128 bit là kích thước khối AES, không quyết định Vigenère thành Caesar.",
+          "Sai: Ma trận là cấu trúc khóa Hill, không phải điều kiện của khóa dịch Vigenère.",
+          "Sai: Không có bản rõ thì không có phép mã hóa cần xét, không phải phép quy về Caesar."
+        ],
+        "page": 29
+      },
+      {
+        "id": "3-q10",
+        "section": "3.3.3",
+        "topic": "Caesar và Vigenère",
+        "level": "Vận dụng",
+        "stem": "Với A=0, Caesar k=3 giải mã D thành gì?",
+        "options": [
+          "Z",
+          "A",
+          "G",
+          "B"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Z=25 không bằng (3−3) mod26=0; đã xử lý dư âm hoặc quy ước chữ sai.",
+          "Đúng: D=3; (3−3) mod 26=0=A.",
+          "Sai: G=(3+3) mod26 dùng chiều mã hóa thay vì giải mã.",
+          "Sai: B=1 nghĩa là chỉ trừ 2 thay vì khóa 3."
+        ],
+        "page": 29
+      },
+      {
+        "id": "3-q11",
+        "section": "3.3.4",
+        "topic": "One-time Pad",
+        "level": "Vận dụng",
+        "stem": "1010 XOR 0110 bằng gì?",
+        "options": [
+          "0010",
+          "1000",
+          "1100",
+          "1110"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Ở bit đầu, 1 XOR 0 phải là 1, nên kết quả không thể bắt đầu bằng 0.",
+          "Sai: Ở bit thứ hai, 0 XOR 1 phải là 1, không phải 0.",
+          "Đúng: XOR cho 1 ở những vị trí hai bit khác nhau.",
+          "Sai: Ở bit thứ ba, 1 XOR 1 phải là 0; 1110 tính sai bit này."
+        ],
+        "page": 32
+      },
+      {
+        "id": "3-q12",
+        "section": "3.3.4",
+        "topic": "One-time Pad",
+        "level": "Thông hiểu",
+        "stem": "Điều kiện quan trọng của one-time pad là gì?",
+        "options": [
+          "Khóa ngắn lặp lại",
+          "Khóa công khai",
+          "Dùng lại khóa càng nhiều càng tốt",
+          "Khóa ngẫu nhiên dài bằng bản rõ và chỉ dùng một lần"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Khóa ngắn lặp làm lộ quan hệ và cấu trúc; không thỏa khóa dài bằng thông điệp dùng một lần.",
+          "Sai: Khóa công khai khiến người nghe lén tính P=C XOR K, mất bí mật.",
+          "Sai: Dùng lại khóa cho C1 XOR C2=P1 XOR P2, trái yêu cầu dùng một lần.",
+          "Đúng: Các điều kiện này ngăn lộ quan hệ giữa bản rõ."
+        ],
+        "page": 32
+      },
+      {
+        "id": "3-q13",
+        "section": "3.3.4",
+        "topic": "One-time Pad",
+        "level": "Thông hiểu",
+        "stem": "Tái dùng khóa XOR cho hai bản rõ làm lộ gì khi XOR hai bản mã?",
+        "options": [
+          "P1 XOR P2",
+          "Luôn trực tiếp ra khóa",
+          "Luôn ra toàn số 0",
+          "Public key RSA"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: K XOR K=0 nên hai khóa triệt tiêu.",
+          "Sai: Hai khóa triệt tiêu nhau trong C1 XOR C2; kết quả là quan hệ hai bản rõ chứ không trực tiếp là K.",
+          "Sai: Kết quả chỉ toàn 0 nếu hai bản rõ giống hệt, không đúng với mọi cặp.",
+          "Sai: XOR hai ciphertext dùng cùng khóa không sinh ra tham số RSA nào."
+        ],
+        "page": 32
+      },
+      {
+        "id": "3-q14",
+        "section": "3.3.5",
+        "topic": "Affine Cipher",
+        "level": "Thông hiểu",
+        "stem": "Affine modulo 26 giải mã được khi a thỏa gì?",
+        "options": [
+          "a=0",
+          "gcd(a,26)=1",
+          "a chẵn",
+          "a=13"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: a=0 khiến mọi x cùng ánh xạ về b, mất khả năng khôi phục duy nhất.",
+          "Đúng: a cần có nghịch đảo nhân modulo 26.",
+          "Sai: a chẵn có ước chung 2 với 26 nên không có nghịch đảo modulo.",
+          "Sai: a=13 có ước chung 13 với 26 nên không có nghịch đảo modulo."
+        ],
+        "page": 33
+      },
+      {
+        "id": "3-q15",
+        "section": "3.3.5",
+        "topic": "Affine Cipher",
+        "level": "Vận dụng",
+        "stem": "a=5,b=8,A=0, Affine mã hóa A thành gì?",
+        "options": [
+          "N",
+          "A",
+          "I",
+          "H"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: N=13 không bằng 5×0+8=8.",
+          "Sai: A=0 bỏ qua thành phần dịch b=8.",
+          "Đúng: (5×0+8) mod 26=8=I.",
+          "Sai: H=7 sai một đơn vị so với I=8 theo A=0."
+        ],
+        "page": 33
+      },
+      {
+        "id": "3-q16",
+        "section": "3.3.5",
+        "topic": "Affine Cipher",
+        "level": "Vận dụng",
+        "stem": "Nghịch đảo của 5 modulo 26 là gì?",
+        "options": [
+          "5",
+          "13",
+          "0,2",
+          "21"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: 5×5=25≡−1 mod26, chưa bằng 1.",
+          "Sai: 5×13=65≡13 mod26, không bằng 1.",
+          "Sai: 0,2 là nghịch đảo số thực; modulo 26 cần một lớp số nguyên.",
+          "Đúng: 5×21=105≡1 mod 26."
+        ],
+        "page": 33
+      },
+      {
+        "id": "3-q17",
+        "section": "3.3.6",
+        "topic": "Playfair",
+        "level": "Nhận biết",
+        "stem": "Playfair với hai chữ cùng hàng mã hóa theo cách nào?",
+        "options": [
+          "Lấy chữ bên phải có vòng lại",
+          "Lấy chữ phía trên",
+          "Luôn đảo hai chữ",
+          "Xóa chữ thứ hai"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Đây là quy tắc cùng hàng trên slide.",
+          "Sai: Lấy phía trên là hướng giải mã cho trường hợp cùng cột, không phải mã hóa cùng hàng.",
+          "Sai: Đảo cặp không thực hiện quy tắc dịch phải từng chữ của Playfair.",
+          "Sai: Playfair biến hai chữ thành hai chữ; không xóa chữ thứ hai."
+        ],
+        "page": 35
+      },
+      {
+        "id": "3-q18",
+        "section": "3.3.6",
+        "topic": "Playfair",
+        "level": "Nhận biết",
+        "stem": "Playfair 5×5 thường gộp cặp nào?",
+        "options": [
+          "B và C",
+          "I và J",
+          "A và Z",
+          "M và N"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: B/C không là cặp quy ước gộp trong bảng 5×5 của slide.",
+          "Đúng: Gộp I/J để 26 chữ còn 25 ô.",
+          "Sai: A/Z không là cặp gộp trong quy ước I/J trên slide.",
+          "Sai: M/N là hai chữ riêng trong bảng; không gộp chúng."
+        ],
+        "page": 35
+      },
+      {
+        "id": "3-q19",
+        "section": "3.3.7",
+        "topic": "Hill và phá mã cổ điển",
+        "level": "Thông hiểu",
+        "stem": "Khóa Hill là gì?",
+        "options": [
+          "Khóa công khai bất kỳ",
+          "Danh sách IP",
+          "Ma trận vuông khả nghịch modulo",
+          "Một chữ dịch cố định"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Hill dùng ma trận khóa chung, không phải hệ public key như RSA.",
+          "Sai: IP trong mạng hay bảng hoán vị DES không phải ma trận Hill khả nghịch modulo.",
+          "Đúng: C=HP mod 26 cần H đảo được để giải mã.",
+          "Sai: Một chữ dịch là khóa Caesar, không biểu diễn trộn vector nhiều ký tự của Hill."
+        ],
+        "page": 38
+      },
+      {
+        "id": "3-q20",
+        "section": "3.3.7",
+        "topic": "Hill và phá mã cổ điển",
+        "level": "Vận dụng",
+        "stem": "Ma trận Hill có det=2 modulo 26 có phù hợp không?",
+        "options": [
+          "Có vì 2 là số nguyên tố",
+          "Có vì định thức khác 0",
+          "Có vì 26 chia hết cho 2",
+          "Không vì gcd(2,26)≠1"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: 2 nguyên tố không giúp nó nguyên tố cùng nhau với 26; gcd vẫn bằng 2.",
+          "Sai: Khác 0 đủ cho trường số thực nhưng không đủ trong vành modulo hợp số.",
+          "Sai: 26 chia hết cho 2 chính là lý do 2 không có nghịch đảo modulo26.",
+          "Đúng: Khả nghịch modulo cần định thức nguyên tố cùng nhau với môđun."
+        ],
+        "page": 38
+      },
+      {
+        "id": "3-q21",
+        "section": "3.4.2",
+        "topic": "DES: cấu trúc, lịch khóa, hàm vòng và lịch sử phá mã",
+        "level": "Nhận biết",
+        "stem": "DES có khối và khóa hiệu dụng dài bao nhiêu?",
+        "options": [
+          "64 bit và 56 bit",
+          "56 bit và 64 bit",
+          "128 bit và 128 bit",
+          "64 bit và 128 bit"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: DES mã hóa khối 64 bit bằng khóa hiệu dụng 56 bit.",
+          "Sai: Đã đảo nhầm độ dài khối 64 và khóa hiệu dụng 56 của DES.",
+          "Sai: 128/128 là một cấu hình của AES, không phải DES.",
+          "Sai: DES đúng khối 64 nhưng khóa hiệu dụng là 56 chứ không phải 128."
+        ],
+        "page": 46
+      },
+      {
+        "id": "3-q22",
+        "section": "3.4.2",
+        "topic": "DES: cấu trúc, lịch khóa, hàm vòng và lịch sử phá mã",
+        "level": "Thông hiểu",
+        "stem": "DES giải mã dùng khóa vòng theo thứ tự nào?",
+        "options": [
+          "Khóa ngẫu nhiên mới",
+          "Đảo ngược thứ tự mã hóa",
+          "Giống hệt không đổi thứ tự",
+          "Chỉ khóa vòng đầu"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Khóa mới không thể đảo phép mã hóa cũ; cần chính các khóa vòng của khóa ban đầu.",
+          "Đúng: Cấu trúc Feistel cho phép dùng cùng phép biến đổi với khóa vòng đảo thứ tự.",
+          "Sai: Dùng cùng thứ tự khóa không đảo chuỗi vòng Feistel của mã hóa.",
+          "Sai: DES có 16 vòng; chỉ một khóa vòng không khôi phục được cả chuỗi biến đổi."
+        ],
+        "page": 46
+      },
+      {
+        "id": "3-q23",
+        "section": "3.4.2",
+        "topic": "DES: cấu trúc, lịch khóa, hàm vòng và lịch sử phá mã",
+        "level": "Nhận biết",
+        "stem": "S-box DES biến đổi kích thước nào?",
+        "options": [
+          "32 bit thành 48 bit",
+          "56 bit thành 64 bit",
+          "6 bit thành 4 bit",
+          "4 bit thành 6 bit"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: 32→48 là phép mở rộng E trước XOR khóa, không phải S-box.",
+          "Sai: 56→64 không phải ánh xạ S-box; khóa hiệu dụng 56 cũng không là đầu vào S-box.",
+          "Đúng: 8 S-box nhận tổng 48 bit và cho tổng 32 bit.",
+          "Sai: 4→6 đảo ngược chiều ánh xạ; S-box nhận 6 và trả 4 bit."
+        ],
+        "page": 46
+      },
+      {
+        "id": "3-q24",
+        "section": "3.4.2",
+        "topic": "DES: cấu trúc, lịch khóa, hàm vòng và lịch sử phá mã",
+        "level": "Nhận biết",
+        "stem": "Trong S-box DES, hàng được chọn bằng gì?",
+        "options": [
+          "Bốn bit giữa",
+          "Cả 48 bit",
+          "Parity của khóa",
+          "Hai bit ngoài của nhóm 6 bit"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Bốn bit giữa chọn cột 0..15, không chọn hàng 0..3.",
+          "Sai: 48 bit được chia thành 8 nhóm 6 bit cho 8 S-box, không dùng toàn bộ để chọn một hàng.",
+          "Sai: Parity thuộc biểu diễn khóa DES; không chọn hàng S-box từ dữ liệu 6 bit.",
+          "Đúng: Hai bit đầu và cuối tạo chỉ số hàng 0..3."
+        ],
+        "page": 46
+      },
+      {
+        "id": "3-q25",
+        "section": "3.4.3",
+        "topic": "AES: state và bốn phép biến đổi",
+        "level": "Thông hiểu",
+        "stem": "AES-256 có khối dữ liệu bao nhiêu bit?",
+        "options": [
+          "128",
+          "256",
+          "192",
+          "64"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Các biến thể AES giữ khối 128 bit, chỉ đổi độ dài khóa.",
+          "Sai: 256 là độ dài khóa AES-256, không là kích thước khối.",
+          "Sai: 192 là một độ dài khóa AES khác, khối vẫn 128.",
+          "Sai: 64 là kích thước khối DES; AES không dùng khối này."
+        ],
+        "page": 73
+      },
+      {
+        "id": "3-q26",
+        "section": "3.4.3",
+        "topic": "AES: state và bốn phép biến đổi",
+        "level": "Thông hiểu",
+        "stem": "Phép AES nào XOR state với khóa vòng?",
+        "options": [
+          "MixColumns",
+          "AddRoundKey",
+          "ShiftRows",
+          "SubBytes"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: MixColumns nhân/trộn từng cột trong trường hữu hạn, không cộng khóa vòng.",
+          "Đúng: AddRoundKey đưa khóa vòng vào bằng XOR.",
+          "Sai: ShiftRows hoán vị vị trí byte theo hàng, không XOR khóa.",
+          "Sai: SubBytes thay byte qua S-box, không nhận khóa vòng làm toán hạng XOR."
+        ],
+        "page": 73
+      },
+      {
+        "id": "3-q27",
+        "section": "3.4.3",
+        "topic": "AES: state và bốn phép biến đổi",
+        "level": "Nhận biết",
+        "stem": "ShiftRows AES dịch trái các hàng bao nhiêu byte?",
+        "options": [
+          "0,2,4,6",
+          "3,2,1,0",
+          "0,1,2,3",
+          "1,1,1,1"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Dịch 4 và 6 trên hàng dài 4 bị quy về 0 và 2, không phải mẫu 0,1,2,3.",
+          "Sai: Mẫu này đảo thứ tự số bước và dịch cả hàng đầu, sai định nghĩa ShiftRows.",
+          "Đúng: Hàng đầu giữ nguyên, các hàng sau dịch tăng dần.",
+          "Sai: Dịch tất cả cùng một bước không tạo độ lệch giữa các hàng như AES."
+        ],
+        "page": 73
+      },
+      {
+        "id": "3-q28",
+        "section": "3.5",
+        "topic": "Bẻ gãy hệ mật mã",
+        "level": "Thông hiểu",
+        "stem": "Có cặp bản rõ–bản mã từ trước nhưng không được chọn đầu vào là mô hình gì?",
+        "options": [
+          "Chosen-plaintext",
+          "Chosen-ciphertext",
+          "Ciphertext-only",
+          "Known-plaintext"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Chosen-plaintext cần quyền tự chọn bản rõ để lấy ciphertext, đề không cho quyền đó.",
+          "Sai: Chosen-ciphertext cần truy vấn giải mã bản mã tự chọn, đề chỉ có cặp đã biết.",
+          "Sai: Ciphertext-only không có bản rõ tương ứng; đề đã biết cả hai.",
+          "Đúng: Đã biết bản rõ khác với quyền chọn bản rõ."
+        ],
+        "page": 94
+      },
+      {
+        "id": "3-q29",
+        "section": "3.5",
+        "topic": "Bẻ gãy hệ mật mã",
+        "level": "Thông hiểu",
+        "stem": "Được chọn bản mã rồi nhận kết quả giải mã thuộc mô hình nào?",
+        "options": [
+          "Chosen-ciphertext",
+          "Ciphertext-only",
+          "Known-plaintext",
+          "Phân tích tần suất thuần túy"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Quyền truy vấn giải mã là dấu hiệu quyết định.",
+          "Sai: Chỉ có ciphertext thì không được truy vấn máy giải mã như đề.",
+          "Sai: Known-plaintext chỉ có cặp biết sẵn, không có quyền chọn ciphertext.",
+          "Sai: Tần suất dùng thống kê dữ liệu; quyền truy vấn giải mã ở đây xác định mô hình mạnh hơn."
+        ],
+        "page": 94
+      },
+      {
+        "id": "3-q30",
+        "section": "3.5",
+        "topic": "Bẻ gãy hệ mật mã",
+        "level": "Thông hiểu",
+        "stem": "Trung bình vét cạn khóa k bit phân bố đều cần khoảng bao nhiêu thử?",
+        "options": [
+          "2^(2k)",
+          "2^(k−1)",
+          "k²",
+          "2k"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: 2^(2k) đếm không gian 2k bit, chẳng hạn các cặp khóa k bit, không phải trung bình một khóa.",
+          "Đúng: Trung bình duyệt nửa không gian 2^k khóa.",
+          "Sai: k² tăng đa thức, còn không gian khóa nhị phân tăng theo 2^k.",
+          "Sai: 2k là hai lần số bit, không phải số cấu hình của k bit."
+        ],
+        "page": 94
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Mã hoá khoá công khai và quản lý khoá",
+    "pages": 56,
+    "file": "Bài 4 - Mã hoá khoá công khai.pdf",
+    "objectives": [
+      "Giải thích cơ chế bằng lời của mình và nêu giới hạn áp dụng.",
+      "Phân biệt thuật toán, khóa, mục tiêu bảo mật và loại tấn công.",
+      "Vận dụng công thức và nhận diện phương án nhiễu trong trắc nghiệm."
+    ],
+    "overview": "Bài này giải quyết bài toán tạo bí mật chung và truyền tin khi chưa chia sẻ khóa từ trước. Số học modulo là nền cho DH/RSA; quản lý khóa quyết định khóa công khai có đáng tin và khóa bị lộ được xử lý thế nào.",
+    "sections": [
+      {
+        "id": "4.1",
+        "title": "Số nguyên tố và sàng Eratosthenes",
+        "from": 5,
+        "to": 9,
+        "explanation": "Trong tài liệu: Số nguyên tố p>1 có đúng hai ước dương 1,p. Mọi số nguyên a>1 phân tích duy nhất thành tích các lũy thừa nguyên tố (không kể thứ tự). Sàng Eratosthenes: ghi 2..n, giữ số chưa gạch nhỏ nhất p, gạch bội của p; chỉ cần xử lý p≤√n vì hợp số phải có ước nguyên tố không quá căn của nó. Giải thích triển khai: bắt đầu gạch từ p², dùng chỉ số mảng nhất quán; không sao chép giả mã trang 9 nếu chưa kiểm tra lỗi chỉ số.",
+        "plain": "Muốn kiểm tra một số có bị ghép từ các số nhỏ hơn hay không, chỉ cần thử tới căn của nó: hai thừa số đều lớn hơn căn sẽ cho tích quá lớn.",
+        "example": "91=7×13 nên hợp số; 1 không nguyên tố; sàng tới 30 xử lý p=2,3,5.",
+        "pitfalls": [
+          "Nguyên tố khác nguyên tố cùng nhau.",
+          "1 không là số nguyên tố.",
+          "Phân biệt giá trị số với chỉ số mảng."
+        ],
+        "recap": [
+          "Giải thích dừng tại √n.",
+          "Phân tích tích nguyên tố duy nhất."
+        ]
+      },
+      {
+        "id": "4.2",
+        "title": "Hệ mã hóa công khai: hàm một chiều và các mục tiêu",
+        "from": 10,
+        "to": 24,
+        "explanation": "Trong tài liệu: Mỗi người có public key (khóa công khai) và private key (khóa riêng). Gửi bí mật tới B: Y=E(PUb,X), B dùng PRb giải mã. Người ký dùng khóa riêng của người gửi, người kiểm tra dùng khóa công khai của người gửi. Hàm một chiều dễ tính xuôi khó đảo; thông tin cửa sập cho phép đảo hiệu quả trong hệ phù hợp. Nhân hai số nguyên tố lớn dễ hơn phân tích tích trong mô hình bài học, nhưng mô tả “phân tích độ phức tạp mũ” không phải định lý tổng quát đã chứng minh. Slide dùng ký hiệu E(PRa,X) minh họa ký rồi E(PUb,...) bảo mật; giải thích mở rộng: chữ ký chuẩn có thuật toán, băm và encoding riêng, không đồng nhất mọi chữ ký với “mã hóa bằng private key”. RSA hỗ trợ mã hóa/chữ ký; DH thỏa thuận khóa, DSS chữ ký; không phải mọi thuật toán công khai hỗ trợ mọi chức năng.",
+        "plain": "Ai cũng có thể đóng khóa gửi B nhưng chỉ B mở được; muốn chứng minh ai gửi phải thêm chữ ký/xác thực. Giới hạn ví von hộp: không thể hiện quan hệ toán học hoặc yêu cầu xác minh khóa công khai.",
+        "example": "Bob muốn gửi Alice: dùng public key Alice; Alice đọc bằng private key Alice. Nếu Alice ký, Bob kiểm tra bằng public key Alice.",
+        "pitfalls": [
+          "Không dùng public key người gửi để bảo mật tới người nhận.",
+          "Public key công khai nên việc mã hóa không chứng minh danh tính.",
+          "Giữ bí mật thuật toán không thay cho giữ khóa."
+        ],
+        "recap": [
+          "Chọn khóa theo mục tiêu và chủ sở hữu.",
+          "Phân biệt mã hóa, ký, trao đổi khóa."
+        ]
+      },
+      {
+        "id": "4.3",
+        "title": "Trao đổi khóa Diffie–Hellman",
+        "from": 25,
+        "to": 29,
+        "explanation": "Trong tài liệu: Công khai số nguyên tố p và phần tử sinh g. Alice chọn bí mật a, gửi A=g^a mod p; Bob chọn b, gửi B=g^b mod p. Alice tính K=B^a mod p, Bob tính K=A^b mod p; cùng bằng g^(ab) mod p. a,b,A,B,K,p,g là số nguyên không đơn vị; tham số nhỏ chỉ để học, không dùng thật. Nền tảng là khó tìm số mũ từ giá trị công khai (logarit rời rạc). Giải thích mở rộng từ bài tập trang 47: DH thuần túy không xác thực nên kẻ ở giữa có thể thay A,B và lập hai khóa khác nhau; cần xác thực trao đổi. Ví von trộn màu ở trang 26 chỉ minh họa tính dễ trộn/khó tách, không chứng minh độ an toàn.",
+        "plain": "Hai người tự tính cùng bí mật từ phần mình giữ và phần công khai của bên kia; không gửi trực tiếp bí mật cuối cùng qua mạng.",
+        "example": "p=353,g=3,a=97,b=233: A=40,B=248,K=160 theo trang 29. Mọi người thấy p,g,A,B nhưng không được suy ra a,b dễ dàng với tham số đủ mạnh.",
+        "pitfalls": [
+          "Không gửi a hoặc b.",
+          "Không coi DH là mã hóa nội dung.",
+          "Có bí mật chung chưa chắc đã biết đúng danh tính đối tác."
+        ],
+        "recap": [
+          "Viết được bốn phép lũy thừa modulo.",
+          "Nhận diện nguy cơ Man-in-the-Middle."
+        ]
+      },
+      {
+        "id": "4.4.1",
+        "title": "RSA: tạo khóa và điều kiện",
+        "from": 30,
+        "to": 35,
+        "explanation": "Trong tài liệu: RSA (Rivest–Shamir–Adleman) chọn hai nguyên tố phân biệt p,q; n=pq; φ(n)=(p−1)(q−1). Chọn e: 1<e<φ(n), gcd(e,φ(n))=1. Tìm d=e⁻¹ mod φ(n), tức ed≡1 mod φ(n). Công khai (e,n), giữ bí mật d và các thừa số. M là số nguyên đại diện bản rõ 0≤M<n; C=M^e mod n, M=C^d mod n. Tất cả là số nguyên không đơn vị; kích thước khóa đo bằng bit của n. RSA chậm hơn đối xứng, phù hợp kết hợp hệ lai; độ dài lớn không khắc phục sinh khóa sai. Giải thích mở rộng: công thức RSA trần trong bài tập không phải sơ đồ triển khai an toàn; cần encoding/padding và thư viện chuẩn.",
+        "plain": "e và d là hai số mũ đi đôi: một phép biến đổi được phép còn lại khôi phục trong môđun n. Muốn suy ra d từ khóa công khai phải giải bài toán khó tương ứng, không phải chỉ lấy 1/e thông thường.",
+        "example": "p=11,q=17: n=187,φ=160,e=7,d=23 vì 7×23=161≡1 mod160. Với M=88, C=11 và giải về 88.",
+        "pitfalls": [
+          "e không cần là nguyên tố nhưng phải gcd(e,φ)=1.",
+          "φ(n) không bằng n−1 khi n=pq.",
+          "d không phải nghịch đảo số thực.",
+          "Không dùng ví dụ khóa nhỏ để triển khai."
+        ],
+        "recap": [
+          "Nêu đúng public/private key.",
+          "Kiểm tra điều kiện trước phép tính."
+        ]
+      },
+      {
+        "id": "4.4.2",
+        "title": "RSA: bình phương–nhân, Euclid và ví dụ",
+        "from": 36,
+        "to": 41,
+        "explanation": "Trong tài liệu: Tính lũy thừa modulo bằng bình phương–nhân: biểu diễn số mũ theo tổng lũy thừa 2, bình phương từng bước và lấy dư sớm để số không phình lớn. Ví dụ 88^7 mod187=(88^4·88²·88) mod187=11. Euclid: gcd(a,b)=gcd(b,a mod b), lặp tới số dư 0. Euclid mở rộng tìm x,y sao ax+by=gcd(a,b), từ đó tìm nghịch đảo khi gcd=1. Ví dụ trang 41 p=61,q=53,n=3233,e=17,d=2753, 123 mã hóa thành 855 và giải về 123.",
+        "plain": "Đừng tính số mũ khổng lồ rồi mới chia dư: cứ nhân hoặc bình phương là rút gọn ngay.",
+        "example": "88² mod187=77; 88⁴ mod187=132; 88⁷ mod187=(88×77×132) mod187=11.",
+        "pitfalls": [
+          "Không cộng phần dư khi công thức cần nhân.",
+          "Giữ cùng môđun ở mọi bước.",
+          "Số nguyên tố cùng nhau không nhất thiết từng số nguyên tố."
+        ],
+        "recap": [
+          "Tính tay được ví dụ nhỏ.",
+          "Giải thích Euclid và nghịch đảo modulo."
+        ]
+      },
+      {
+        "id": "4.5",
+        "title": "Quản lý khóa: thu hồi, thay thế, thông báo và lộ khóa",
+        "from": 42,
+        "to": 45,
+        "explanation": "Trong tài liệu: Thu hồi khóa cần xác định thẩm quyền và cân bằng kiểm soát nhiều bên với tốc độ xử lý. Sau thu hồi phải phân phối khóa mới sớm để giữ an toàn và sẵn sàng. Thông báo có thể đẩy từ trung tâm tới người dùng hoặc để người dùng tra cứu; chứng thực có hạn giảm thời gian dùng thông tin lỗi thời. Khi private key lộ tại T, chữ ký sau T không còn đáng tin; dữ liệu mã hóa bằng public key tương ứng có nguy cơ mất bí mật. Giải thích mở rộng: dữ liệu cũ đã bị lưu cũng có thể bị giải mã nếu dùng cùng khóa và không có cơ chế bí mật chuyển tiếp; không mặc nhiên chỉ dữ liệu sau T bị ảnh hưởng.",
+        "plain": "Thu hồi là thông báo “đừng tin khóa này nữa”, không phải phép xóa khóa khỏi trí nhớ kẻ đã lấy được nó.",
+        "example": "Một chứng thư bị thu hồi nhưng máy người nhận không cập nhật trạng thái có thể vẫn chấp nhận khóa cũ.",
+        "pitfalls": [
+          "Thu hồi không làm ciphertext đã bị đánh cắp tự biến mất.",
+          "Đổi khóa nhưng không xác thực phân phối có thể tiếp tục bị giả mạo.",
+          "Cân bằng nhiều người duyệt và tốc độ ứng cứu."
+        ],
+        "recap": [
+          "Mô tả vòng đời khóa bị lộ.",
+          "Phân biệt push và pull thông tin thu hồi."
+        ]
+      },
+      {
+        "id": "4.6",
+        "title": "Bài tập RSA, DH và kiểm tra an toàn",
+        "from": 46,
+        "to": 56,
+        "explanation": "Trong tài liệu: Bài tập gồm sàng nguyên tố; chứng minh nghiệm a²≡1 mod p; minh họa MITM; DH p=353,g=3 và p=13,g=2; RSA n=187; ánh xạ ký tự 100..125; thông điệp thuộc {8,9}; ứng dụng socket DH/RSA; mã hóa họ tên và BAO MAT THONG TIN. Với p lẻ nguyên tố, (a−1)(a+1)≡0 suy ra a≡±1; p=2 thì hai lớp trùng nhau. Với p=13,g=2, 2^11≡7 nên XA=11 mod12, 2^7≡11 nên XB=7 mod12. Mã hóa từng ký tự bằng RSA trần có tập rõ nhỏ cho phép lập bảng mã công khai để đoán; bài tập này minh họa thiếu ngẫu nhiên, không phải khuyến nghị thực hành. Trang 52 câu “không cần n” cần kiểm tra lại: để thử C=M^e mod n nói chung cần n; với n=437,e=3,C=75 thì 8³ mod437=75, 9³ mod437=292 nên M=8.",
+        "plain": "Không cần phá khóa nếu tập thông điệp có vài khả năng: thử mã hóa các ứng viên bằng public key rồi so bản mã.",
+        "example": "RSA p=5,q=7,e=5 có φ=24,d=5; lập bảng chữ A=0 trước khi giải để không lẫn ASCII với mã thứ tự chữ.",
+        "pitfalls": [
+          "Public key vốn ai cũng biết nên đối phương có thể mã hóa ứng viên.",
+          "Bài họ tên phải ghi quy ước dấu, khoảng trắng và ký tự.",
+          "Không suy diễn phần đề bị gõ nhầm."
+        ],
+        "recap": [
+          "Kiểm tra phép toán bằng mã hóa lại.",
+          "Giải thích điểm yếu tập bản rõ nhỏ."
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "title": "Mục tiêu và cơ chế",
+        "headers": [
+          "Cơ chế",
+          "Mục tiêu",
+          "Giới hạn"
+        ],
+        "rows": [
+          [
+            "Mã hóa",
+            "Giữ bí mật nội dung",
+            "Không tự xác thực nguồn"
+          ],
+          [
+            "Hash không khóa",
+            "Tạo digest, hỗ trợ kiểm tra dữ liệu",
+            "Không tự chống giả mạo nguồn"
+          ],
+          [
+            "MAC",
+            "Toàn vẹn và nguồn từ người biết khóa chung",
+            "Không chống chối bỏ giữa hai người cùng khóa"
+          ],
+          [
+            "Chữ ký số",
+            "Xác thực, toàn vẹn, hỗ trợ chống chối bỏ",
+            "Không tự giấu nội dung"
+          ]
+        ]
+      }
+    ],
+    "study": [
+      "Đọc theo thứ tự mục; sau mỗi mục đóng tài liệu và giải thích cơ chế trong 60 giây.",
+      "Tự làm ví dụ nhỏ bằng tay, sau đó kiểm tra phép tính; không học công thức thiếu điều kiện.",
+      "Luyện câu hỏi và ghi lý do từng phương án sai; ôn lại sau 1, 3 và 7 ngày."
+    ],
+    "terms": [
+      {
+        "en": "Public key",
+        "vi": "Khóa công khai",
+        "meaning": "Khóa được chia sẻ; cần xác minh nó thuộc đúng chủ."
+      },
+      {
+        "en": "Private key",
+        "vi": "Khóa riêng",
+        "meaning": "Thông tin cần giữ bí mật của chủ khóa."
+      },
+      {
+        "en": "Discrete logarithm",
+        "vi": "Logarit rời rạc",
+        "meaning": "Bài toán tìm số mũ từ phần tử sinh và kết quả modulo."
+      },
+      {
+        "en": "Modular inverse",
+        "vi": "Nghịch đảo modulo",
+        "meaning": "x là nghịch đảo a mod m nếu ax≡1 mod m."
+      },
+      {
+        "en": "Revocation",
+        "vi": "Thu hồi",
+        "meaning": "Thông báo khóa/chứng thực không còn được tin."
+      },
+      {
+        "en": "Man-in-the-Middle",
+        "vi": "Kẻ đứng giữa",
+        "meaning": "Chặn và thay thông điệp để mạo danh với hai bên."
+      },
+      {
+        "en": "DH — Diffie–Hellman",
+        "vi": "Thỏa thuận khóa Diffie–Hellman",
+        "meaning": "Hai bên tính cùng bí mật từ số mũ riêng và giá trị công khai; DH thuần túy thiếu xác thực."
+      },
+      {
+        "en": "RSA — Rivest–Shamir–Adleman",
+        "vi": "Hệ RSA",
+        "meaning": "Mã hóa/chữ ký bất đối xứng dùng lũy thừa modulo n=pq."
+      },
+      {
+        "en": "GCD — Greatest Common Divisor",
+        "vi": "Ước chung lớn nhất",
+        "meaning": "gcd(a,b); hai số nguyên tố cùng nhau nếu kết quả bằng1."
+      },
+      {
+        "en": "Euler totient φ(n)",
+        "vi": "Hàm phi Euler",
+        "meaning": "Đếm số lớp modulo n nguyên tố cùng nhau với n; n=pq với nguyên tố phân biệt thì φ=(p−1)(q−1)."
+      },
+      {
+        "en": "Primitive root",
+        "vi": "Phần tử sinh",
+        "meaning": "Phần tử có lũy thừa sinh toàn bộ nhóm nhân modulo p trong mô hình DH."
+      },
+      {
+        "en": "Trapdoor one-way function",
+        "vi": "Hàm một chiều có cửa sập",
+        "meaning": "Dễ tính xuôi, khó đảo khi thiếu bí mật phụ; biết cửa sập cho phép đảo hiệu quả."
+      },
+      {
+        "en": "Session key",
+        "vi": "Khóa phiên",
+        "meaning": "Khóa dùng cho một phiên, thường sử dụng với mã đối xứng sau trao đổi/thỏa thuận."
+      },
+      {
+        "en": "DSS — Digital Signature Standard",
+        "vi": "Chuẩn chữ ký số",
+        "meaning": "Trong bảng slide thuộc chức năng chữ ký, không dùng thay phép mã hóa."
+      },
+      {
+        "en": "Elliptic curve",
+        "vi": "Đường cong elliptic",
+        "meaning": "Nền toán học cho nhiều thuật toán công khai khác nhau; không phải tên một phép mã hóa duy nhất."
+      },
+      {
+        "en": "MITM — Man-in-the-Middle",
+        "vi": "Tấn công kẻ đứng giữa",
+        "meaning": "Đối phương mạo danh với mỗi bên bằng thay thông tin trao đổi."
+      },
+      {
+        "en": "Square-and-multiply",
+        "vi": "Bình phương–nhân",
+        "meaning": "Tính lũy thừa hiệu quả qua biểu diễn số mũ nhị phân và lấy dư từng bước."
+      },
+      {
+        "en": "Extended Euclidean algorithm",
+        "vi": "Euclid mở rộng",
+        "meaning": "Tìm hệ số Bézout để suy nghịch đảo modulo khi gcd=1."
+      },
+      {
+        "en": "PU / PR",
+        "vi": "Khóa công khai / khóa riêng",
+        "meaning": "Ký hiệu slide: PUa public key A; PRa private key A. Vai trò phụ thuộc mã hóa hoặc ký."
+      },
+      {
+        "en": "ASCII — American Standard Code for Information Interchange",
+        "vi": "Bảng mã trao đổi thông tin Hoa Kỳ",
+        "meaning": "Ánh xạ ký tự thành mã số; khác quy ước A=0 hoặc A=100 trong bài tập."
+      }
+    ],
+    "issues": [
+      {
+        "page": 9,
+        "note": "Giả mã sàng có dấu hiệu không nhất quán giá trị và chỉ số; dùng mô tả thuật toán đã kiểm tra."
+      },
+      {
+        "page": 17,
+        "note": "Ký hiệu mã hóa private key là mô hình minh họa chữ ký, không thay thế thuật toán chữ ký chuẩn."
+      },
+      {
+        "page": 24,
+        "note": "Không coi nhận định độ phức tạp mũ của phân tích nguyên tố là định lý đã được chứng minh."
+      },
+      {
+        "page": 45,
+        "note": "Lộ private key có thể ảnh hưởng dữ liệu trước thời điểm T; thu hồi không tự bảo vệ ciphertext đã lưu."
+      },
+      {
+        "page": 46,
+        "note": "Đề dùng n nhưng công thức dùng a; cần thống nhất biến. Với p=2 các nghiệm +1 và −1 trùng lớp."
+      },
+      {
+        "page": 52,
+        "note": "Câu nói xác định M mà không cần n không rõ/thiếu điều kiện; lời giải thử ứng viên theo public key dùng n=437. Không đưa tuyên bố này thành đáp án đúng."
+      }
+    ],
+    "questions": [
+      {
+        "id": "4-q1",
+        "section": "4.1",
+        "topic": "Số nguyên tố và sàng Eratosthenes",
+        "level": "Nhận biết",
+        "stem": "Số nào là nguyên tố?",
+        "options": [
+          "17",
+          "1",
+          "21",
+          "91"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: 17 chỉ có ước dương 1 và 17.",
+          "Sai: 1 chỉ có một ước dương nên bị loại theo định nghĩa p>1.",
+          "Sai: 21=3×7 có ước dương khác 1 và chính nó.",
+          "Sai: 91=7×13 là hợp số."
+        ],
+        "page": 6
+      },
+      {
+        "id": "4-q2",
+        "section": "4.1",
+        "topic": "Số nguyên tố và sàng Eratosthenes",
+        "level": "Thông hiểu",
+        "stem": "Hai số nguyên tố cùng nhau nghĩa là gì?",
+        "options": [
+          "Hai số đều lẻ",
+          "Ước chung lớn nhất bằng 1",
+          "Cả hai đều nguyên tố",
+          "Hai số bằng nhau"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Hai số lẻ như 9 và 15 vẫn có gcd=3.",
+          "Đúng: Ví dụ 35 và 64 có gcd=1 dù đều là hợp số.",
+          "Sai: 35 và 64 nguyên tố cùng nhau dù cả hai là hợp số; không bắt từng số nguyên tố.",
+          "Sai: Hai số bằng nhau lớn hơn 1 có gcd bằng chính nó nên không nguyên tố cùng nhau."
+        ],
+        "page": 6
+      },
+      {
+        "id": "4-q3",
+        "section": "4.1",
+        "topic": "Số nguyên tố và sàng Eratosthenes",
+        "level": "Vận dụng",
+        "stem": "Cần sàng các số tới n=121. Chỉ cần xét và gạch bội của các số nguyên tố p tới ngưỡng nào?",
+        "options": [
+          "60",
+          "121",
+          "11",
+          "10"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: 60 vượt ngưỡng cần thiết; mọi hợp số tới121 đã có ước≤11.",
+          "Sai: Xét tới121 là không cần thiết; quy tắc dừng dựa p²≤n.",
+          "Đúng: √121=11, phải xử lý cả p=11 để gạch 121=11².",
+          "Sai: Dừng ở 10 sẽ bỏ sót 121 vì chưa gạch bội 11."
+        ],
+        "page": 6
+      },
+      {
+        "id": "4-q4",
+        "section": "4.1",
+        "topic": "Số nguyên tố và sàng Eratosthenes",
+        "level": "Nhận biết",
+        "stem": "Phân tích 91 thành nguyên tố là gì?",
+        "options": [
+          "3×30",
+          "9×10",
+          "11×8",
+          "7×13"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: 3×30=90 và 30 không nguyên tố.",
+          "Sai: 9×10=90, cả hai thừa số đều không nguyên tố.",
+          "Sai: 11×8=88 và 8 không nguyên tố.",
+          "Đúng: 7 và 13 là nguyên tố, tích bằng 91."
+        ],
+        "page": 6
+      },
+      {
+        "id": "4-q5",
+        "section": "4.2",
+        "topic": "Hệ mã hóa công khai: hàm một chiều và các mục tiêu",
+        "level": "Thông hiểu",
+        "stem": "Bob gửi bí mật cho Alice bằng khóa nào?",
+        "options": [
+          "Public key Alice",
+          "Private key Bob",
+          "Public key Bob",
+          "Private key Alice được gửi cho Bob"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Mã hóa bằng khóa công khai của người nhận để người nhận dùng khóa riêng giải.",
+          "Sai: Private key Bob dùng cho chữ ký của Bob, không giữ bí mật riêng cho Alice.",
+          "Sai: Public key Bob tạo ciphertext để Bob giải, nhầm chủ thể người nhận.",
+          "Sai: Alice không phải chia sẻ private key; Bob chỉ cần public key Alice."
+        ],
+        "page": 11
+      },
+      {
+        "id": "4-q6",
+        "section": "4.2",
+        "topic": "Hệ mã hóa công khai: hàm một chiều và các mục tiêu",
+        "level": "Vận dụng",
+        "stem": "Alice vô tình gửi bản sao private key của mình cho Bob. Sau đó Carol mã hóa tin nhắn bằng public key Alice. Theo mô hình, ai có khả năng giải mã nếu đều giữ đúng bản sao khóa?",
+        "options": [
+          "Bất kỳ ai biết public key Alice",
+          "Cả Alice và Bob",
+          "Chỉ Alice vì khóa vẫn mang tên Alice",
+          "Chỉ Carol vì Carol đã mã hóa"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Public key cho phép mã hóa nhưng không đủ để giải; chỉ những người có private key tương ứng mới làm được.",
+          "Đúng: Alice và Bob đều sở hữu private key tương ứng nên đều có thể giải ciphertext này; tên chủ khóa không ngăn bản sao hoạt động.",
+          "Sai: Mật mã dựa trên sở hữu bí mật khóa, không dựa trên nhãn tên; Bob đã có bản sao cần thiết.",
+          "Sai: Tạo ciphertext bằng public key không cấp quyền giải mã; Carol không được giả thiết có private key."
+        ],
+        "page": 11
+      },
+      {
+        "id": "4-q7",
+        "section": "4.2",
+        "topic": "Hệ mã hóa công khai: hàm một chiều và các mục tiêu",
+        "level": "Thông hiểu",
+        "stem": "Kiểm tra chữ ký Alice dùng khóa nào?",
+        "options": [
+          "Public key Bob",
+          "Khóa đối xứng tùy ý",
+          "Public key Alice",
+          "Private key Bob"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Public key Bob kiểm chữ ký Bob chứ không kiểm chữ ký Alice.",
+          "Sai: Khóa đối xứng không thực hiện kiểm chữ ký công khai Alice theo sơ đồ.",
+          "Đúng: Xác minh gắn với khóa công khai của người ký.",
+          "Sai: Private key Bob thuộc vai trò giải mã/ký của Bob, không xác minh chữ ký Alice."
+        ],
+        "page": 11
+      },
+      {
+        "id": "4-q8",
+        "section": "4.2",
+        "topic": "Hệ mã hóa công khai: hàm một chiều và các mục tiêu",
+        "level": "Thông hiểu",
+        "stem": "Mã hóa bằng public key Bob có tự chứng minh Alice là người gửi không?",
+        "options": [
+          "Có, vì public key luôn bí mật",
+          "Có, vì Bob không có private key",
+          "Chỉ khi bản rõ dài 128 bit",
+          "Không, ai cũng dùng được public key Bob"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Public key theo định nghĩa được công khai, vì vậy ai cũng có thể mã hóa gửi Bob.",
+          "Sai: Bob có private key tương ứng để giải mã; sự có mặt khóa đó không xác định ai mã hóa.",
+          "Sai: 128 bit là độ dài dữ liệu, không biến khóa công khai thành bằng chứng danh tính người gửi.",
+          "Đúng: Tính công khai cho phép bất kỳ ai tạo ciphertext gửi Bob."
+        ],
+        "page": 11
+      },
+      {
+        "id": "4-q9",
+        "section": "4.2",
+        "topic": "Hệ mã hóa công khai: hàm một chiều và các mục tiêu",
+        "level": "Thông hiểu",
+        "stem": "Hàm một chiều có đặc điểm gì?",
+        "options": [
+          "Dễ tính xuôi, khó đảo khi thiếu thông tin cần thiết",
+          "Khó tính xuôi nhưng dễ đảo",
+          "Luôn dễ đảo bằng phép chia",
+          "Không phụ thuộc đầu vào"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Độ khó đảo là ý tưởng cốt lõi của sơ đồ công khai.",
+          "Sai: Đó là chiều khó dễ ngược với định nghĩa dùng trong hệ công khai.",
+          "Sai: Đảo bằng phép chia dễ thì không có độ khó đảo cần thiết của hàm một chiều.",
+          "Sai: Hàm phải biến đổi đầu vào; độc lập đầu vào sẽ không khôi phục được thông điệp nói chung."
+        ],
+        "page": 11
+      },
+      {
+        "id": "4-q10",
+        "section": "4.2",
+        "topic": "Hệ mã hóa công khai: hàm một chiều và các mục tiêu",
+        "level": "Nhận biết",
+        "stem": "Trong bảng ứng dụng của slide, DH có vai trò chính nào?",
+        "options": [
+          "Mã hóa file trực tiếp như AES",
+          "Trao đổi khóa",
+          "Tạo checksum TCP",
+          "Nén dữ liệu"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: DH tạo bí mật chung rồi dùng nó với mã hóa khác, không mã hóa nguyên file như AES.",
+          "Đúng: DH tạo khóa chung để dùng cho các cơ chế khác.",
+          "Sai: Checksum TCP phát hiện lỗi truyền, không phải bài toán thỏa thuận bí mật.",
+          "Sai: Nén giảm biểu diễn dữ liệu; DH thỏa thuận khóa."
+        ],
+        "page": 11
+      },
+      {
+        "id": "4-q11",
+        "section": "4.3",
+        "topic": "Trao đổi khóa Diffie–Hellman",
+        "level": "Thông hiểu",
+        "stem": "DH Alice gửi giá trị nào?",
+        "options": [
+          "Private key Bob",
+          "g×a không lấy dư",
+          "g^a mod p",
+          "a trực tiếp"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Alice không gửi private key của Bob và bình thường cũng không biết nó.",
+          "Sai: DH dùng lũy thừa modulo, không dùng nhân thông thường g×a.",
+          "Đúng: a giữ bí mật; g^a mod p là giá trị công khai.",
+          "Sai: a là bí mật riêng, gửi trực tiếp sẽ cho đối phương tính khóa chung."
+        ],
+        "page": 29
+      },
+      {
+        "id": "4-q12",
+        "section": "4.3",
+        "topic": "Trao đổi khóa Diffie–Hellman",
+        "level": "Thông hiểu",
+        "stem": "Sau nhận B, Alice tính khóa DH thế nào?",
+        "options": [
+          "B+a",
+          "a mod B",
+          "p^B mod a",
+          "B^a mod p"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: B+a không có đẳng thức bảo đảm bằng A+b ở phía Bob.",
+          "Sai: a mod B không tạo g^(ab) mod p và có thể không trùng phía Bob.",
+          "Sai: Đã đảo vai trò cơ số, số mũ, môđun; công thức cần B^a mod p.",
+          "Đúng: K=(g^b)^a mod p=g^(ab) mod p."
+        ],
+        "page": 29
+      },
+      {
+        "id": "4-q13",
+        "section": "4.3",
+        "topic": "Trao đổi khóa Diffie–Hellman",
+        "level": "Vận dụng",
+        "stem": "p=353,g=3,a=97 trong ví dụ cho public value nào?",
+        "options": [
+          "40",
+          "248",
+          "160",
+          "97"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Trang 29 cho 3^97 mod353=40.",
+          "Sai: 248 là giá trị công khai của Bob khi b=233.",
+          "Sai: 160 là khóa chung sau kết hợp phần bí mật với public value bên kia.",
+          "Sai: 97 là private exponent của Alice, không phải giá trị được gửi."
+        ],
+        "page": 29
+      },
+      {
+        "id": "4-q14",
+        "section": "4.3",
+        "topic": "Trao đổi khóa Diffie–Hellman",
+        "level": "Nhận biết",
+        "stem": "Hai public value 40 và 248 trong ví dụ cho K bằng bao nhiêu?",
+        "options": [
+          "233",
+          "160",
+          "353",
+          "97"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: 233 là bí mật b của Bob, không phải kết quả g^(ab) mod353.",
+          "Đúng: 248^97 mod353=40^233 mod353=160.",
+          "Sai: 353 là môđun p; kết quả modulo phải nhỏ hơn 353.",
+          "Sai: 97 là bí mật a của Alice, không phải khóa chung."
+        ],
+        "page": 29
+      },
+      {
+        "id": "4-q15",
+        "section": "4.3",
+        "topic": "Trao đổi khóa Diffie–Hellman",
+        "level": "Thông hiểu",
+        "stem": "DH không xác thực dễ bị tấn công nào?",
+        "options": [
+          "Phân tích tần suất chữ trong ciphertext",
+          "Va chạm digest do đầu ra ngắn",
+          "Man-in-the-Middle",
+          "Vét cạn trực tiếp mọi khóa RSA"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Phân tích tần suất đánh vào cấu trúc mã cổ điển; điểm yếu DH ở đây là thiếu xác thực giá trị trao đổi.",
+          "Sai: Va chạm digest là vấn đề hàm băm, không phải cơ chế thay public value DH.",
+          "Đúng: Kẻ giữa thay giá trị DH và lập hai bí mật riêng với hai bên.",
+          "Sai: Hệ đang xét DH, không RSA; MITM không cần vét cạn hay tìm private exponent thật."
+        ],
+        "page": 29
+      },
+      {
+        "id": "4-q16",
+        "section": "4.3",
+        "topic": "Trao đổi khóa Diffie–Hellman",
+        "level": "Thông hiểu",
+        "stem": "Độ khó toán học nền của DH được slide nêu là gì?",
+        "options": [
+          "Phân tích thừa số nguyên tố",
+          "Nghịch đảo số thực",
+          "Hoán vị ma trận khóa",
+          "Logarit rời rạc"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Phân tích thừa số nguyên tố gắn với cấu trúc RSA; DH trong slide dựa trên logarit rời rạc.",
+          "Sai: Nghịch đảo số thực không khôi phục số mũ trong nhóm modulo.",
+          "Sai: Hoán vị ma trận không phải bài toán tìm a từ g^a mod p của DH.",
+          "Đúng: Tìm số mũ từ g và g^a mod p là bài toán logarit rời rạc."
+        ],
+        "page": 29
+      },
+      {
+        "id": "4-q17",
+        "section": "4.4.1",
+        "topic": "RSA: tạo khóa và điều kiện",
+        "level": "Vận dụng",
+        "stem": "p=11,q=17 cho n bằng gì?",
+        "options": [
+          "187",
+          "160",
+          "28",
+          "7"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: n=pq=11×17=187.",
+          "Sai: 160 là φ(n)=(11−1)(17−1), không phải n.",
+          "Sai: 28=p+q, trong khi n là tích p×q.",
+          "Sai: 7 là lựa chọn e trong ví dụ, không phải môđun."
+        ],
+        "page": 33
+      },
+      {
+        "id": "4-q18",
+        "section": "4.4.1",
+        "topic": "RSA: tạo khóa và điều kiện",
+        "level": "Vận dụng",
+        "stem": "p=11,q=17 cho φ(n) bằng gì?",
+        "options": [
+          "28",
+          "160",
+          "187",
+          "186"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: 28 là tổng p+q, không đếm số phần tử nguyên tố cùng nhau với n.",
+          "Đúng: φ=(11−1)(17−1)=160.",
+          "Sai: 187 là n=pq, chưa áp dụng (p−1)(q−1).",
+          "Sai: n−1=186 chỉ là φ(n) khi n nguyên tố; ở đây n là tích hai nguyên tố."
+        ],
+        "page": 33
+      },
+      {
+        "id": "4-q19",
+        "section": "4.4.1",
+        "topic": "RSA: tạo khóa và điều kiện",
+        "level": "Thông hiểu",
+        "stem": "Chọn e trong RSA cần điều kiện nào?",
+        "options": [
+          "e chia hết φ(n)",
+          "e bằng 0",
+          "gcd(e,φ(n))=1",
+          "e luôn bằng p"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Nếu e chia hết φ(n), gcd không bằng 1 nên không có nghịch đảo.",
+          "Sai: e=0 không có nghịch đảo modulo φ(n).",
+          "Đúng: e cần nghịch đảo modulo φ(n).",
+          "Sai: e không bắt buộc bằng p; chọn theo gcd với φ(n), không theo tên thừa số."
+        ],
+        "page": 33
+      },
+      {
+        "id": "4-q20",
+        "section": "4.4.1",
+        "topic": "RSA: tạo khóa và điều kiện",
+        "level": "Vận dụng",
+        "stem": "Với φ=160,e=7, d hợp lệ là gì?",
+        "options": [
+          "7",
+          "160",
+          "187",
+          "23"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: 7×7=49 không đồng dư 1 mod160.",
+          "Sai: 7×160≡0 mod160, không bằng 1.",
+          "Sai: 7×187=1309≡29 mod160, không bằng 1.",
+          "Đúng: 7×23=161≡1 mod160."
+        ],
+        "page": 33
+      },
+      {
+        "id": "4-q21",
+        "section": "4.4.1",
+        "topic": "RSA: tạo khóa và điều kiện",
+        "level": "Vận dụng",
+        "stem": "RSA chọn p=5,q=7,e=5 và tính được d=5. Cặp nào được phân phối làm public key?",
+        "options": [
+          "(5,35)",
+          "(5,7)",
+          "(5,24)",
+          "(7,35)"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: n=5×7=35, public key=(e,n)=(5,35); d trùng e trong ví dụ nhỏ không thay đổi quy tắc.",
+          "Sai: Đây là cặp thừa số p,q; không phải (e,n).",
+          "Sai: 24 là φ(n)=(5−1)(7−1), không phải môđun n.",
+          "Sai: 7 là q, không phải e=5 đã chọn."
+        ],
+        "page": 33
+      },
+      {
+        "id": "4-q22",
+        "section": "4.4.1",
+        "topic": "RSA: tạo khóa và điều kiện",
+        "level": "Thông hiểu",
+        "stem": "RSA trần biểu diễn M theo điều kiện nào?",
+        "options": [
+          "M phải bằng e",
+          "0≤M<n",
+          "M luôn lớn hơn n",
+          "M phải là số nguyên tố"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: M đại diện thông điệp, e là số mũ công khai; chúng không cần bằng nhau.",
+          "Đúng: M là phần tử đại diện modulo n.",
+          "Sai: Modulo n chỉ phân biệt các lớp 0..n−1; M lớn hơn n mất tính biểu diễn duy nhất nếu không chia khối.",
+          "Sai: M không cần nguyên tố; ví dụ 88 là hợp số nhưng vẫn mã/giải được."
+        ],
+        "page": 33
+      },
+      {
+        "id": "4-q23",
+        "section": "4.4.1",
+        "topic": "RSA: tạo khóa và điều kiện",
+        "level": "Vận dụng",
+        "stem": "Với n=187,e=7, M=88 cho C bằng bao nhiêu?",
+        "options": [
+          "23",
+          "160",
+          "11",
+          "88"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: 23 là số mũ riêng d của ví dụ, không phải ciphertext.",
+          "Sai: 160 là φ(n), không phải 88^7 mod187.",
+          "Đúng: 88^7 mod187=11 theo ví dụ.",
+          "Sai: 88 là plaintext đầu vào; phép mã hóa ví dụ cho 11, không giữ nguyên."
+        ],
+        "page": 33
+      },
+      {
+        "id": "4-q24",
+        "section": "4.4.1",
+        "topic": "RSA: tạo khóa và điều kiện",
+        "level": "Thông hiểu",
+        "stem": "Điều nào đúng về RSA và mã đối xứng?",
+        "options": [
+          "RSA luôn nhanh hơn AES cho file lớn",
+          "RSA không có public key",
+          "Khóa riêng RSA phải công bố",
+          "RSA thường chậm hơn nên hệ lai dùng đối xứng mã hóa nội dung"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Các phép lũy thừa số lớn của RSA thường đắt hơn mã khối đối xứng khi mã hóa dữ liệu dài.",
+          "Sai: RSA là hệ public key với cặp công khai (e,n); phủ nhận public key là sai mô hình.",
+          "Sai: Công bố khóa riêng cho phép người khác giải mã hoặc giả chữ ký, phá mục tiêu bảo mật.",
+          "Đúng: Hệ lai tận dụng tốc độ đối xứng và phân phối khóa bằng bất đối xứng."
+        ],
+        "page": 33
+      },
+      {
+        "id": "4-q25",
+        "section": "4.4.2",
+        "topic": "RSA: bình phương–nhân, Euclid và ví dụ",
+        "level": "Nhận biết",
+        "stem": "Euclid dùng đẳng thức nào?",
+        "options": [
+          "gcd(a,b)=gcd(b,a mod b)",
+          "gcd(a,b)=a+b",
+          "gcd(a,b)=a×b",
+          "gcd(a,b)=a−1 mọi trường hợp"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Lặp lấy dư bảo toàn ước chung lớn nhất.",
+          "Sai: Tổng a+b không phải ước chung lớn nhất; ví dụ gcd(6,4)=2, không phải 10.",
+          "Sai: Tích ab thường lớn hơn mọi ước chung; gcd(6,4)=2 chứ không phải 24.",
+          "Sai: a−1 không đúng chung; gcd(6,4)=2 chứ không phải 5."
+        ],
+        "page": 40
+      },
+      {
+        "id": "4-q26",
+        "section": "4.4.2",
+        "topic": "RSA: bình phương–nhân, Euclid và ví dụ",
+        "level": "Thông hiểu",
+        "stem": "Lợi ích của bình phương–nhân modulo là gì?",
+        "options": [
+          "Đổi mọi hợp số thành nguyên tố",
+          "Giảm số phép nhân và rút gọn số trung gian",
+          "Loại bỏ nhu cầu môđun",
+          "Công khai private key"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Thuật toán tính lũy thừa không thay đổi tính nguyên tố của cơ số/môđun.",
+          "Đúng: Phân tích số mũ nhị phân giúp tính hiệu quả, lấy dư sớm giữ số nhỏ.",
+          "Sai: Lấy dư ở từng bước là thành phần chính giúp số trung gian nhỏ, không bị loại bỏ.",
+          "Sai: Đây là tối ưu phép tính; không cần hoặc cho phép công khai khóa riêng."
+        ],
+        "page": 40
+      },
+      {
+        "id": "4-q27",
+        "section": "4.4.2",
+        "topic": "RSA: bình phương–nhân, Euclid và ví dụ",
+        "level": "Nhận biết",
+        "stem": "Ví dụ n=3233,e=17 mã hóa 123 thành gì?",
+        "options": [
+          "61",
+          "53",
+          "855",
+          "2753"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: 61 là thừa số p dùng tạo khóa, không phải 123^17 mod3233.",
+          "Sai: 53 là thừa số q, không phải ciphertext của 123.",
+          "Đúng: Trang 41 cho 123^17 mod3233=855.",
+          "Sai: 2753 là private exponent d, dùng giải mã 855 về 123."
+        ],
+        "page": 40
+      },
+      {
+        "id": "4-q28",
+        "section": "4.5",
+        "topic": "Quản lý khóa: thu hồi, thay thế, thông báo và lộ khóa",
+        "level": "Thông hiểu",
+        "stem": "Thu hồi khóa cần thông báo tới ai?",
+        "options": [
+          "Chỉ bên phát hành khóa, không cần các bên dựa vào khóa",
+          "Chỉ người ký, không cần người kiểm chữ ký",
+          "Chỉ nhà thiết kế thuật toán, không cần bên nhận",
+          "Những người đang sử dụng hoặc tin khóa đó"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Nếu bên dựa vào khóa không nhận thông báo, họ vẫn có thể tiếp tục chấp nhận khóa bị lộ.",
+          "Sai: Người kiểm chữ ký mới cần biết trạng thái thu hồi để dừng tin chữ ký mới.",
+          "Sai: Nhà thiết kế thuật toán không nhất thiết là bên sử dụng khóa và không thể thông báo thay mọi bên nhận.",
+          "Đúng: Người dùng phải biết để ngừng tin khóa cũ."
+        ],
+        "page": 44
+      },
+      {
+        "id": "4-q29",
+        "section": "4.5",
+        "topic": "Quản lý khóa: thu hồi, thay thế, thông báo và lộ khóa",
+        "level": "Thông hiểu",
+        "stem": "Thu hồi khóa có xóa private key đã bị kẻ khác sao chép không?",
+        "options": [
+          "Không",
+          "Có tự động",
+          "Có nếu public key dài",
+          "Có nếu cùng lúc thay thuật toán mã hóa"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Thu hồi thay đổi trạng thái tin cậy, không xóa bản sao của đối phương.",
+          "Sai: Thu hồi là thay trạng thái tin cậy, không truy cập/xóa mọi bản sao của đối phương.",
+          "Sai: Độ dài public key không xóa được file private key đã bị sao chép.",
+          "Sai: Đổi thuật toán cho dữ liệu mới không làm bản sao khóa cũ của kẻ tấn công biến mất."
+        ],
+        "page": 44
+      },
+      {
+        "id": "4-q30",
+        "section": "4.5",
+        "topic": "Quản lý khóa: thu hồi, thay thế, thông báo và lộ khóa",
+        "level": "Thông hiểu",
+        "stem": "Sau thu hồi, vì sao cần phân phối khóa mới sớm?",
+        "options": [
+          "Để public key thành private key",
+          "Duy trì an toàn và tính sẵn sàng",
+          "Để khóa cũ tự dài hơn",
+          "Để bỏ kiểm tra danh tính"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Vai trò public/private không đảo tự động khi thay khóa; cần cặp khóa mới đúng vai trò.",
+          "Đúng: Hệ thống cần khóa hợp lệ để tiếp tục hoạt động.",
+          "Sai: Khóa cũ không tự thêm bit và đã bị thu hồi; phải tạo/phân phối khóa mới.",
+          "Sai: Phân phối khóa mới càng cần kiểm danh tính để tránh kẻ tấn công thay khóa lần nữa."
+        ],
+        "page": 44
+      },
+      {
+        "id": "4-q31",
+        "section": "4.6",
+        "topic": "Bài tập RSA, DH và kiểm tra an toàn",
+        "level": "Thông hiểu",
+        "stem": "Vì sao mã hóa từng chữ bằng RSA trần với public key dễ bị đoán?",
+        "options": [
+          "Mỗi chữ luôn dài 2048 bit",
+          "Chỉ người gửi được biết e",
+          "Đối phương lập bảng ciphertext cho tập chữ nhỏ",
+          "Đối phương cần biết d mới thử mã hóa được chữ ứng viên"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: 2048 bit mô tả kích thước khóa điển hình trong ngữ cảnh, không làm mất việc có thể thử 26 ký tự.",
+          "Sai: e là phần public key nên đối phương có quyền biết và dùng nó.",
+          "Đúng: Mã hóa xác định trên tập đầu vào nhỏ cho phép so sánh ứng viên.",
+          "Sai: Để mã hóa ứng viên chỉ cần public key e,n; không cần private exponent d."
+        ],
+        "page": 51
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Chứng thực dữ liệu",
+    "pages": 59,
+    "file": "Bài 5 - Chứng thực dữ liệu.pdf",
+    "objectives": [
+      "Giải thích cơ chế bằng lời của mình và nêu giới hạn áp dụng.",
+      "Phân biệt thuật toán, khóa, mục tiêu bảo mật và loại tấn công.",
+      "Vận dụng công thức và nhận diện phương án nhiễu trong trắc nghiệm."
+    ],
+    "overview": "Mã hóa giúp giấu nội dung; chứng thực trả lời nội dung có đúng nguồn và còn nguyên vẹn hay không. Bài phân biệt checksum, hash, MAC và chữ ký số, rồi phối hợp với mã hóa để đạt nhiều mục tiêu.",
+    "sections": [
+      {
+        "id": "5.1.1",
+        "title": "Vai trò chứng thực và nhận dạng",
+        "from": 5,
+        "to": 12,
+        "explanation": "Trong tài liệu: Authentication xác nhận nguồn gốc và phát hiện dữ liệu bị sửa/giả mạo. Slide liệt kê nhận dạng qua password, PIN, smart card, biometric, chữ ký, one-time password và certificate. Giải thích mở rộng: nhận dạng một thực thể và chứng thực từng thông điệp liên quan nhưng không đồng nhất; cần gắn thông điệp với phiên/người gửi bằng cơ chế cụ thể. Chống chối bỏ cần bằng chứng kiểm chứng bởi bên thứ ba và quản lý khóa phù hợp; không phải mọi cơ chế authentication đều có tính chất này.",
+        "plain": "Biết ai vừa đăng nhập chưa đủ để kết luận mọi file sau đó thật sự do họ gửi. Mỗi thông điệp vẫn cần được bảo vệ.",
+        "example": "Password là thứ biết; smart card là vật có; vân tay là đặc điểm sinh học. OTP dùng một lần không đồng nghĩa khóa one-time pad trong mã hóa.",
+        "pitfalls": [
+          "Không coi MAC chung khóa là bằng chứng chống chối bỏ.",
+          "Không đồng nhất OTP và OTPad.",
+          "Certificate hỗ trợ liên kết danh tính–khóa khi được xác minh đúng."
+        ],
+        "recap": [
+          "Phân biệt bí mật, toàn vẹn, nguồn gốc, chống chối bỏ.",
+          "Nhận biết các yếu tố nhận dạng."
+        ]
+      },
+      {
+        "id": "5.1.2",
+        "title": "Chứng thực bằng mã hóa và giới hạn khóa chia sẻ",
+        "from": 13,
+        "to": 22,
+        "explanation": "Trong tài liệu: Ví dụ Alice và Bob chia sẻ K: gửi M cùng C=E(K,M); Bob giải C thành M′ và so M′=M. Vì Bob cũng giữ K, Bob có thể tạo bản tương tự, nên không chứng minh riêng Alice tạo cho bên thứ ba. Public-key encryption tới B bằng PUb chỉ giữ bí mật, ai cũng có thể tạo ciphertext. Slide minh họa ký bằng PRa và kiểm bằng PUa, rồi bọc bằng PUb để có cả bảo mật. Giải thích mở rộng: mã hóa đơn thuần không được mặc định có tính toàn vẹn; phải xét cấu trúc và chế độ cụ thể. Ký cần sơ đồ chữ ký chuẩn chứ không áp dụng tùy ý phép “mã hóa private key”.",
+        "plain": "Hai người cùng giữ con dấu thì nhìn dấu không đủ chứng minh ai đóng. Đây là giới hạn về quy trách nhiệm, không phủ nhận MAC hữu ích giữa hai bên.",
+        "example": "Nếu Bob biết K, Bob có thể tự tính E(K,M) rồi nói Alice gửi. Chữ ký bằng private key chỉ Alice giữ giải quyết một mục tiêu khác.",
+        "pitfalls": [
+          "Public-key encryption không xác thực người gửi.",
+          "Không nghĩ mọi ciphertext hợp lệ đều không bị chỉnh sửa.",
+          "Trang 21 PRb trong dòng mô tả A là lỗi ký hiệu."
+        ],
+        "recap": [
+          "Giải thích tại sao khóa chung không chống chối bỏ.",
+          "Chọn đúng khóa người gửi/người nhận."
+        ]
+      },
+      {
+        "id": "5.1.3",
+        "title": "Digest, checksum và HMAC: phân biệt",
+        "from": 15,
+        "to": 18,
+        "explanation": "Trong tài liệu: Digest/fingerprint không dùng khóa là đầu ra hàm băm. MAC dùng khóa bí mật. Checksum TCP chủ yếu phát hiện lỗi truyền, không chống đối thủ chủ động vì đối thủ có thể tính lại. Slide tr15 mô tả HMAC như kết hợp hash và checksum là thiếu chính xác. Giải thích mở rộng để hiệu chỉnh: HMAC là Keyed-Hash Message Authentication Code, cấu trúc băm có khóa, không phải checksum TCP cộng hash. Công thức khái niệm HMAC(K,M)=H((K′⊕opad)||H((K′⊕ipad)||M)); K′ là khóa được xử lý về kích thước khối, || nối chuỗi; đây là phần mở rộng hỗ trợ bài tập, không phải chi tiết được slide trình bày.",
+        "plain": "Checksum giống kiểm tra lỗi gõ trên đường đi; người cố tình sửa có thể sửa cả tờ kiểm tra. MAC thêm bí mật mà kẻ sửa không biết.",
+        "example": "Tải file cùng hash qua kênh bị đối phương sửa hoàn toàn: họ thay file và hash nên việc so khớp chưa chứng minh nguồn tin cậy.",
+        "pitfalls": [
+          "Hash trần không xác thực nguồn.",
+          "Không dùng checksum thường làm MAC.",
+          "MAC là thuật ngữ chứng thực ở đây, không phải địa chỉ card mạng."
+        ],
+        "recap": [
+          "Nêu vai trò của khóa bí mật.",
+          "Phân biệt lỗi ngẫu nhiên và sửa đổi ác ý."
+        ]
+      },
+      {
+        "id": "5.2.1",
+        "title": "MAC: tính, gửi, kiểm và kết hợp mã hóa",
+        "from": 23,
+        "to": 28,
+        "explanation": "Trong tài liệu: Message Authentication Code: T=C(K,M), M có độ dài biến đổi, K là khóa bí mật chia sẻ, T là tag độ dài cố định. Gửi M||T; người nhận tính lại C(K,Mnhận) và so tag. Khớp chứng minh phù hợp với người biết K trong giả thiết thuật toán/khóa an toàn, không chứng minh duy nhất ai trong nhóm đã tạo. MAC không che M. Slide nêu ba mô hình: MAC đơn; mã hóa cả M||MAC bằng K2; mã hóa M bằng K2 rồi MAC trên ciphertext bằng K1. K1,K2 khác vai trò; giải thích mở rộng: không khuyên tự ghép thuật toán tùy ý, cần sơ đồ chuẩn và xử lý lỗi an toàn.",
+        "plain": "Tem niêm phong chỉ người giữ bí mật mới làm đúng: người đọc vẫn thấy nội dung nếu bạn không mã hóa thêm. Giới hạn ví von: MAC là tính toán, không là miếng tem không thể sao chép; cần kiểm tra thông điệp và ngữ cảnh.",
+        "example": "Giao dịch số tiền M được gửi cùng tag; sửa 100 thành 900 nhưng giữ tag thường khiến kiểm tra thất bại nếu không biết K.",
+        "pitfalls": [
+          "MAC không mã hóa dữ liệu.",
+          "Người nhận biết khóa cũng có thể tạo tag.",
+          "Tag khớp không tự chứng minh thông điệp mới, chưa bị phát lại."
+        ],
+        "recap": [
+          "Mô tả ba bước tính–gửi–kiểm.",
+          "Nhận ra MAC trên plaintext và MAC trên ciphertext."
+        ]
+      },
+      {
+        "id": "5.2.2",
+        "title": "MAC: độ dài, vét cạn và DES-MAC",
+        "from": 26,
+        "to": 33,
+        "explanation": "Trong tài liệu: n là số bit tag, k là số bit khóa. Đoán tag ngẫu nhiên cho một lần kiểm tra có xác suất xấp xỉ 2^(−n) dưới giả thiết tag đều; tìm khóa bằng vét cạn trung bình khoảng 2^(k−1) thử. Vì MAC nhiều–một, một cặp (M,T) có thể tương ứng nhiều khóa: mô hình slide ước lượng khoảng 2^(k−n), rồi 2^(k−2n) sau hai cặp độc lập. Với k=80,n=32: khoảng 2^48 rồi 2^16 ứng viên. Đây là mô hình lý tưởng, không khẳng định luôn tìm được chính xác một khóa sau số vòng nhất định. Hình trang 33 minh họa xâu khối DES: khối sau XOR đầu ra trước rồi mã hóa, đầu ra cuối tạo MAC; tên thuật toán/độ dài trên slide mang bối cảnh lịch sử.",
+        "plain": "Một dấu tag ngắn có thể khớp với nhiều chìa khác nhau; thêm cặp thông điệp–tag giúp loại dần khóa sai.",
+        "example": "k=80,n=32, một cặp hợp lệ chưa đủ nhận ra khóa đúng giữa xấp xỉ 2^48 ứng viên dù tìm được nhiều khóa tạo đúng tag.",
+        "pitfalls": [
+          "Không nhầm đoán tag với khôi phục khóa.",
+          "2^(k−n) là số ứng viên kỳ vọng, không thời gian tấn công tổng.",
+          "Độ dài lịch sử không là khuyến nghị hiện hành."
+        ],
+        "recap": [
+          "Phân biệt n bit tag và k bit khóa.",
+          "Giải thích vì sao một tag trùng chưa xác nhận đúng khóa."
+        ]
+      },
+      {
+        "id": "5.3.1",
+        "title": "Hàm băm và ví dụ XOR-hash",
+        "from": 34,
+        "to": 38,
+        "explanation": "Trong tài liệu: H ánh xạ chuỗi vào digest độ dài cố định. XOR-hash chia M thành khối 16 bit, đệm khối cuối theo quy ước slide, rồi H⊕(M)=M1⊕...⊕Mk. XOR giao hoán nên đổi thứ tự khối hoặc bù hai thay đổi có thể giữ hash; vì thế không phù hợp làm dấu vân tay mật mã. Slide dùng từ “duy nhất” cần hiểu là khó tìm va chạm trong thực hành, không phải không có va chạm: miền vào lớn hơn miền ra thì nguyên lý chuồng bồ câu đảm bảo tồn tại va chạm. Giải thích mở rộng: preimage resistance khó tìm đầu vào từ hash; second-preimage khó tìm M′≠M khớp M cho trước; collision resistance khó tìm bất kỳ hai đầu vào khác nhau có cùng hash.",
+        "plain": "Digest giống dấu nhận dạng ngắn của file; ngắn hơn toàn bộ file nên có thể trùng, điều cần là đối phương khó cố tình tạo trùng. Giới hạn ví von: vân tay người không phải bằng chứng toán học về hàm băm.",
+        "example": "A⊕B=B⊕A: hai chuỗi hai khối AB và BA có cùng XOR-hash dù nội dung khác. Với một khối h, hai khối h⊕x và x cũng XOR ra h.",
+        "pitfalls": [
+          "Không nói hash tuyệt đối duy nhất.",
+          "Không coi mọi thay đổi bắt buộc tạo hash khác trong mọi trường hợp.",
+          "Băm không phải mã hóa có khóa giải mã."
+        ],
+        "recap": [
+          "Phân biệt ba tính kháng.",
+          "Giải thích va chạm XOR-hash."
+        ]
+      },
+      {
+        "id": "5.3.2",
+        "title": "Cấu trúc hàm băm và các mô hình sử dụng",
+        "from": 39,
+        "to": 45,
+        "explanation": "Trong tài liệu: Hình trang 40: chia M thành khối Mi; trạng thái ban đầu IV, hàm nén F xử lý từng khối với trạng thái trước để ra trạng thái kế; kết quả cuối là digest. Slide nêu các mô hình: E(K,M||H(M)); M||E(K,H(M)); M||E(PRa,H(M)); mã hóa cả dạng ký; M||H(M||S); mã hóa cả dạng ghép bí mật. Mục tiêu phụ thuộc hash được bảo vệ bằng khóa nào và phần nào được mã hóa. Giải thích mở rộng: các hình là mô hình giảng dạy, H(M||S) không được tự đồng nhất với HMAC; không chọn phép ghép hash+bí mật tùy ý để triển khai.",
+        "plain": "Cùng là hash nhưng nếu kẻ sửa được thay luôn hash thì không bảo vệ nguồn gốc; phải bảo vệ digest hoặc dùng MAC/chữ ký.",
+        "example": "M||H(M) trên kênh không tin cậy không đủ xác thực; M kèm chữ ký digest kiểm bằng public key đáng tin có thể chứng thực nguồn.",
+        "pitfalls": [
+          "IV hàm băm không phải private key.",
+          "Không xem nối bí mật là HMAC chuẩn.",
+          "SHA-3 có cấu trúc khác họ băm lặp được minh họa."
+        ],
+        "recap": [
+          "Theo dõi M, digest và khóa trên sơ đồ.",
+          "Phân biệt giữ bí mật và xác thực digest."
+        ]
+      },
+      {
+        "id": "5.3.3",
+        "title": "MD5 và các họ SHA",
+        "from": 46,
+        "to": 50,
+        "explanation": "Trong tài liệu: MD5 (Message-Digest Algorithm 5) cho 128 bit, biểu diễn 32 ký tự hex vì mỗi ký tự hex có 4 bit. SHA (Secure Hash Algorithm): SHA-1 160 bit; SHA-224/256/384/512 cho độ dài tương ứng tên; SHA-3 dùng cấu trúc Keccak khác SHA-2. Slide có nội dung lịch sử về điểm yếu MD4/MD5 và SHA-1; không coi câu SHA-1 “thay thế an toàn” hay mọi SHA đều kháng va chạm là đánh giá hiện hành. Phân biệt học thuộc độ dài với đánh giá độ an toàn; chỉ chiều dài không đủ đảm bảo thuật toán tốt. SHA-512 nhận thông điệp nhỏ hơn 2^128 bit theo mô hình giới hạn trên slide, không phải đầu vào chỉ 512 bit.",
+        "plain": "Tên thuật toán không đồng nghĩa độ tin cậy; một thuật toán cũ có thể cho đúng số bit nhưng đã có điểm yếu trong cách trộn.",
+        "example": "File 1 MB và file 1 GB đều có MD5 digest 128 bit; đó là đầu ra cố định chứ không phải nén có thể phục hồi file.",
+        "pitfalls": [
+          "SHA không chỉ có đầu ra 160 bit.",
+          "32 ký tự hex MD5 không phải 32 bit.",
+          "Không dịch hash là nén dữ liệu có thể giải ngược."
+        ],
+        "recap": [
+          "Nhớ độ dài MD5 và các SHA.",
+          "Phân biệt SHA-2 và SHA-3 về cấu trúc."
+        ]
+      },
+      {
+        "id": "5.4",
+        "title": "Chữ ký số: ký, kiểm và kết hợp bảo mật",
+        "from": 51,
+        "to": 55,
+        "explanation": "Trong tài liệu: Người gửi băm M rồi dùng thuật toán ký với private key tạo chữ ký S; gửi M,S. Người nhận kiểm S bằng public key người gửi đã xác minh, đồng thời băm M theo cùng thuật toán để kiểm liên kết nội dung. Chữ ký cung cấp xác thực nguồn, toàn vẹn và hỗ trợ chống chối bỏ dưới giả thiết quản lý khóa đúng; không tự giấu thông điệp. Nếu cần bí mật, bổ sung mã hóa cho người nhận. Slide minh họa ký digest bằng RSA; không khái quát thành mọi chữ ký là giải mã một hash. Private key bị lộ hoặc public key bị tráo làm suy yếu kết luận về chủ thể.",
+        "plain": "Chữ ký giống cam kết gắn vào đúng nội dung; ai cũng có thể kiểm bằng public key, nhưng không vì thế đọc được nội dung nếu bên ngoài còn lớp mã hóa. Giới hạn ví von: không là ảnh chữ ký tay dán lên PDF.",
+        "example": "A ký hợp đồng, B kiểm bằng public key A. Muốn chỉ B đọc, A còn mã hóa nội dung cho B; khóa ký A và khóa giải mã B có vai trò khác nhau.",
+        "pitfalls": [
+          "Không dùng private key người nhận để ký thay người gửi.",
+          "Signature không tự confidentiality.",
+          "Phải tin đúng liên kết danh tính–public key."
+        ],
+        "recap": [
+          "Mô tả đúng thứ tự băm–ký–gửi–kiểm.",
+          "Chọn khóa theo vai trò."
+        ]
+      },
+      {
+        "id": "5.5",
+        "title": "Bài tập chứng thực và hệ tích hợp",
+        "from": 56,
+        "to": 59,
+        "explanation": "Trong tài liệu: Bài tập gồm tạo va chạm XOR-hash 16 bit, mô tả MD5, lưu đồ SHA và HMAC, phân tích lưu mật khẩu Windows XP trong bối cảnh lịch sử, khảo sát ứng dụng chữ ký, độ an toàn hash/MAC, cài ứng dụng minh họa; tìm public key/chứng thư website, kiểm hash phần mềm và thiết kế hệ có bảo mật–chứng thực–chữ ký. Trang 57 ghi SHA-51 không xác định được là thuật toán nào; cần giảng viên xác nhận thay vì tự đổi. Bài Windows XP học ở góc độ bảo vệ và đánh giá rủi ro hệ cũ, không yêu cầu thao tác với hệ thống không được phép.",
+        "plain": "Mỗi bài thực hành phải chỉ ra mình đang chứng minh mục tiêu gì; “hash khớp” khác với “đã tin đúng nhà phát hành”.",
+        "example": "Với h 16 bit, chọn x tùy ý rồi tạo hai khối (h⊕x)||x: XOR-hash bằng h. Thử nhiều x để có các chuỗi khác nhau.",
+        "pitfalls": [
+          "Không tải mã hash từ cùng nguồn bị giả mạo rồi kết luận xác thực.",
+          "Không làm lưu đồ cho tên thuật toán bị gõ thiếu trước khi xác nhận."
+        ],
+        "recap": [
+          "Giải thích được kết quả kiểm tra chứng minh điều gì.",
+          "Ghi nguồn, thuật toán, độ dài và điều kiện tin cậy."
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "title": "Mục tiêu và cơ chế",
+        "headers": [
+          "Cơ chế",
+          "Mục tiêu",
+          "Giới hạn"
+        ],
+        "rows": [
+          [
+            "Mã hóa",
+            "Giữ bí mật nội dung",
+            "Không tự xác thực nguồn"
+          ],
+          [
+            "Hash không khóa",
+            "Tạo digest, hỗ trợ kiểm tra dữ liệu",
+            "Không tự chống giả mạo nguồn"
+          ],
+          [
+            "MAC",
+            "Toàn vẹn và nguồn từ người biết khóa chung",
+            "Không chống chối bỏ giữa hai người cùng khóa"
+          ],
+          [
+            "Chữ ký số",
+            "Xác thực, toàn vẹn, hỗ trợ chống chối bỏ",
+            "Không tự giấu nội dung"
+          ]
+        ]
+      }
+    ],
+    "study": [
+      "Đọc theo thứ tự mục; sau mỗi mục đóng tài liệu và giải thích cơ chế trong 60 giây.",
+      "Tự làm ví dụ nhỏ bằng tay, sau đó kiểm tra phép tính; không học công thức thiếu điều kiện.",
+      "Luyện câu hỏi và ghi lý do từng phương án sai; ôn lại sau 1, 3 và 7 ngày."
+    ],
+    "terms": [
+      {
+        "en": "Message Authentication Code",
+        "vi": "Mã chứng thực thông điệp",
+        "meaning": "Tag phụ thuộc thông điệp và khóa bí mật."
+      },
+      {
+        "en": "Message digest",
+        "vi": "Giá trị băm",
+        "meaning": "Đầu ra độ dài cố định đại diện dữ liệu."
+      },
+      {
+        "en": "Collision",
+        "vi": "Va chạm",
+        "meaning": "Hai đầu vào khác nhau có cùng hash."
+      },
+      {
+        "en": "Non-repudiation",
+        "vi": "Chống chối bỏ",
+        "meaning": "Hỗ trợ bằng chứng quy trách nhiệm với giả thiết khóa và danh tính đúng."
+      },
+      {
+        "en": "Digital signature",
+        "vi": "Chữ ký số",
+        "meaning": "Bằng chứng kiểm bằng public key, gắn với nội dung và private key người ký."
+      },
+      {
+        "en": "Checksum",
+        "vi": "Tổng kiểm",
+        "meaning": "Giá trị kiểm lỗi, không mặc định chống giả mạo chủ động."
+      },
+      {
+        "en": "HMAC",
+        "vi": "MAC dựa trên băm có khóa",
+        "meaning": "Cấu trúc MAC chuẩn dùng hash và khóa chia sẻ."
+      },
+      {
+        "en": "Authentication",
+        "vi": "Chứng thực",
+        "meaning": "Xác nhận nguồn gốc/danh tính và sự nguyên vẹn tùy cơ chế."
+      },
+      {
+        "en": "MAC — Message Authentication Code",
+        "vi": "Mã chứng thực thông điệp",
+        "meaning": "Tag tính từ khóa bí mật chung và thông điệp; không phải địa chỉ Media Access Control."
+      },
+      {
+        "en": "HMAC — Keyed-Hash Message Authentication Code",
+        "vi": "MAC dùng hàm băm có khóa",
+        "meaning": "Cấu trúc MAC với khóa và hash; không đồng nhất hash nối bí mật hoặc checksum."
+      },
+      {
+        "en": "CHF — Cryptographic Hash Function",
+        "vi": "Hàm băm mật mã",
+        "meaning": "Hàm băm thiết kế cho tính một chiều và khó tìm va chạm; không giải mã ngược bằng khóa."
+      },
+      {
+        "en": "MD5 — Message-Digest Algorithm 5",
+        "vi": "Hàm băm MD5",
+        "meaning": "Đầu ra128 bit, thường32 ký tự hex; học thông số không đồng nghĩa khuyến nghị an toàn."
+      },
+      {
+        "en": "SHA — Secure Hash Algorithm",
+        "vi": "Họ giải thuật băm an toàn",
+        "meaning": "Gồm các họ SHA-1, SHA-2, SHA-3 với độ dài/cấu trúc khác nhau."
+      },
+      {
+        "en": "SHA-1",
+        "vi": "SHA phiên bản1",
+        "meaning": "Digest160 bit; các mô tả ứng dụng trong slide mang bối cảnh lịch sử."
+      },
+      {
+        "en": "SHA-2",
+        "vi": "Họ SHA-2",
+        "meaning": "Slide nêu SHA-224/256/384/512; số cuối biểu thị bit đầu ra."
+      },
+      {
+        "en": "SHA-3 / Keccak",
+        "vi": "Họ SHA-3",
+        "meaning": "Họ băm có cấu trúc khác SHA-2, gồm các biến thể độ dài224/256/384/512 bit trên slide."
+      },
+      {
+        "en": "IV — Initialization Vector",
+        "vi": "Giá trị khởi tạo",
+        "meaning": "Trạng thái đầu của chuỗi hàm nén trong hình băm; không là private key."
+      },
+      {
+        "en": "Compression function",
+        "vi": "Hàm nén mật mã",
+        "meaning": "Biến trạng thái trước và khối thông điệp thành trạng thái tiếp; không là nén có thể giải phục hồi file."
+      },
+      {
+        "en": "Preimage resistance",
+        "vi": "Kháng tiền ảnh",
+        "meaning": "Cho digest h, khó tìm M sao H(M)=h."
+      },
+      {
+        "en": "Second-preimage resistance",
+        "vi": "Kháng tiền ảnh thứ hai",
+        "meaning": "Cho M, khó tìm M′ khác M nhưng H(M′)=H(M)."
+      },
+      {
+        "en": "Collision resistance",
+        "vi": "Kháng va chạm",
+        "meaning": "Khó tìm bất kỳ cặp đầu vào khác nhau cùng digest; không có nghĩa va chạm không tồn tại."
+      },
+      {
+        "en": "OTP — One-time Password",
+        "vi": "Mật khẩu dùng một lần",
+        "meaning": "Mã xác thực dùng một lần; phân biệt One-time Pad trong bài mật mã."
+      },
+      {
+        "en": "PIN — Personal Identification Number",
+        "vi": "Mã số nhận dạng cá nhân",
+        "meaning": "Thông tin người dùng biết, khác vật sở hữu và biometric."
+      },
+      {
+        "en": "Biometric",
+        "vi": "Sinh trắc học",
+        "meaning": "Nhận dạng qua thuộc tính như vân tay/võng mạc."
+      },
+      {
+        "en": "Smart card",
+        "vi": "Thẻ thông minh",
+        "meaning": "Vật sở hữu có khả năng lưu/xử lý thông tin phục vụ nhận dạng."
+      },
+      {
+        "en": "Certificate",
+        "vi": "Chứng thư số",
+        "meaning": "Liên kết danh tính với khóa theo hệ tin cậy; phải kiểm chuỗi, hạn và trạng thái phù hợp."
+      },
+      {
+        "en": "TCP — Transmission Control Protocol",
+        "vi": "Giao thức điều khiển truyền vận",
+        "meaning": "Checksum trong TCP hỗ trợ phát hiện lỗi, không là MAC chống giả mạo."
+      },
+      {
+        "en": "Hexadecimal",
+        "vi": "Thập lục phân",
+        "meaning": "Mỗi chữ số0..F biểu diễn4 bit;32 ký tự hex là128 bit."
+      },
+      {
+        "en": "RFC — Request for Comments",
+        "vi": "Tài liệu RFC",
+        "meaning": "Dòng tài liệu kỹ thuật Internet; slide viện dẫn RFC1321 cho MD5."
+      },
+      {
+        "en": "NSA — National Security Agency",
+        "vi": "Cơ quan An ninh Quốc gia Hoa Kỳ",
+        "meaning": "Tổ chức được slide nhắc trong lịch sử phát triển SHA."
+      },
+      {
+        "en": "Replay",
+        "vi": "Phát lại",
+        "meaning": "Gửi lại thông điệp hợp lệ cũ; MAC đúng không tự chứng minh độ mới."
+      }
+    ],
+    "issues": [
+      {
+        "page": 6,
+        "note": "Authentication chung không tự đảm bảo chống chối bỏ; MAC khóa chung là phản ví dụ."
+      },
+      {
+        "page": 15,
+        "note": "HMAC không phải kết hợp hàm băm với checksum thông thường; phân biệt cấu trúc MAC dựa trên hash có khóa."
+      },
+      {
+        "page": 21,
+        "note": "Dòng “Chỉ A có PRb” nhầm ký hiệu: ý đúng trong sơ đồ là private key A, PRa."
+      },
+      {
+        "page": 26,
+        "note": "Khoảng độ dài tag/khóa là mô tả lịch sử trong slide, không khuyến nghị triển khai hiện hành."
+      },
+      {
+        "page": 36,
+        "note": "“Duy nhất” không thể hiểu tuyệt đối không va chạm với đầu vào dài hơn đầu ra; cần diễn giải là khó tìm va chạm."
+      },
+      {
+        "page": 46,
+        "note": "MD5/SHA-1 và các đánh giá thay thế là nội dung lịch sử; không xem SHA-1 là lựa chọn an toàn mới."
+      },
+      {
+        "page": 48,
+        "note": "Không khái quát mọi phiên bản SHA đều giữ nguyên mức kháng va chạm như tuyên bố chung."
+      },
+      {
+        "page": 57,
+        "note": "Tên “SHA-51” không rõ; cần giảng viên xác nhận. Không tự đoán là SHA-1 hoặc SHA-512."
+      }
+    ],
+    "questions": [
+      {
+        "id": "5-q1",
+        "section": "5.1.1",
+        "topic": "Vai trò chứng thực và nhận dạng",
+        "level": "Thông hiểu",
+        "stem": "Mục tiêu trực tiếp của chứng thực dữ liệu là gì?",
+        "options": [
+          "Xác nhận nguồn gốc và phát hiện sửa đổi",
+          "Luôn nén file",
+          "Luôn giấu nội dung",
+          "Bảo mật nội dung khỏi mọi người đọc"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Authentication quan tâm nguồn và tính nguyên vẹn, khác mục tiêu bí mật.",
+          "Sai: Nén giảm số bit biểu diễn, không chứng minh ai gửi hay dữ liệu có bị sửa.",
+          "Sai: Giấu nội dung là confidentiality; chứng thực có thể gửi M nguyên văn kèm MAC.",
+          "Sai: Chặn mọi người đọc là mục tiêu bí mật, không trực tiếp là xác nhận nguồn/toàn vẹn."
+        ],
+        "page": 6
+      },
+      {
+        "id": "5-q2",
+        "section": "5.1.1",
+        "topic": "Vai trò chứng thực và nhận dạng",
+        "level": "Nhận biết",
+        "stem": "Smart card thuộc dạng yếu tố nào?",
+        "options": [
+          "Hash của file",
+          "Thứ người dùng có",
+          "Thứ người dùng biết",
+          "Đặc điểm sinh học"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Hash file là giá trị kiểm tra dữ liệu, không là vật người dùng sở hữu để nhận dạng.",
+          "Đúng: Thẻ là vật sở hữu, khác password và biometric.",
+          "Sai: PIN/password là thứ biết; smart card là thẻ vật lý.",
+          "Sai: Vân tay/võng mạc là biometric; smart card không là thuộc tính cơ thể."
+        ],
+        "page": 6
+      },
+      {
+        "id": "5-q3",
+        "section": "5.1.1",
+        "topic": "Vai trò chứng thực và nhận dạng",
+        "level": "Nhận biết",
+        "stem": "Ví dụ nào là biometric?",
+        "options": [
+          "Khóa USB chứa file",
+          "Mật khẩu dùng một lần",
+          "Vân tay",
+          "Mã PIN"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: USB chứa bí mật là vật sở hữu, không là đặc điểm sinh học.",
+          "Sai: OTP là mã dùng một lần, không đo thuộc tính sinh học.",
+          "Đúng: Vân tay là đặc điểm sinh học dùng nhận dạng.",
+          "Sai: PIN là điều người dùng biết, không là biometric."
+        ],
+        "page": 6
+      },
+      {
+        "id": "5-q4",
+        "section": "5.1.2",
+        "topic": "Chứng thực bằng mã hóa và giới hạn khóa chia sẻ",
+        "level": "Thông hiểu",
+        "stem": "Vì sao khóa chung không đủ chống chối bỏ với bên thứ ba?",
+        "options": [
+          "Khóa chung luôn công khai",
+          "Người nhận không biết thuật toán",
+          "Bản rõ luôn rỗng",
+          "Cả người gửi và người nhận đều tạo được bằng chứng cùng khóa"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Khóa chung vẫn có thể hoàn toàn bí mật; giới hạn nằm ở việc có hai chủ thể cùng biết khóa.",
+          "Sai: Người nhận phải biết thuật toán và khóa để kiểm; không biết thuật toán không là lý do chống chối bỏ thất bại.",
+          "Sai: Bản rõ có thể là dữ liệu bất kỳ; vấn đề quy trách nhiệm vẫn tồn tại dù bản rõ dài hay ngắn.",
+          "Đúng: Bob có thể tạo dữ liệu hợp lệ giống Alice nên không quy riêng cho Alice."
+        ],
+        "page": 14
+      },
+      {
+        "id": "5-q5",
+        "section": "5.1.2",
+        "topic": "Chứng thực bằng mã hóa và giới hạn khóa chia sẻ",
+        "level": "Thông hiểu",
+        "stem": "Mã hóa thông điệp với public key B đảm bảo trực tiếp điều gì trong mô hình?",
+        "options": [
+          "Bí mật cho B có private key tương ứng",
+          "Danh tính chắc chắn là A",
+          "Không cần kiểm public key",
+          "Không ai tạo được bản mã mới"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Ai cũng dùng public key B được; chỉ B có private key giải mã.",
+          "Sai: Ai cũng có public key B nên ai cũng tạo ciphertext và tự nhận là A được.",
+          "Sai: Nếu không xác minh public key B, đối phương có thể thay khóa rồi đọc dữ liệu.",
+          "Sai: Tính công khai cho phép mọi người tạo ciphertext gửi B; điều được hạn chế là quyền giải mã."
+        ],
+        "page": 14
+      },
+      {
+        "id": "5-q6",
+        "section": "5.1.3",
+        "topic": "Digest, checksum và HMAC: phân biệt",
+        "level": "Thông hiểu",
+        "stem": "Digest không khóa khác MAC ở đâu?",
+        "options": [
+          "Digest luôn dài bằng file",
+          "MAC phụ thuộc khóa bí mật",
+          "Digest luôn có private key",
+          "MAC luôn mã hóa toàn bộ thông điệp"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Digest có độ dài cố định theo hàm băm, không chạy theo độ dài file.",
+          "Đúng: Khóa bí mật là điểm phân biệt quan trọng.",
+          "Sai: Hash không khóa không dùng private key; chữ ký mới sử dụng khóa riêng.",
+          "Sai: MAC tạo tag chứng thực, không biến toàn bộ nội dung thành bản mã."
+        ],
+        "page": 15
+      },
+      {
+        "id": "5-q7",
+        "section": "5.1.3",
+        "topic": "Digest, checksum và HMAC: phân biệt",
+        "level": "Nhận biết",
+        "stem": "Checksum TCP chủ yếu phục vụ mục tiêu nào?",
+        "options": [
+          "Trao đổi khóa công khai",
+          "Giữ bí mật nội dung",
+          "Phát hiện lỗi truyền",
+          "Chữ ký số chống chối bỏ"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Trao đổi khóa dùng giao thức như DH, không do checksum thực hiện.",
+          "Sai: Checksum gửi kèm không che nội dung gói tin.",
+          "Đúng: Checksum thường không chống đối phương chủ động tính lại.",
+          "Sai: Checksum không có private/public key và đối phương tính lại được nên không phải chữ ký số."
+        ],
+        "page": 15
+      },
+      {
+        "id": "5-q8",
+        "section": "5.1.3",
+        "topic": "Digest, checksum và HMAC: phân biệt",
+        "level": "Thông hiểu",
+        "stem": "HMAC là gì?",
+        "options": [
+          "Hash cộng checksum TCP tùy ý",
+          "Chữ ký băm dùng public key người nhận",
+          "Chữ ký cần public key",
+          "Cấu trúc MAC dựa trên hàm băm có khóa"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Checksum TCP không phải thành phần thay thế cho cấu trúc keyed-hash có ipad/opad.",
+          "Sai: HMAC dùng khóa chia sẻ bí mật, không dùng public key người nhận để tạo chữ ký.",
+          "Sai: Chữ ký là bất đối xứng còn HMAC là MAC đối xứng, cả hai bên giữ cùng khóa.",
+          "Đúng: HMAC sử dụng khóa bí mật và cấu trúc hash xác định."
+        ],
+        "page": 15
+      },
+      {
+        "id": "5-q9",
+        "section": "5.1.3",
+        "topic": "Digest, checksum và HMAC: phân biệt",
+        "level": "Thông hiểu",
+        "stem": "File và hash đều bị kẻ tấn công thay thế thì hash khớp chứng minh gì?",
+        "options": [
+          "Chỉ chúng phù hợp với nhau, chưa chứng minh nguồn tin cậy",
+          "Chắc chắn đúng nhà phát hành",
+          "Chắc chắn không có malware",
+          "Private key không thể bị lộ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Hash trần không ngăn đối phương thay cả dữ liệu và digest.",
+          "Sai: Muốn quy về nhà phát hành phải có hash/chữ ký từ nguồn đáng tin; hai dữ liệu tự khớp chưa đủ.",
+          "Sai: Hash chỉ kiểm sự phù hợp byte, không phân tích nội dung có độc hại hay không.",
+          "Sai: Phép so hash trần không nói gì về tình trạng private key của nhà phát hành."
+        ],
+        "page": 15
+      },
+      {
+        "id": "5-q10",
+        "section": "5.2.1",
+        "topic": "MAC: tính, gửi, kiểm và kết hợp mã hóa",
+        "level": "Nhận biết",
+        "stem": "Công thức khái niệm của MAC là gì?",
+        "options": [
+          "T=giá trị hash không khóa",
+          "T=C(K,M)",
+          "T=M/K trong số thực",
+          "T=E(PUb,M) luôn"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Hash không khóa không có bí mật ngăn người khác tính tag cho dữ liệu giả.",
+          "Đúng: MAC phụ thuộc thông điệp và khóa bí mật.",
+          "Sai: MAC dùng thuật toán mật mã trên chuỗi bit; phép chia số thực không định nghĩa MAC.",
+          "Sai: Mã hóa public key người nhận khác MAC có khóa bí mật chia sẻ, và ai cũng có thể mã hóa."
+        ],
+        "page": 23
+      },
+      {
+        "id": "5-q11",
+        "section": "5.2.1",
+        "topic": "MAC: tính, gửi, kiểm và kết hợp mã hóa",
+        "level": "Thông hiểu",
+        "stem": "Người nhận kiểm MAC bằng cách nào?",
+        "options": [
+          "Chỉ nhìn độ dài file",
+          "Gửi private key lên mạng",
+          "Tính lại tag bằng khóa chia sẻ rồi so sánh",
+          "Giải mã tag để lấy nguyên file"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Độ dài không phát hiện thay nội dung bằng chuỗi khác cùng kích thước.",
+          "Sai: MAC dùng khóa chung để tính lại; gửi private key vừa không cần vừa phá bảo mật.",
+          "Đúng: Hai phía dùng cùng khóa và hàm MAC trên thông điệp nhận.",
+          "Sai: Tag là đầu ra nhiều–một, không chứa đủ thông tin để giải về toàn bộ file."
+        ],
+        "page": 23
+      },
+      {
+        "id": "5-q12",
+        "section": "5.2.1",
+        "topic": "MAC: tính, gửi, kiểm và kết hợp mã hóa",
+        "level": "Thông hiểu",
+        "stem": "Gửi M cùng MAC có tự che nội dung M không?",
+        "options": [
+          "Có luôn",
+          "Chỉ khi MAC dài 32 bit",
+          "Có nếu M là văn bản",
+          "Không"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: M được truyền nguyên văn nên người quan sát vẫn đọc nó; tag chỉ xác thực.",
+          "Sai: 32 bit là độ dài tag, không biến dữ liệu M thành ciphertext.",
+          "Sai: Văn bản hay nhị phân đều lộ nếu gửi nguyên dạng cùng MAC.",
+          "Đúng: MAC không phải phép mã hóa nội dung."
+        ],
+        "page": 23
+      },
+      {
+        "id": "5-q13",
+        "section": "5.2.1",
+        "topic": "MAC: tính, gửi, kiểm và kết hợp mã hóa",
+        "level": "Thông hiểu",
+        "stem": "MAC hợp lệ có tự ngăn phát lại một thông điệp cũ không?",
+        "options": [
+          "Không nếu thiếu cơ chế kiểm độ mới",
+          "Có luôn",
+          "Có vì tag ngắn",
+          "Có vì người nhận biết khóa"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Thông điệp cũ và tag cũ vẫn có thể hợp lệ; cần ràng buộc số thứ tự/nonce/ngữ cảnh.",
+          "Sai: Một cặp M,MAC cũ vẫn kiểm đúng nếu hệ không kiểm độ mới/số thứ tự.",
+          "Sai: Tag ngắn không mang dấu thời gian tự động; còn làm dễ đoán tag hơn.",
+          "Sai: Biết khóa cho phép kiểm lại tag, không chứng minh thông điệp chưa từng được nhận."
+        ],
+        "page": 23
+      },
+      {
+        "id": "5-q14",
+        "section": "5.2.1",
+        "topic": "MAC: tính, gửi, kiểm và kết hợp mã hóa",
+        "level": "Thông hiểu",
+        "stem": "Encrypt-then-MAC theo sơ đồ slide tính MAC trên gì?",
+        "options": [
+          "Dữ liệu đã giải mã không có khóa",
+          "Ciphertext",
+          "Chỉ public key",
+          "Chỉ tên người dùng"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: MAC trong encrypt-then-MAC dùng khóa và đặt trên dữ liệu đã mã hóa, không trên bản rõ sau giải mã.",
+          "Đúng: Mô hình E(K2,M)||C(K1,E(K2,M)) xác thực ciphertext.",
+          "Sai: Chỉ public key không ràng buộc tag với nội dung ciphertext được gửi.",
+          "Sai: Tên người dùng riêng lẻ không bao phủ dữ liệu đã mã hóa nên không phát hiện sửa ciphertext."
+        ],
+        "page": 23
+      },
+      {
+        "id": "5-q15",
+        "section": "5.2.2",
+        "topic": "MAC: độ dài, vét cạn và DES-MAC",
+        "level": "Thông hiểu",
+        "stem": "Khóa k bit và tag n bit: một cặp lý tưởng để lại khoảng bao nhiêu khóa khớp?",
+        "options": [
+          "2^(k+n)",
+          "Luôn đúng một khóa",
+          "2^(k−n)",
+          "k+n"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: 2^(k+n) nhân thêm không gian tag thay vì lọc khóa theo một tag quan sát được.",
+          "Sai: Khi k>n, nhiều khóa có thể cùng tạo tag; một cặp không bảo đảm duy nhất.",
+          "Đúng: 2^k khóa phân vào khoảng 2^n tag.",
+          "Sai: k+n là phép cộng độ dài, không là kỳ vọng số khóa trong không gian 2^k."
+        ],
+        "page": 30
+      },
+      {
+        "id": "5-q16",
+        "section": "5.2.2",
+        "topic": "MAC: độ dài, vét cạn và DES-MAC",
+        "level": "Vận dụng",
+        "stem": "k=80,n=32, số ứng viên sau một cặp xấp xỉ bao nhiêu?",
+        "options": [
+          "2^32",
+          "2^80",
+          "48",
+          "2^48"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: 2^32 là số tag có thể, không phải số khóa còn khớp một tag.",
+          "Sai: 2^80 là toàn bộ khóa trước khi lọc bằng cặp thông điệp–tag.",
+          "Sai: 48 là số bit số mũ k−n, số ứng viên là 2^48 chứ không phải 48.",
+          "Đúng: 80−32=48 theo mô hình trong slide."
+        ],
+        "page": 30
+      },
+      {
+        "id": "5-q17",
+        "section": "5.2.2",
+        "topic": "MAC: độ dài, vét cạn và DES-MAC",
+        "level": "Vận dụng",
+        "stem": "Sau hai cặp độc lập trong cùng mô hình k=80,n=32 còn khoảng bao nhiêu?",
+        "options": [
+          "2^16",
+          "2^48",
+          "2^64",
+          "16"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: 80−2×32=16.",
+          "Sai: 2^48 là kỳ vọng sau cặp đầu tiên; cặp thứ hai lọc thêm khoảng 32 bit.",
+          "Sai: 2^64 đếm không gian hai tag 32 bit, không phải khóa còn sau lọc.",
+          "Sai: 16 là số mũ 80−64, số khóa kỳ vọng là 2^16."
+        ],
+        "page": 30
+      },
+      {
+        "id": "5-q18",
+        "section": "5.2.2",
+        "topic": "MAC: độ dài, vét cạn và DES-MAC",
+        "level": "Vận dụng",
+        "stem": "Một hệ lý tưởng dùng MAC dài 16 bit và cho đối phương một lần đoán tag ngẫu nhiên. Xác suất đoán đúng là bao nhiêu?",
+        "options": [
+          "1/2",
+          "1/65536",
+          "1/16",
+          "1/256"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: 1/2 là đoán một bit, không phải toàn bộ tag16 bit.",
+          "Đúng: Có2^16=65536 tag đều nhau nên một lần đoán khớp xác suất1/65536.",
+          "Sai: 16 là số bit, không phải số tag có thể.",
+          "Sai: 256 là2^8, chỉ đúng với tag8 bit."
+        ],
+        "page": 30
+      },
+      {
+        "id": "5-q19",
+        "section": "5.3.1",
+        "topic": "Hàm băm và ví dụ XOR-hash",
+        "level": "Thông hiểu",
+        "stem": "Vì sao XOR-hash không kháng va chạm tốt?",
+        "options": [
+          "Mọi đầu vào có độ dài 0",
+          "Nó luôn tạo hash khác cho mọi chuỗi",
+          "XOR giao hoán cho phép đổi thứ tự khối mà giữ hash",
+          "Nó dùng khóa công khai dài"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: XOR-hash xử lý chuỗi độ dài thay đổi; không yêu cầu đầu vào rỗng.",
+          "Sai: Có thể đổi hai khối giữ XOR nên tồn tại va chạm tạo rất dễ, trái nhận định này.",
+          "Đúng: A XOR B=B XOR A nên dễ tạo hai chuỗi khác nhau cùng hash.",
+          "Sai: XOR-hash ví dụ không dùng public key; điểm yếu là tính tuyến tính/giao hoán."
+        ],
+        "page": 35
+      },
+      {
+        "id": "5-q20",
+        "section": "5.3.1",
+        "topic": "Hàm băm và ví dụ XOR-hash",
+        "level": "Thông hiểu",
+        "stem": "Hàm băm đầu ra cố định có thể tuyệt đối không va chạm trên mọi chuỗi dài tùy ý không?",
+        "options": [
+          "Có nếu tên chứa SHA",
+          "Có nếu bỏ khóa",
+          "Có nếu file là PDF",
+          "Không, miền vào lớn hơn miền ra"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Tên SHA không thay nguyên lý miền vào lớn hơn miền ra; mục tiêu là khó tìm trùng.",
+          "Sai: Bỏ khóa không làm tăng miền đầu ra; va chạm vẫn phải tồn tại.",
+          "Sai: Định dạng PDF không loại nguyên lý chuồng bồ câu trên mọi chuỗi dài tùy ý.",
+          "Đúng: Nguyên lý chuồng bồ câu đảm bảo tồn tại trùng đầu ra."
+        ],
+        "page": 35
+      },
+      {
+        "id": "5-q21",
+        "section": "5.3.1",
+        "topic": "Hàm băm và ví dụ XOR-hash",
+        "level": "Thông hiểu",
+        "stem": "Khó tìm đầu vào từ một digest cho trước gọi là gì?",
+        "options": [
+          "Kháng tiền ảnh",
+          "Kháng va chạm",
+          "Mã hóa đối xứng",
+          "Kháng tiền ảnh thứ hai"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Preimage resistance xét tìm M từ h=H(M).",
+          "Sai: Kháng va chạm xét tìm bất kỳ hai thông điệp cùng hash, không phải đầu vào cho một digest đã cho.",
+          "Sai: Mã đối xứng có khóa giải ngược; băm một chiều không phải phép giải mã đó.",
+          "Sai: Tiền ảnh thứ hai cho trước một thông điệp M và tìm M′ trùng hash; đề chỉ cho digest, không cho thông điệp gốc."
+        ],
+        "page": 35
+      },
+      {
+        "id": "5-q22",
+        "section": "5.3.1",
+        "topic": "Hàm băm và ví dụ XOR-hash",
+        "level": "Thông hiểu",
+        "stem": "Khó tìm bất kỳ cặp khác nhau cùng digest gọi là gì?",
+        "options": [
+          "Hoán vị",
+          "Kháng va chạm",
+          "Kháng phát lại tự động",
+          "Giải mã"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Hoán vị là ánh xạ một–một trên tập bằng kích thước, không mô tả thuộc tính chống tìm trùng của hash.",
+          "Đúng: Collision resistance khác với tìm ảnh ngược cho một digest cụ thể.",
+          "Sai: Phát lại sử dụng lại thông điệp hợp lệ; hash không tự cung cấp độ mới.",
+          "Sai: Giải mã khôi phục bản rõ bằng khóa, khác tìm cặp hash trùng nhau."
+        ],
+        "page": 35
+      },
+      {
+        "id": "5-q23",
+        "section": "5.3.1",
+        "topic": "Hàm băm và ví dụ XOR-hash",
+        "level": "Vận dụng",
+        "stem": "Hệ XOR-hash xử lý mỗi khối 4 bit. Với h=1010 và x=0011, cặp khối nào có hash h theo cách (h XOR x)||x?",
+        "options": [
+          "0011 || 0011",
+          "1001 || 1001",
+          "1001 || 0011",
+          "1010 || 0011"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: Hai khối giống nhau XOR về0000, không phải h.",
+          "Sai: Hai khối1001 giống nhau cũng XOR về0000.",
+          "Đúng: 1010 XOR0011=1001; 1001 XOR0011=1010.",
+          "Sai: 1010 XOR0011=1001, không phải h=1010."
+        ],
+        "page": 35
+      },
+      {
+        "id": "5-q24",
+        "section": "5.3.2",
+        "topic": "Cấu trúc hàm băm và các mô hình sử dụng",
+        "level": "Vận dụng",
+        "stem": "Kẻ tấn công thay cả file tải về và hash trần trên cùng trang tải. Người dùng tính hash file và thấy trùng hash trên trang. Nên kết luận gì?",
+        "options": [
+          "File chắc chắn không bị thay vì hash đã khớp",
+          "Đã chứng minh người gửi giữ private key của nhà phát hành",
+          "Chỉ cần đổi hash sang định dạng hex là xác thực được nguồn",
+          "Chưa chứng minh file đúng nhà phát hành; cần nguồn hash đáng tin hoặc chữ ký được kiểm đúng"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Cả file lẫn giá trị đối chiếu đều có thể bị thay cùng lúc nên không độc lập đáng tin.",
+          "Sai: Hash trần không sử dụng private key nên không đưa bằng chứng sở hữu khóa.",
+          "Sai: Hex chỉ là cách biểu diễn bit, không bổ sung nguồn tin cậy hay chữ ký.",
+          "Đúng: Đối phương tính được hash mới cho file giả; so khớp chỉ chứng minh hai dữ liệu phù hợp."
+        ],
+        "page": 43
+      },
+      {
+        "id": "5-q25",
+        "section": "5.3.2",
+        "topic": "Cấu trúc hàm băm và các mô hình sử dụng",
+        "level": "Nhận biết",
+        "stem": "Trong cấu trúc hash lặp, IV là gì?",
+        "options": [
+          "Trạng thái khởi tạo",
+          "Private key người ký",
+          "Tag nhận từ mạng",
+          "Mã PIN người nhận"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: IV cung cấp trạng thái đầu cho quá trình nén từng khối.",
+          "Sai: Hàm băm thường công khai IV; nó không là private key của người ký.",
+          "Sai: Tag từ mạng là kết quả cần kiểm, không phải trạng thái khởi tạo của hàm nén.",
+          "Sai: PIN là yếu tố nhận dạng cá nhân, không là IV cố định của hàm băm chuẩn."
+        ],
+        "page": 43
+      },
+      {
+        "id": "5-q26",
+        "section": "5.3.3",
+        "topic": "MD5 và các họ SHA",
+        "level": "Nhận biết",
+        "stem": "MD5 có digest bao nhiêu bit?",
+        "options": [
+          "512",
+          "128",
+          "32",
+          "160"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: 512 bit là độ dài SHA-512, không phải MD5.",
+          "Đúng: MD5 có 128 bit, thường hiển thị 32 ký tự hex.",
+          "Sai: 32 là số ký tự hex khi biểu diễn MD5, mỗi ký tự mang 4 bit.",
+          "Sai: 160 bit là SHA-1, không phải MD5."
+        ],
+        "page": 46
+      },
+      {
+        "id": "5-q27",
+        "section": "5.3.3",
+        "topic": "MD5 và các họ SHA",
+        "level": "Vận dụng",
+        "stem": "Một công cụ xuất digest dưới dạng 32 ký tự hex. Mỗi ký tự hex mang 4 bit. Digest đó có độ dài bao nhiêu bit?",
+        "options": [
+          "256",
+          "32",
+          "128",
+          "64"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: 256 bit tương ứng64 ký tự hex, gấp đôi số đã cho.",
+          "Sai: 32 nhầm số ký tự với số bit; một ký tự hex không phải một bit.",
+          "Đúng: 32×4=128 bit.",
+          "Sai: 64 bit chỉ đủ16 ký tự hex, thiếu một nửa."
+        ],
+        "page": 46
+      },
+      {
+        "id": "5-q28",
+        "section": "5.3.3",
+        "topic": "MD5 và các họ SHA",
+        "level": "Nhận biết",
+        "stem": "SHA-1 cho độ dài digest nào?",
+        "options": [
+          "128 bit",
+          "256 bit",
+          "32 bit",
+          "160 bit"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: 128 bit là MD5, không là SHA-1.",
+          "Sai: 256 bit là SHA-256, thuộc họ SHA-2.",
+          "Sai: 32 có thể là số ký tự hex của MD5, không là bit đầu ra SHA-1.",
+          "Đúng: Độ dài danh nghĩa SHA-1 là 160 bit; không đồng nghĩa khuyến nghị an toàn hiện hành."
+        ],
+        "page": 46
+      },
+      {
+        "id": "5-q29",
+        "section": "5.3.3",
+        "topic": "MD5 và các họ SHA",
+        "level": "Nhận biết",
+        "stem": "SHA-256 cho digest bao nhiêu bit?",
+        "options": [
+          "256",
+          "128",
+          "160",
+          "512"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Số 256 chỉ độ dài digest.",
+          "Sai: 128 bit là MD5, không phải SHA-256.",
+          "Sai: 160 bit là SHA-1.",
+          "Sai: 512 bit là SHA-512 hoặc SHA3-512, không phải SHA-256."
+        ],
+        "page": 46
+      },
+      {
+        "id": "5-q30",
+        "section": "5.3.3",
+        "topic": "MD5 và các họ SHA",
+        "level": "Thông hiểu",
+        "stem": "SHA-3 khác SHA-2 chủ yếu ở điều gì theo slide?",
+        "options": [
+          "SHA-3 có public key",
+          "Cấu trúc Keccak khác",
+          "SHA-3 luôn không cần đầu vào",
+          "SHA-3 là mã hóa RSA"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: SHA-3 là hàm băm không khóa, không có public/private key.",
+          "Đúng: Slide nêu SHA-3 dùng cấu trúc Keccak khác họ SHA-2.",
+          "Sai: SHA-3 vẫn nhận thông điệp làm đầu vào để tạo digest.",
+          "Sai: RSA là hệ bất đối xứng, không là cấu trúc băm SHA-3."
+        ],
+        "page": 46
+      },
+      {
+        "id": "5-q31",
+        "section": "5.4",
+        "topic": "Chữ ký số: ký, kiểm và kết hợp bảo mật",
+        "level": "Thông hiểu",
+        "stem": "Ai dùng khóa nào để ký thông điệp A gửi?",
+        "options": [
+          "A dùng private key B",
+          "Mọi người dùng public key A",
+          "A dùng private key A",
+          "B dùng public key B"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Sai: A không được giữ private key B để ký mạo danh B; chữ ký A dùng khóa riêng A.",
+          "Sai: Public key A để mọi người kiểm, không cho phép tạo chữ ký A hợp lệ.",
+          "Đúng: Quyền tạo chữ ký gắn với khóa riêng của người ký.",
+          "Sai: Public key B dùng để mã hóa gửi B/kiểm chữ ký B, không là khóa ký của A."
+        ],
+        "page": 53
+      },
+      {
+        "id": "5-q32",
+        "section": "5.4",
+        "topic": "Chữ ký số: ký, kiểm và kết hợp bảo mật",
+        "level": "Vận dụng",
+        "stem": "A gửi hợp đồng có chữ ký, nhưng người nhận lấy public key A qua kênh có thể bị thay. Cách xác minh phù hợp nhất là gì?",
+        "options": [
+          "Chỉ cần public key mở được chữ ký thì chắc chắn là A",
+          "Dùng private key người nhận thay cho public key A",
+          "So hash hai lần bằng cùng public key chưa xác minh là đủ",
+          "Xác minh liên kết danh tính–public key A trước, rồi kiểm chữ ký và nội dung bằng khóa đó"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Sai: Kẻ thay khóa có thể ký bằng private key của họ rồi đưa public key giả mang tên A.",
+          "Sai: Private key người nhận không có quan hệ kiểm chữ ký private key A.",
+          "Sai: Lặp phép kiểm không sửa được giả định danh tính khóa đầu vào bị sai.",
+          "Đúng: Chữ ký chỉ quy về người sở hữu private key tương ứng; cần biết public key thực sự thuộc A."
+        ],
+        "page": 53
+      },
+      {
+        "id": "5-q33",
+        "section": "5.4",
+        "topic": "Chữ ký số: ký, kiểm và kết hợp bảo mật",
+        "level": "Thông hiểu",
+        "stem": "Chữ ký số trên bản rõ có tự giữ bí mật bản rõ không?",
+        "options": [
+          "Không",
+          "Có luôn",
+          "Chỉ khi ký bằng RSA",
+          "Có nếu chữ ký dài hơn file"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Đúng: Muốn confidentiality cần mã hóa thêm.",
+          "Sai: Chữ ký có thể đính kèm bản rõ vẫn đọc được; cần mã hóa riêng để bí mật.",
+          "Sai: RSA dùng để ký không đồng nghĩa mã hóa thông điệp cho riêng người nhận.",
+          "Sai: Độ dài chữ ký không quyết định ai đọc được bản rõ gửi kèm."
+        ],
+        "page": 53
+      },
+      {
+        "id": "5-q34",
+        "section": "5.4",
+        "topic": "Chữ ký số: ký, kiểm và kết hợp bảo mật",
+        "level": "Thông hiểu",
+        "stem": "Nếu nội dung thay đổi sau khi ký, kiểm chữ ký đúng sẽ thế nào?",
+        "options": [
+          "Chỉ thay nội dung nên không ảnh hưởng xác minh bằng public key",
+          "Không còn hợp lệ cho nội dung đã sửa",
+          "Luôn hợp lệ",
+          "Tự sửa lại nội dung"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Sai: Xác minh dùng cả nội dung và chữ ký; public key đúng không làm chữ ký hợp lệ cho nội dung khác.",
+          "Đúng: Chữ ký ràng buộc với digest/nội dung cụ thể.",
+          "Sai: Chữ ký ràng buộc nội dung ban đầu nên không tiếp tục hợp lệ cho sửa đổi tùy ý.",
+          "Sai: Xác minh phát hiện sai, không biết để tự khôi phục toàn bộ bản rõ gốc."
+        ],
+        "page": 53
+      }
+    ]
+  }
+]

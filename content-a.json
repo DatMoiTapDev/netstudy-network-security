@@ -1,0 +1,3014 @@
+[
+  {
+    "id": "1",
+    "title": "Tổng quan",
+    "pages": 96,
+    "file": "Bài 1 - Tổng quan.pdf",
+    "overview": "Bảo mật mạng trả lời bốn câu hỏi: bảo vệ cái gì, chống ai và kiểu tấn công nào, dùng cơ chế nào, kiểm tra hiệu quả ra sao. Bài này là bản đồ để nối malware ở Bài 2, mật mã ở Bài 3–5 và bảo vệ đường truyền, biên mạng ở Bài 6–8.",
+    "objectives": [
+      "Phân biệt bí mật, toàn vẹn, sẵn sàng và chống chối bỏ.",
+      "Nhận diện cơ chế của chín nhóm tấn công trong slide.",
+      "Giải thích vai trò và giới hạn của từng lớp phòng thủ."
+    ],
+    "sections": [
+      {
+        "id": "1.1",
+        "title": "Một số khái niệm",
+        "from": 5,
+        "to": 19,
+        "explanation": "Theo slide, an toàn mạng là một phần của an ninh thông tin; còn phải phối hợp chính sách, kiểm toán, bảo mật hệ điều hành, cơ sở dữ liệu, ứng phó và khôi phục. Dữ liệu cần bảo vệ khi lưu trữ (storage state) và khi truyền (transmission state). Confidentiality giới hạn người được đọc; Integrity bảo đảm dữ liệu không bị thay đổi trái phép; Availability bảo đảm người hợp pháp sử dụng được; Non-repudiation cung cấp bằng chứng để bên thực hiện khó phủ nhận hành động. Đây là các mục tiêu khác nhau: mã hoá không tự bảo đảm dịch vụ luôn hoạt động. Hình tam giác ở trang 16 nêu quan hệ giữa chức năng, khả năng sử dụng và mức an toàn; đó là bài toán thiết kế, không phải công thức định lượng. Các biểu đồ trang 7–15 là minh hoạ lịch sử, không dùng làm số liệu hiện tại.",
+        "plain": "Hồ sơ học tập cần vừa giấu điểm với người lạ, vừa tránh sửa điểm trái phép, vừa mở được lúc cần. Ba việc này không thay thế nhau.",
+        "example": "Một bảng điểm bị đọc trộm vi phạm bí mật; bị sửa từ 5 thành 9 vi phạm toàn vẹn; website bị tê liệt vi phạm sẵn sàng. Chữ ký số có thể hỗ trợ chứng minh người gửi, nhưng còn phụ thuộc quản lý khoá và ngữ cảnh pháp lý.",
+        "pitfalls": [
+          "Không đồng nhất toàn vẹn với bí mật.",
+          "Chống chối bỏ không chỉ là có mật khẩu.",
+          "Không suy số liệu cũ thành hiện trạng."
+        ],
+        "recap": [
+          "Nêu được hai trạng thái dữ liệu.",
+          "Tự tạo tình huống cho từng mục tiêu bảo mật."
+        ]
+      },
+      {
+        "id": "1.2",
+        "title": "Nghe trộm và phá mã",
+        "from": 20,
+        "to": 24,
+        "explanation": "Eavesdropping quan sát lưu lượng, thường là tấn công thụ động. Trên môi trường truyền dùng chung, không nên giả định không ai bắt được gói tin; cần mã hoá trước khi truyền. Plaintext là bản rõ, ciphertext là bản mã, key là khoá điều khiển phép biến đổi. Cryptanalysis tìm thông tin từ bản mã mà không có khoá giải mã; phân tích thống kê tận dụng cấu trúc bị lộ. Brute force thử các khoá có thể. Chọn giải thuật tốt và không gian khoá đủ lớn giúp giảm nguy cơ; chỉ tăng độ dài khoá không sửa được thuật toán hoặc giao thức thiết kế sai.",
+        "plain": "Người khác nhìn được phong bì không có nghĩa đọc được nội dung. Ví von chỉ minh hoạ bí mật: bản mã vẫn có thể lộ độ dài hoặc thời điểm gửi.",
+        "example": "Wi-Fi công cộng có người thu lưu lượng: mã hoá và kiểm tra danh tính đầu kia giúp bảo vệ nội dung; nó không làm sóng vô hình.",
+        "pitfalls": [
+          "Không nói mã hoá ngăn hoàn toàn việc bắt gói.",
+          "Brute force và phân tích thống kê là hai cách khác nhau."
+        ],
+        "recap": [
+          "Phân biệt quan sát bản mã với hiểu bản rõ.",
+          "Nêu vai trò thuật toán và khoá."
+        ]
+      },
+      {
+        "id": "1.3",
+        "title": "Đánh cắp mật khẩu và chứng thực",
+        "from": 25,
+        "to": 32,
+        "explanation": "Password pilfering gồm guessing, social engineering, dictionary attack và password sniffing. Guessing dựa vào mật khẩu dễ đoán hoặc mặc định; dictionary attack thử danh sách ứng viên; sniffing lấy thông tin đăng nhập trên đường truyền; social engineering thao túng con người. Chứng thực dùng thông tin bí mật, đặc điểm sinh trắc hoặc vật/chứng cứ xác thực. Kerberos là giao thức chứng thực, không phải một vật sinh trắc. Phần mô tả lưu mật khẩu trong slide là công nghệ cũ và dùng từ mã hoá rộng; phần mở rộng: mật khẩu thông thường được kiểm tra bằng hàm băm mật khẩu có salt, không cần giải mã. SSH và HTTPS là hai cách dùng giao thức bảo vệ khác nhau, không phải SSH nằm trong HTTPS. Quy tắc trong slide gồm mật khẩu khó đoán, không chia sẻ, không dùng lại giữa tài khoản và tránh liên kết giả.",
+        "plain": "Có người phá cửa bằng thử chìa, có người giả làm quản lý để xin chìa. Biện pháp kỹ thuật phải đi cùng cách xử lý yêu cầu đáng ngờ.",
+        "example": "Email tự xưng phòng đào tạo đòi mật khẩu là social engineering; mật khẩu dài không cứu được nếu người dùng tự gửi nó.",
+        "pitfalls": [
+          "Đổi mật khẩu không chữa máy có keylogger.",
+          "Không gọi hash là mã hoá đảo ngược.",
+          "Mật khẩu phức tạp vẫn có thể bị phishing."
+        ],
+        "recap": [
+          "Ghép đúng từng cách đánh cắp với biện pháp bảo vệ.",
+          "Giải thích vì sao không dùng chung mật khẩu."
+        ]
+      },
+      {
+        "id": "1.4",
+        "title": "Giả mạo danh tính và chiếm phiên",
+        "from": 33,
+        "to": 43,
+        "explanation": "Identity spoofing mạo nhận một bên. Man-in-the-middle (MITM) chen giữa hai bên để quan sát hoặc sửa dữ liệu trong khi họ tưởng đang liên lạc trực tiếp. Replay tái sử dụng thông điệp hoặc giấy phép hợp lệ đã thu được; bản mã không bị sửa vẫn có thể bị phát lại. Network spoofing trong slide gồm SYN flooding, TCP hijacking và ARP spoofing. SYN flood khai thác trạng thái kết nối nửa mở; TCP hijacking chiếm ngữ cảnh kết nối đang có; ARP poisoning làm sai liên kết IP–MAC trên mạng cục bộ. Phần mở rộng: chứng thực đầu cuối và bảo vệ toàn vẹn quan trọng với MITM; nonce, số thứ tự hoặc thời hạn giúp chống replay. Chỉ kiểm tra IP hoặc tên miền không đủ bảo đảm chống ARP poisoning.",
+        "plain": "MITM giống người đứng giữa nhận rồi chuyển lời; replay giống dùng lại vé cũ còn được hệ thống chấp nhận. Mỗi phép ví von chỉ mô tả một cơ chế.",
+        "example": "Một token cũ được gửi lại và hệ thống chấp nhận dù không ai biết cách sửa token: vấn đề là thiếu kiểm tra độ mới, không nhất thiết là phá mã.",
+        "pitfalls": [
+          "Mã hoá đơn thuần không bảo đảm chống MITM.",
+          "ARP ánh xạ trong liên kết cục bộ, không tìm MAC của máy bất kỳ trên Internet.",
+          "SYN flood đánh vào tài nguyên phục vụ kết nối."
+        ],
+        "recap": [
+          "Phân biệt chặn-sửa, phát lại và chiếm phiên.",
+          "Nêu dữ kiện nhận dạng ARP poisoning."
+        ]
+      },
+      {
+        "id": "1.5",
+        "title": "Tràn bộ đệm, chối bỏ và xâm nhập",
+        "from": 44,
+        "to": 47,
+        "explanation": "Buffer overflow xảy ra khi chương trình ghi vượt dung lượng vùng đệm, có thể làm hỏng dữ liệu hay luồng điều khiển. Bản chất là lỗi kiểm soát bộ nhớ; không phải mọi chuỗi dài đều là tấn công. Repudiation là phủ nhận đã gửi/nhận hoặc thực hiện hành vi; chữ ký và bằng chứng kiểm toán có thể hỗ trợ xử lý nhưng không phải mọi mã xác thực đều có tính chứng minh với bên thứ ba. Intrusion là truy cập trái phép, thường liên quan cấu hình hở, lỗ hổng giao thức/phần mềm hoặc dịch vụ không cần thiết. Quét cổng có thể phục vụ kiểm tra được phép hoặc trinh sát; bản thân một cổng mở chưa chứng minh bị xâm nhập.",
+        "plain": "Một hộp chỉ chứa 10 món mà chương trình cố nhét 20 món có thể làm hỏng khu vực bên cạnh. Máy tính không có ranh giới vật lý cứng như hộp, nên đây chỉ là ví dụ về vượt giới hạn.",
+        "example": "Đóng dịch vụ không dùng làm giảm bề mặt tấn công; vá lỗi và giới hạn quyền xử lý các nguyên nhân khác mà đóng cổng không giải quyết hết.",
+        "pitfalls": [
+          "Không suy cứ có port mở là nhiễm mã độc.",
+          "Không đồng nhất xác thực nguồn với chống chối bỏ."
+        ],
+        "recap": [
+          "Giải thích nguyên nhân tràn bộ đệm.",
+          "Liên hệ cấu hình dịch vụ với bề mặt tấn công."
+        ]
+      },
+      {
+        "id": "1.6",
+        "title": "Tấn công từ chối dịch vụ",
+        "from": 48,
+        "to": 54,
+        "explanation": "Denial of Service (DoS) làm người dùng hợp pháp không sử dụng được dịch vụ, thường bằng cạn kiệt tài nguyên hoặc khai thác lỗi xử lý. Distributed DoS (DDoS) dùng nhiều nguồn phân tán. Slide liệt kê Smurf, buffer-overflow attack, ping of death, teardrop và SYN attack. Smurf minh hoạ phản xạ: máy trung gian gửi trả lời về nạn nhân do địa chỉ nguồn bị giả. Botnet là tập hợp máy bị điều khiển; zombie là từng máy thành viên. Chặn một địa chỉ có thể không đủ với DDoS; cơ chế phòng thủ phải phù hợp tài nguyên bị nghẽn. Đây là mô tả cơ chế để nhận biết và phòng thủ, không phải hướng dẫn thực hiện tấn công.",
+        "plain": "Quầy tiếp nhận bị ngập yêu cầu vô ích khiến người có việc thật phải chờ. Với DDoS, nhiều nguồn cùng gây tải nên khó lọc hơn.",
+        "example": "Web còn nguyên dữ liệu nhưng người học không truy cập được trong giờ thi: mục tiêu sẵn sàng bị ảnh hưởng.",
+        "pitfalls": [
+          "DDoS không bắt buộc phải đánh cắp dữ liệu.",
+          "Nhiều người dùng hợp pháp truy cập không tự động là DDoS."
+        ],
+        "recap": [
+          "Phân biệt DoS và DDoS.",
+          "Nhận ra vai trò phản xạ và botnet."
+        ]
+      },
+      {
+        "id": "1.7",
+        "title": "Các loại phần mềm độc hại",
+        "from": 55,
+        "to": 62,
+        "explanation": "Malicious software (malware) là nhóm rộng. Virus tự nhân bản bằng cách gắn với vật chủ; worm tự lan như chương trình độc lập; Trojan nguỵ trang chức năng và không có đặc tính tự nhân bản như virus. Logic bomb được kích hoạt bởi một điều kiện; backdoor bỏ qua đường truy cập bình thường; spyware theo dõi người dùng. Browser hijacking đổi thiết lập hoặc hướng truy cập trình duyệt; zombieware biến máy thành thành viên bị điều khiển. Các nhãn có thể chồng lấn: Trojan có thể cài backdoor rồi biến máy thành zombie.",
+        "plain": "Tên gọi trả lời những câu khác nhau: lan thế nào, vào bằng cách nào, làm việc xấu gì. Không cần ép một mẫu mã độc chỉ có đúng một nhãn.",
+        "example": "Một trò chơi giả cài chương trình ghi phím rồi nhận lệnh từ xa vừa mang cách phát tán Trojan vừa có chức năng spyware/backdoor.",
+        "pitfalls": [
+          "Không phải mọi malware đều là virus.",
+          "Worm không cần gắn vào file chủ.",
+          "Logic bomb không nhất thiết hẹn theo ngày giờ."
+        ],
+        "recap": [
+          "So sánh cơ chế lan của virus, worm, Trojan.",
+          "Tách cơ chế lây khỏi chức năng gây hại."
+        ]
+      },
+      {
+        "id": "1.8",
+        "title": "Lý lịch và hành động của kẻ tấn công",
+        "from": 63,
+        "to": 87,
+        "explanation": "Slide phân biệt black-hat hacker, script kiddie, cyber spy, vicious employee và cyber terrorist theo năng lực, động cơ, vị trí và mục tiêu. Script kiddie phụ thuộc công cụ có sẵn; nội gián có quyền truy cập sẵn nên kiểm soát từ ngoài vào chưa đủ. Hình trang 69–70 mô tả kỹ năng ethical hacker và chứng nhận; chứng chỉ không tự chứng minh một hành động là được phép. Chuỗi hình 71–87 trình bày trinh sát, quét, giành quyền truy cập, duy trì truy cập và xoá dấu vết. Học chuỗi này để chọn nơi phát hiện và ngăn chặn: giảm lộ thông tin, giám sát, vá lỗi, giới hạn quyền, giữ log an toàn. Không cần mô phỏng xâm nhập để hiểu mục tiêu phòng thủ.",
+        "plain": "Người biết nhiều kỹ thuật chưa chắc là kẻ xấu; điều quyết định còn là quyền được phép và cách sử dụng. Người trong công ty cũng có thể gây rủi ro.",
+        "example": "Tài khoản nhân viên chỉ nên đọc dữ liệu phục vụ công việc; ghi log và rà soát quyền giúp hạn chế lạm dụng nội bộ.",
+        "pitfalls": [
+          "Không dùng tuổi tác làm tiêu chí chắc chắn để phân loại.",
+          "Đánh giá đạo đức phải xét sự cho phép.",
+          "Các giai đoạn không phải mọi sự cố đều xảy ra tuần tự."
+        ],
+        "recap": [
+          "Nêu được khác biệt động cơ và năng lực.",
+          "Liên hệ mỗi giai đoạn với dấu vết phòng thủ."
+        ]
+      },
+      {
+        "id": "1.9",
+        "title": "Mô hình bảo mật cơ bản và phòng thủ theo chiều sâu",
+        "from": 88,
+        "to": 94,
+        "explanation": "Bốn thành phần trong slide: cryptosystem bảo vệ dữ liệu bằng mã hoá, chứng thực và quản lý khoá; firewall kiểm soát lưu lượng vào/ra theo chính sách; anti-malicious software nhận diện, cách ly và xử lý mã độc; Intrusion Detection System (IDS) quan sát sự kiện, lưu lượng hoặc log để cảnh báo. Chúng bổ sung chứ không thay thế nhau. Hình trang 92 minh hoạ defense in depth: nhiều lớp bảo vệ từ con người/chính sách đến biên mạng, máy chủ, ứng dụng và dữ liệu. Trang 93–94 liệt kê các nhóm kiểm tra hệ thống: lỗ hổng, kiểm thử ngoài/trong, thiết bị, ứng dụng, cơ sở dữ liệu, không dây và cấu hình. Kiểm tra phải có phạm vi và sự cho phép.",
+        "plain": "Cửa khoá, camera, niêm phong tài liệu và người trực mỗi thứ xử lý một nguy cơ; nhiều lớp vẫn cần cấu hình đúng và phối hợp.",
+        "example": "Firewall cho phép HTTPS để học; file độc tải qua HTTPS vẫn cần kiểm soát đầu cuối. Mã hoá đường truyền không đánh giá sự an toàn của file.",
+        "pitfalls": [
+          "IDS chủ yếu phát hiện/cảnh báo, không mặc định chặn.",
+          "Firewall không thay antivirus.",
+          "Nhiều công cụ không tự thành phòng thủ hiệu quả."
+        ],
+        "recap": [
+          "Gán đúng vai trò cho bốn thành phần.",
+          "Giải thích một kịch bản cần nhiều lớp."
+        ]
+      },
+      {
+        "id": "1.10",
+        "title": "Bài tập nền tảng mạng và tổng hợp",
+        "from": 95,
+        "to": 96,
+        "explanation": "Bài tập gốc yêu cầu TCP/IP header, ARP, Internet Control Message Protocol (ICMP), Simple Mail Transfer Protocol (SMTP), three-way handshake, TCP–UDP, IPv4–IPv6, router–switch và bảng tổng hợp tấn công. Phần giải thích mở rộng phục vụ làm bài: TCP cung cấp luồng byte tin cậy, có thứ tự và điều khiển; UDP là datagram không có cơ chế bảo đảm đó ở tầng vận chuyển. IP phục vụ địa chỉ và chuyển tiếp; ARP tìm địa chỉ liên kết cho IPv4 trong mạng cục bộ; ICMP trao đổi thông tin điều khiển/lỗi; SMTP chuyển thư. Bắt tay TCP thường được mô tả SYN → SYN-ACK → ACK. Router chuyển giữa mạng dựa trên IP; switch Ethernet chuyển frame theo MAC. IPv4 có địa chỉ 32 bit, IPv6 128 bit; thêm bit địa chỉ không tự làm mạng an toàn. Khi tự học header, nối mỗi trường với rủi ro: cổng với dịch vụ, sequence với luồng TCP, checksum với phát hiện lỗi truyền.",
+        "plain": "Học giao thức là để biết tấn công đang lợi dụng phần nào, không chỉ thuộc tên viết tắt.",
+        "example": "SYN flood dễ hiểu hơn khi biết máy chủ phải quản lý kết nối đang bắt tay; ARP poisoning dễ hiểu hơn khi biết IP–MAC được dùng ở đâu.",
+        "pitfalls": [
+          "Checksum thông thường không phải bằng chứng chống sửa có chủ đích.",
+          "UDP không đồng nghĩa mọi ứng dụng dùng nó đều không tin cậy."
+        ],
+        "recap": [
+          "Vẽ được bắt tay ba bước.",
+          "Lập bảng tên–cơ chế–tài sản bị ảnh hưởng–phòng thủ."
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "title": "Các mục tiêu bảo mật",
+        "headers": [
+          "Mục tiêu",
+          "Câu hỏi",
+          "Ví dụ vi phạm"
+        ],
+        "rows": [
+          [
+            "Confidentiality",
+            "Ai được đọc?",
+            "Đọc trộm điểm"
+          ],
+          [
+            "Integrity",
+            "Có bị sửa trái phép?",
+            "Sửa điểm"
+          ],
+          [
+            "Availability",
+            "Có dùng được khi cần?",
+            "Web tê liệt"
+          ],
+          [
+            "Non-repudiation",
+            "Có chứng cứ về hành vi?",
+            "Phủ nhận giao dịch"
+          ]
+        ]
+      },
+      {
+        "title": "Phân biệt malware",
+        "headers": [
+          "Loại",
+          "Đặc trưng",
+          "Không nên suy ra"
+        ],
+        "rows": [
+          [
+            "Virus",
+            "Gắn vật chủ, tự nhân bản",
+            "Mọi chương trình độc hại đều là virus"
+          ],
+          [
+            "Worm",
+            "Độc lập, tự lan",
+            "Luôn cần người mở file"
+          ],
+          [
+            "Trojan",
+            "Nguỵ trang, chức năng trái phép",
+            "Phải tự nhân bản"
+          ],
+          [
+            "Backdoor",
+            "Lối truy cập bỏ qua kiểm soát",
+            "Luôn là một cổng cố định"
+          ]
+        ]
+      }
+    ],
+    "study": [
+      "Học mục tiêu bảo mật trước, sau đó với mỗi tấn công tự hỏi mục tiêu nào bị ảnh hưởng.",
+      "Vẽ cơ chế bằng 3–4 bước khái niệm; ghi một biện pháp và giới hạn của nó.",
+      "Sau một ngày ôn lại bảng virus–worm–Trojan, MITM–replay và firewall–IDS.",
+      "Dành khoảng 1 phút 52 giây mỗi câu thi; đánh dấu câu phân vân rồi quay lại."
+    ],
+    "terms": [
+      {
+        "en": "Confidentiality",
+        "vi": "Tính bí mật",
+        "meaning": "Chỉ bên được phép được đọc thông tin."
+      },
+      {
+        "en": "Integrity",
+        "vi": "Tính toàn vẹn",
+        "meaning": "Chống thay đổi dữ liệu trái phép."
+      },
+      {
+        "en": "Availability",
+        "vi": "Tính sẵn sàng",
+        "meaning": "Người hợp pháp dùng được dịch vụ khi cần."
+      },
+      {
+        "en": "Non-repudiation",
+        "vi": "Chống chối bỏ",
+        "meaning": "Bằng chứng liên kết bên thực hiện với hành vi."
+      },
+      {
+        "en": "Man-in-the-middle",
+        "vi": "Kẻ chen giữa",
+        "meaning": "Đứng giữa các bên để chặn, chuyển hoặc sửa thông điệp."
+      },
+      {
+        "en": "Replay",
+        "vi": "Phát lại",
+        "meaning": "Dùng lại thông điệp hợp lệ đã có."
+      },
+      {
+        "en": "IDS — Intrusion Detection System",
+        "vi": "Hệ thống phát hiện xâm nhập",
+        "meaning": "Quan sát và cảnh báo dấu hiệu xâm nhập."
+      },
+      {
+        "en": "Defense in depth",
+        "vi": "Phòng thủ theo chiều sâu",
+        "meaning": "Phối hợp các lớp phòng thủ bổ sung nhau."
+      },
+      {
+        "en": "Eavesdropping",
+        "vi": "Nghe trộm",
+        "meaning": "Quan sát thông tin trên đường truyền mà không có quyền."
+      },
+      {
+        "en": "Cryptanalysis",
+        "vi": "Phân tích mật mã",
+        "meaning": "Tìm thông tin từ bản mã khi chưa có khoá giải mã."
+      },
+      {
+        "en": "Brute force",
+        "vi": "Thử vét cạn",
+        "meaning": "Duyệt các ứng viên khoá hoặc mật khẩu."
+      },
+      {
+        "en": "Plaintext",
+        "vi": "Bản rõ",
+        "meaning": "Dữ liệu trước mã hoá hoặc sau giải mã."
+      },
+      {
+        "en": "Ciphertext",
+        "vi": "Bản mã",
+        "meaning": "Kết quả biến đổi dữ liệu bằng mã hoá."
+      },
+      {
+        "en": "Key",
+        "vi": "Khoá",
+        "meaning": "Tham số điều khiển mã hoá/giải mã hoặc xác thực."
+      },
+      {
+        "en": "Password pilfering",
+        "vi": "Đánh cắp mật khẩu",
+        "meaning": "Nhóm hành vi lấy thông tin đăng nhập trái phép."
+      },
+      {
+        "en": "Guessing",
+        "vi": "Đoán mật khẩu",
+        "meaning": "Thử mật khẩu dựa vào điều dễ đoán hoặc mặc định."
+      },
+      {
+        "en": "Social engineering",
+        "vi": "Thao túng con người",
+        "meaning": "Dùng lừa dối và lòng tin để lấy thông tin/quyền truy cập."
+      },
+      {
+        "en": "Phishing",
+        "vi": "Lừa đảo giả danh",
+        "meaning": "Thông điệp hoặc trang giả nhằm dụ cung cấp dữ liệu hoặc thực hiện hành động."
+      },
+      {
+        "en": "Dictionary attack",
+        "vi": "Tấn công từ điển",
+        "meaning": "Thử danh sách ứng viên thường gặp."
+      },
+      {
+        "en": "Password sniffing",
+        "vi": "Nghe lén thông tin đăng nhập",
+        "meaning": "Thu thông tin đăng nhập từ lưu lượng mạng."
+      },
+      {
+        "en": "Authentication",
+        "vi": "Chứng thực danh tính",
+        "meaning": "Kiểm tra bên tham gia có đúng là danh tính đã khai báo."
+      },
+      {
+        "en": "Biometrics",
+        "vi": "Sinh trắc học",
+        "meaning": "Đặc điểm cơ thể/hành vi dùng hỗ trợ xác thực."
+      },
+      {
+        "en": "Identity spoofing",
+        "vi": "Giả mạo danh tính",
+        "meaning": "Mạo nhận một thực thể khác."
+      },
+      {
+        "en": "TCP — Transmission Control Protocol",
+        "vi": "Giao thức vận chuyển tin cậy",
+        "meaning": "Cung cấp luồng byte có thứ tự cùng cơ chế kiểm soát ở hai đầu."
+      },
+      {
+        "en": "IP — Internet Protocol",
+        "vi": "Giao thức liên mạng",
+        "meaning": "Định địa chỉ và chuyển tiếp gói qua mạng."
+      },
+      {
+        "en": "UDP — User Datagram Protocol",
+        "vi": "Giao thức datagram người dùng",
+        "meaning": "Vận chuyển datagram, không tự cung cấp bảo đảm tin cậy như TCP."
+      },
+      {
+        "en": "ARP — Address Resolution Protocol",
+        "vi": "Giao thức phân giải địa chỉ",
+        "meaning": "Tìm địa chỉ liên kết tương ứng IPv4 trong mạng cục bộ."
+      },
+      {
+        "en": "ICMP — Internet Control Message Protocol",
+        "vi": "Giao thức thông điệp điều khiển Internet",
+        "meaning": "Trao đổi thông tin điều khiển và báo lỗi IP."
+      },
+      {
+        "en": "SMTP — Simple Mail Transfer Protocol",
+        "vi": "Giao thức chuyển thư",
+        "meaning": "Chuyển tiếp thư điện tử giữa các hệ thống."
+      },
+      {
+        "en": "TCP hijacking",
+        "vi": "Chiếm phiên TCP",
+        "meaning": "Mạo nhận hoặc can thiệp để chiếm kết nối hiện có."
+      },
+      {
+        "en": "SYN flooding",
+        "vi": "Làm ngập yêu cầu SYN",
+        "meaning": "Gây tải bằng nhiều yêu cầu bắt tay TCP chưa hoàn tất."
+      },
+      {
+        "en": "ARP poisoning",
+        "vi": "Đầu độc ARP",
+        "meaning": "Làm sai ánh xạ IP–MAC trong mạng cục bộ."
+      },
+      {
+        "en": "Buffer overflow",
+        "vi": "Tràn bộ đệm",
+        "meaning": "Ghi vượt giới hạn vùng bộ nhớ được cấp."
+      },
+      {
+        "en": "Repudiation",
+        "vi": "Chối bỏ",
+        "meaning": "Phủ nhận hành vi gửi/nhận hoặc giao dịch."
+      },
+      {
+        "en": "Intrusion",
+        "vi": "Xâm nhập",
+        "meaning": "Truy cập trái phép vào tài nguyên hệ thống."
+      },
+      {
+        "en": "DoS — Denial of Service",
+        "vi": "Từ chối dịch vụ",
+        "meaning": "Làm người hợp pháp không dùng được dịch vụ."
+      },
+      {
+        "en": "DDoS — Distributed Denial of Service",
+        "vi": "Từ chối dịch vụ phân tán",
+        "meaning": "Nhiều nguồn cùng gây tác động từ chối dịch vụ."
+      },
+      {
+        "en": "Malware — Malicious software",
+        "vi": "Phần mềm độc hại",
+        "meaning": "Phần mềm thực hiện chức năng gây hại hoặc trái phép."
+      },
+      {
+        "en": "Virus",
+        "vi": "Virus máy tính",
+        "meaning": "Mã tự nhân bản gắn vào vật chủ."
+      },
+      {
+        "en": "Worm",
+        "vi": "Sâu máy tính",
+        "meaning": "Chương trình độc lập có khả năng tự lan."
+      },
+      {
+        "en": "Trojan horse",
+        "vi": "Trojan nguỵ trang",
+        "meaning": "Chương trình che giấu chức năng gây hại, không đặc trưng bởi tự nhân bản."
+      },
+      {
+        "en": "Logic bomb",
+        "vi": "Bom logic",
+        "meaning": "Mã được kích hoạt bởi điều kiện định trước."
+      },
+      {
+        "en": "Backdoor",
+        "vi": "Cửa hậu",
+        "meaning": "Lối truy cập bỏ qua kiểm soát bình thường."
+      },
+      {
+        "en": "Spyware",
+        "vi": "Phần mềm gián điệp",
+        "meaning": "Thu thập thông tin hoặc theo dõi người dùng trái phép."
+      },
+      {
+        "en": "Browser hijacking",
+        "vi": "Chiếm trình duyệt",
+        "meaning": "Thay đổi thiết lập hoặc hướng truy cập ngoài mong muốn."
+      },
+      {
+        "en": "Zombie",
+        "vi": "Máy bị điều khiển",
+        "meaning": "Máy thành viên chịu điều khiển để thực hiện hoạt động của bên khác."
+      },
+      {
+        "en": "Botnet",
+        "vi": "Mạng máy bị điều khiển",
+        "meaning": "Tập hợp các máy/bot chịu điều khiển phối hợp."
+      },
+      {
+        "en": "Black-hat hacker",
+        "vi": "Người tấn công mũ đen",
+        "meaning": "Sử dụng kỹ năng để xâm phạm trái phép."
+      },
+      {
+        "en": "Script kiddie",
+        "vi": "Người phụ thuộc công cụ tấn công có sẵn",
+        "meaning": "Dùng công cụ mà thiếu hiểu biết cơ chế sâu."
+      },
+      {
+        "en": "Cyber spy",
+        "vi": "Gián điệp mạng",
+        "meaning": "Thu thập thông tin bí mật qua hệ thống số."
+      },
+      {
+        "en": "Vicious employee",
+        "vi": "Nhân viên ác ý",
+        "meaning": "Người nội bộ cố tình lạm dụng quyền hoặc gây hại."
+      },
+      {
+        "en": "Cyber terrorist",
+        "vi": "Khủng bố mạng",
+        "meaning": "Dùng công nghệ mạng phục vụ mục tiêu khủng bố."
+      },
+      {
+        "en": "Cryptosystem",
+        "vi": "Hệ thống mật mã",
+        "meaning": "Phối hợp mã hoá, chứng thực, giao thức và quản lý khoá."
+      },
+      {
+        "en": "Firewall",
+        "vi": "Tường lửa",
+        "meaning": "Kiểm soát lưu lượng theo quy tắc chính sách."
+      },
+      {
+        "en": "AMS — Anti-Malicious System software",
+        "vi": "Phần mềm chống mã độc",
+        "meaning": "Nhận diện, cách ly hoặc xử lý mã độc."
+      },
+      {
+        "en": "Reconnaissance",
+        "vi": "Trinh sát",
+        "meaning": "Thu thập thông tin về mục tiêu; học để giảm lộ lọt thông tin."
+      },
+      {
+        "en": "Scanning",
+        "vi": "Rà quét",
+        "meaning": "Tìm bề mặt và trạng thái hệ thống trong phạm vi được phép."
+      },
+      {
+        "en": "Gaining access",
+        "vi": "Giành quyền truy cập",
+        "meaning": "Giai đoạn có được quyền vào hệ thống."
+      },
+      {
+        "en": "Maintaining access",
+        "vi": "Duy trì truy cập",
+        "meaning": "Giữ khả năng truy cập sau lần xâm nhập ban đầu."
+      },
+      {
+        "en": "Clearing tracks",
+        "vi": "Xoá dấu vết",
+        "meaning": "Che hoạt động; đối phó bằng bảo vệ và lưu giữ log."
+      }
+    ],
+    "issues": [
+      {
+        "page": 28,
+        "note": "Slide dùng từ mã hoá cho dữ liệu mật khẩu; đường dẫn /etc/shadows có lỗi tên. Không học nhầm với băm mật khẩu hay /etc/shadow."
+      },
+      {
+        "page": 29,
+        "note": "Cụm SSH trong HTTPS không chính xác; học hai giao thức riêng."
+      },
+      {
+        "page": 41,
+        "note": "Biện pháp kiểm tra tên miền/IP được nêu chưa đủ để bảo đảm chống ARP poisoning."
+      },
+      {
+        "page": 7,
+        "note": "Các biểu đồ thống kê trang 7–15 có mốc lịch sử; không xem là số liệu hiện tại."
+      }
+    ],
+    "questions": [
+      {
+        "id": "1-q1",
+        "section": "1.1",
+        "topic": "Một số khái niệm",
+        "level": "Nhận biết",
+        "stem": "Bị đọc trộm dữ liệu chủ yếu vi phạm mục tiêu nào?",
+        "options": [
+          "Availability",
+          "Integrity",
+          "Non-repudiation",
+          "Confidentiality"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Availability nói đến dùng được dịch vụ, không phải giới hạn ai đọc.",
+          "Integrity nói đến chống sửa trái phép, không phải đọc trộm.",
+          "Non-repudiation nói đến bằng chứng hành vi, không trực tiếp giữ bí mật.",
+          "Confidentiality giới hạn người được đọc dữ liệu."
+        ],
+        "page": 6
+      },
+      {
+        "id": "1-q2",
+        "section": "1.1",
+        "topic": "Một số khái niệm",
+        "level": "Thông hiểu",
+        "stem": "Bảng điểm bị thay đổi trái phép nhưng website vẫn hoạt động. Mục tiêu trực tiếp bị vi phạm?",
+        "options": [
+          "Availability",
+          "Non-repudiation",
+          "Integrity",
+          "Confidentiality"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Dịch vụ vẫn hoạt động nên dữ kiện không chỉ ra mất sẵn sàng.",
+          "Không có dữ kiện về phủ nhận hành vi; sửa nội dung trực tiếp là toàn vẹn.",
+          "Integrity bảo vệ dữ liệu khỏi sửa trái phép.",
+          "Confidentiality bị vi phạm khi bị đọc trái phép; dữ kiện ở đây là sửa điểm."
+        ],
+        "page": 6
+      },
+      {
+        "id": "1-q3",
+        "section": "1.1",
+        "topic": "Một số khái niệm",
+        "level": "Vận dụng",
+        "stem": "Web thi không truy cập được dù dữ liệu chưa bị đọc hay sửa. Mục tiêu nào bị tác động?",
+        "options": [
+          "Non-repudiation",
+          "Availability",
+          "Confidentiality",
+          "Integrity"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Không có tình huống phủ nhận giao dịch; vấn đề là không dùng được.",
+          "Sẵn sàng là khả năng phục vụ người dùng hợp pháp khi cần.",
+          "Không có dữ kiện nội dung bị đọc lộ.",
+          "Không có dữ kiện nội dung bị sửa."
+        ],
+        "page": 6
+      },
+      {
+        "id": "1-q4",
+        "section": "1.1",
+        "topic": "Một số khái niệm",
+        "level": "Thông hiểu",
+        "stem": "Non-repudiation hướng đến điều gì?",
+        "options": [
+          "Có bằng chứng để bên thực hiện khó phủ nhận hành vi",
+          "Bảo đảm chỉ người được phép đọc nội dung",
+          "Bảo đảm dịch vụ hoạt động khi cần",
+          "Phát hiện dữ liệu bị thay đổi"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Chống chối bỏ liên quan bằng chứng về hành vi, không phải tốc độ hay bí mật đơn thuần.",
+          "Đây là mục tiêu confidentiality.",
+          "Đây là mục tiêu availability.",
+          "Đây là mục tiêu integrity; phát hiện sửa chưa tự cung cấp bằng chứng bên thực hiện."
+        ],
+        "page": 6
+      },
+      {
+        "id": "1-q5",
+        "section": "1.2",
+        "topic": "Nghe trộm và phá mã",
+        "level": "Thông hiểu",
+        "stem": "Mã hoá trước khi truyền chủ yếu giúp gì khi kẻ khác bắt được gói?",
+        "options": [
+          "Ngăn mọi người khác bắt gói tin",
+          "Chứng minh bên gửi không thể phủ nhận",
+          "Bảo đảm dịch vụ không thể bị nghẽn",
+          "Khó hiểu nội dung bản rõ nếu không có khoá phù hợp"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Mã hoá biến đổi nội dung nhưng không ngăn người khác thu tín hiệu hoặc gói tin.",
+          "Mã hoá không tự tạo bằng chứng chống chối bỏ; còn cần cơ chế thích hợp như chữ ký và quản lý khoá.",
+          "Lưu lượng mã hoá vẫn có thể bị chặn hoặc làm nghẽn.",
+          "Mã hoá bảo vệ nội dung, không làm việc bắt gói bất khả thi."
+        ],
+        "page": 23
+      },
+      {
+        "id": "1-q6",
+        "section": "1.2",
+        "topic": "Nghe trộm và phá mã",
+        "level": "Nhận biết",
+        "stem": "Thử lần lượt các khoá là cách tiếp cận nào?",
+        "options": [
+          "Replay",
+          "Password sniffing",
+          "Brute force",
+          "Phân tích tần suất"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Replay dùng lại thông điệp cũ, không tìm khoá bằng thử vét cạn.",
+          "Password sniffing thu thông tin trên đường truyền, không duyệt khoá.",
+          "Brute force tìm bằng duyệt không gian khoá.",
+          "Phân tích tần suất dùng quy luật thống kê, không thử lần lượt toàn bộ khoá."
+        ],
+        "page": 24
+      },
+      {
+        "id": "1-q7",
+        "section": "1.3",
+        "topic": "Đánh cắp mật khẩu và chứng thực",
+        "level": "Vận dụng",
+        "stem": "Email giả quản trị viên yêu cầu cung cấp mật khẩu là gì?",
+        "options": [
+          "Cryptanalysis",
+          "Social engineering",
+          "Password sniffing",
+          "Dictionary attack"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Cryptanalysis phân tích bản mã; tình huống không có bước phá mã.",
+          "Đây là thao túng con người để lấy thông tin.",
+          "Sniffing thu dữ liệu trên đường truyền; email giả ở đây dụ người tự cung cấp.",
+          "Dictionary attack thử danh sách ứng viên, không giả quản trị viên để xin mật khẩu."
+        ],
+        "page": 27
+      },
+      {
+        "id": "1-q8",
+        "section": "1.3",
+        "topic": "Đánh cắp mật khẩu và chứng thực",
+        "level": "Thông hiểu",
+        "stem": "Password sniffing khai thác trực tiếp điều gì?",
+        "options": [
+          "Thông tin đăng nhập bị lộ trên đường truyền",
+          "Thử mật khẩu trong danh sách từ điển",
+          "Giả danh quản trị viên để hỏi mật khẩu",
+          "Đọc thông tin từ kho mật khẩu cục bộ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Sniffing quan sát lưu lượng; bảo vệ kênh giúp giảm nguy cơ này.",
+          "Thử danh sách ứng viên là dictionary attack, không phải thu thập thụ động trên đường truyền.",
+          "Giả danh để hỏi mật khẩu là social engineering.",
+          "Đọc kho mật khẩu tại máy là thu thập đầu cuối; sniffing nhắm kênh truyền."
+        ],
+        "page": 29
+      },
+      {
+        "id": "1-q9",
+        "section": "1.3",
+        "topic": "Đánh cắp mật khẩu và chứng thực",
+        "level": "Vận dụng",
+        "stem": "Vì sao không dùng một mật khẩu cho nhiều tài khoản?",
+        "options": [
+          "Loại bỏ mọi nguy cơ phishing",
+          "Ngăn ghi phím ở máy bị nhiễm",
+          "Bảo vệ mật khẩu ngay cả khi kênh truyền là bản rõ",
+          "Giảm việc một lần lộ kéo theo nhiều tài khoản"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Mật khẩu riêng vẫn có thể bị người dùng cung cấp cho trang phishing.",
+          "Keylogger thu tại đầu cuối, không phụ thuộc việc mật khẩu có dùng lại hay không.",
+          "Kênh bản rõ vẫn lộ mật khẩu đang truyền; dùng riêng chỉ hạn chế lan ảnh hưởng.",
+          "Mật khẩu riêng giúp cô lập tác động của một tài khoản bị lộ."
+        ],
+        "page": 32
+      },
+      {
+        "id": "1-q10",
+        "section": "1.4",
+        "topic": "Giả mạo danh tính và chiếm phiên",
+        "level": "Thông hiểu",
+        "stem": "MITM khác nghe trộm đơn thuần ở khả năng nào?",
+        "options": [
+          "Chỉ tái sử dụng thông điệp cũ",
+          "Chỉ làm cạn tài nguyên kết nối",
+          "Chen giữa và có thể sửa hoặc giả dữ liệu trao đổi",
+          "Chỉ thử toàn bộ không gian khoá"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Tái sử dụng thông điệp là replay; MITM còn có thể chuyển và sửa trao đổi.",
+          "Làm cạn tài nguyên là DoS; không phải đặc trưng chiếm vị trí trung gian.",
+          "MITM có thể can thiệp vào trao đổi và giả làm đầu bên kia.",
+          "Thử khoá là brute force, không mô tả chen giữa hai bên."
+        ],
+        "page": 34
+      },
+      {
+        "id": "1-q11",
+        "section": "1.4",
+        "topic": "Giả mạo danh tính và chiếm phiên",
+        "level": "Vận dụng",
+        "stem": "Token được mã hoá nhưng bị gửi lại và vẫn được chấp nhận. Đây là nguy cơ gì?",
+        "options": [
+          "Buffer overflow",
+          "Replay",
+          "Brute force",
+          "Dictionary attack"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Không có ghi vượt vùng đệm; hệ thống chấp nhận thông điệp cũ.",
+          "Phát lại không cần sửa token hoặc biết khoá.",
+          "Không có dữ kiện thử khoá; token được dùng lại nguyên trạng.",
+          "Không có bước thử mật khẩu từ danh sách."
+        ],
+        "page": 36
+      },
+      {
+        "id": "1-q12",
+        "section": "1.4",
+        "topic": "Giả mạo danh tính và chiếm phiên",
+        "level": "Thông hiểu",
+        "stem": "SYN flood thường gây cạn loại tài nguyên nào?",
+        "options": [
+          "Trạng thái hoặc khả năng xử lý kết nối đang bắt tay",
+          "Không gian khoá mã hoá",
+          "Tính toàn vẹn file đã lưu",
+          "Bảng chứng thư số của trình duyệt"
+        ],
+        "correct": 0,
+        "explanations": [
+          "SYN flood làm hệ thống phải xử lý nhiều yêu cầu bắt tay chưa hoàn tất.",
+          "Không gian khoá liên quan brute force; SYN flood đánh vào xử lý bắt tay.",
+          "SYN flood không cần sửa file lưu trữ.",
+          "Kho chứng thư không phải tài nguyên trạng thái TCP đang bắt tay."
+        ],
+        "page": 37
+      },
+      {
+        "id": "1-q13",
+        "section": "1.4",
+        "topic": "Giả mạo danh tính và chiếm phiên",
+        "level": "Nhận biết",
+        "stem": "ARP poisoning làm sai liên kết nào?",
+        "options": [
+          "Tên miền với địa chỉ IP trên DNS",
+          "Cổng TCP với số thứ tự gói",
+          "Địa chỉ IP công cộng với khoá chứng thực",
+          "IP với MAC trong mạng cục bộ"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Tên miền sang IP là nhiệm vụ DNS, không phải ARP.",
+          "Cổng và sequence thuộc ngữ cảnh vận chuyển TCP; ARP không ánh xạ cặp này.",
+          "ARP không cung cấp ánh xạ khoá chứng thực cho địa chỉ IP công cộng.",
+          "ARP phục vụ phân giải địa chỉ IPv4 sang địa chỉ liên kết cục bộ."
+        ],
+        "page": 41
+      },
+      {
+        "id": "1-q14",
+        "section": "1.5",
+        "topic": "Tràn bộ đệm, chối bỏ và xâm nhập",
+        "level": "Nhận biết",
+        "stem": "Buffer overflow là gì?",
+        "options": [
+          "Mở quá nhiều cổng dịch vụ",
+          "Tái sử dụng thông điệp chứng thực",
+          "Ghi vượt giới hạn vùng đệm",
+          "Thử quá nhiều khoá mã hoá"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Nhiều cổng mở tăng bề mặt dịch vụ nhưng không tự là buffer overflow.",
+          "Tái sử dụng thông điệp là replay, không phải lỗi giới hạn vùng đệm.",
+          "Vượt ranh giới bộ nhớ có thể làm hỏng dữ liệu hoặc luồng điều khiển.",
+          "Thử khoá thuộc brute force, không phải ghi vượt bộ nhớ."
+        ],
+        "page": 44
+      },
+      {
+        "id": "1-q15",
+        "section": "1.5",
+        "topic": "Tràn bộ đệm, chối bỏ và xâm nhập",
+        "level": "Vận dụng",
+        "stem": "Tắt dịch vụ mạng không dùng nhằm giảm gì?",
+        "options": [
+          "Mọi nguy cơ lạm dụng quyền nội bộ",
+          "Bề mặt tấn công",
+          "Mọi nguy cơ social engineering",
+          "Toàn bộ lỗi kiểm soát bộ nhớ"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Quyền nội bộ có thể bị lạm dụng qua đường được phép dù đã đóng dịch vụ thừa.",
+          "Ít dịch vụ có thể truy cập hơn giúp giảm những điểm có thể bị khai thác.",
+          "Đóng dịch vụ không ngăn người dùng bị lừa tiết lộ thông tin.",
+          "Lỗi kiểm soát bộ nhớ trong phần mềm còn dùng vẫn cần vá hoặc sửa."
+        ],
+        "page": 47
+      },
+      {
+        "id": "1-q16",
+        "section": "1.6",
+        "topic": "Tấn công từ chối dịch vụ",
+        "level": "Nhận biết",
+        "stem": "Khác biệt cốt lõi của DDoS so với DoS một nguồn?",
+        "options": [
+          "Nhiều nguồn phân tán tham gia",
+          "Mọi gói đều phải bị sửa nội dung",
+          "Luôn phải biết mật khẩu nạn nhân",
+          "Chỉ có một máy gửi trực tiếp"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Distributed thể hiện nguồn tấn công phân tán.",
+          "DDoS có thể chỉ gây nghẽn mà không sửa nội dung gói.",
+          "DDoS có thể dùng lưu lượng mà không biết mật khẩu nạn nhân.",
+          "Một nguồn trực tiếp không thể hiện tính phân tán của DDoS."
+        ],
+        "page": 48
+      },
+      {
+        "id": "1-q17",
+        "section": "1.6",
+        "topic": "Tấn công từ chối dịch vụ",
+        "level": "Thông hiểu",
+        "stem": "Trong Smurf, vì sao trả lời lại đổ về nạn nhân?",
+        "options": [
+          "Máy nạn nhân tự yêu cầu mọi bên gửi dữ liệu",
+          "Mỗi bên trung gian đã có quyền quản trị nạn nhân",
+          "Mọi bản trả lời đều phải chứa mã thực thi",
+          "Địa chỉ nguồn trong yêu cầu bị giả thành địa chỉ nạn nhân"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Trong Smurf, nạn nhân không cần chủ động yêu cầu các phản hồi.",
+          "Các máy phản xạ không cần quyền quản trị trên nạn nhân; chúng đáp địa chỉ nguồn giả.",
+          "Phản hồi ICMP không cần chứa mã thực thi để gây cạn tài nguyên.",
+          "Cơ chế phản xạ khiến bên trung gian gửi đáp lại địa chỉ nguồn bị giả."
+        ],
+        "page": 50
+      },
+      {
+        "id": "1-q18",
+        "section": "1.6",
+        "topic": "Tấn công từ chối dịch vụ",
+        "level": "Nhận biết",
+        "stem": "Botnet là gì?",
+        "options": [
+          "Mọi mạng có nhiều máy hợp pháp",
+          "Một công cụ giám sát tập trung",
+          "Tập hợp máy bị điều khiển để thực hiện hoạt động chung",
+          "Một máy zombie duy nhất"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Máy nối mạng hợp pháp không mặc nhiên bị điều khiển trái phép.",
+          "Công cụ giám sát hợp pháp không phải tập hợp máy bị kiểm soát như botnet.",
+          "Zombie là máy thành viên; botnet là tập hợp bị điều khiển.",
+          "Một zombie là thành viên, chưa phải tập hợp botnet."
+        ],
+        "page": 52
+      },
+      {
+        "id": "1-q19",
+        "section": "1.7",
+        "topic": "Các loại phần mềm độc hại",
+        "level": "Thông hiểu",
+        "stem": "Đặc điểm nào phù hợp virus trong bài?",
+        "options": [
+          "Chỉ cung cấp lối vào bỏ qua chứng thực",
+          "Tự nhân bản gắn với vật chủ",
+          "Luôn tự lan như chương trình độc lập",
+          "Nguỵ trang nhưng không tự nhân bản"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Lối vào bỏ kiểm soát là backdoor; không nêu đặc tính tự nhân bản của virus.",
+          "Virus lây bằng cách gắn với file, chương trình hoặc đối tượng chủ.",
+          "Độc lập không cần chủ là đặc trưng worm truyền thống.",
+          "Nguỵ trang không tự nhân bản là đặc trưng Trojan."
+        ],
+        "page": 56
+      },
+      {
+        "id": "1-q20",
+        "section": "1.7",
+        "topic": "Các loại phần mềm độc hại",
+        "level": "Thông hiểu",
+        "stem": "Worm khác virus truyền thống ở điểm nào?",
+        "options": [
+          "Có thể là chương trình độc lập không cần file chủ",
+          "Không tự nhân bản như Trojan",
+          "Bắt buộc gắn vào tài liệu macro",
+          "Chỉ hoạt động khi file chủ được chạy"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Worm có khả năng tự lan và không cần ký sinh như virus.",
+          "Không tự nhân bản là mô tả Trojan, trong khi worm tự lan.",
+          "Worm không bắt buộc ký sinh trong tài liệu macro.",
+          "Phụ thuộc file chủ chạy là đặc trưng virus trong mô hình so sánh."
+        ],
+        "page": 57
+      },
+      {
+        "id": "1-q21",
+        "section": "1.7",
+        "topic": "Các loại phần mềm độc hại",
+        "level": "Vận dụng",
+        "stem": "Mã độc chỉ kích hoạt khi một điều kiện nhất định đúng phù hợp tên nào?",
+        "options": [
+          "Worm",
+          "Keylogger",
+          "Password sniffer",
+          "Logic bomb"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Worm được phân loại bởi tự lan độc lập, không bởi điều kiện kích hoạt.",
+          "Keylogger được phân loại bởi ghi phím.",
+          "Password sniffer được phân loại bởi thu thông tin đăng nhập trên lưu lượng.",
+          "Logic bomb dựa trên điều kiện kích hoạt, có thể là thời gian hay sự kiện khác."
+        ],
+        "page": 59
+      },
+      {
+        "id": "1-q22",
+        "section": "1.8",
+        "topic": "Lý lịch và hành động của kẻ tấn công",
+        "level": "Nhận biết",
+        "stem": "Script kiddie trong slide chủ yếu là người thế nào?",
+        "options": [
+          "Được phân loại hoàn toàn theo tuổi",
+          "Có quyền kiểm thử mọi mục tiêu công khai",
+          "Phụ thuộc công cụ có sẵn và ít hiểu cơ chế bên trong",
+          "Luôn tự phát triển mọi công cụ từ đầu"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Tuổi không quyết định năng lực hay cách sử dụng công cụ.",
+          "Dùng công cụ không tạo quyền kiểm thử; phải có sự cho phép.",
+          "Tiêu chí là cách phụ thuộc công cụ, không phải cứ dùng script là script kiddie.",
+          "Tự phát triển công cụ sâu không phù hợp đặc trưng phụ thuộc công cụ của script kiddie."
+        ],
+        "page": 65
+      },
+      {
+        "id": "1-q23",
+        "section": "1.9",
+        "topic": "Mô hình bảo mật cơ bản và phòng thủ theo chiều sâu",
+        "level": "Thông hiểu",
+        "stem": "Vai trò điển hình của IDS là gì?",
+        "options": [
+          "Thay thế kiểm tra malware đầu cuối",
+          "Phát hiện và cảnh báo dấu hiệu xâm nhập",
+          "Mã hoá toàn bộ dữ liệu trên đường truyền",
+          "Tự động chặn mọi hoạt động nghi ngờ"
+        ],
+        "correct": 1,
+        "explanations": [
+          "IDS không thay việc kiểm tra, cách ly và xử lý malware trên máy.",
+          "IDS tập trung giám sát, phân tích và cảnh báo.",
+          "Mã hoá đường truyền thuộc cryptosystem, không phải chức năng chính IDS.",
+          "IDS mặc định phát hiện/cảnh báo; tự chặn là chức năng cần cấu hình/hệ thống IPS."
+        ],
+        "page": 89
+      },
+      {
+        "id": "1-q24",
+        "section": "1.9",
+        "topic": "Mô hình bảo mật cơ bản và phòng thủ theo chiều sâu",
+        "level": "Vận dụng",
+        "stem": "HTTPS được firewall cho phép nhưng file tải về có malware. Lớp nào bổ sung trực tiếp?",
+        "options": [
+          "Anti-malicious software ở đầu cuối",
+          "Chỉ tăng độ dài khoá TLS",
+          "Chỉ dùng IDS để thay thế xử lý file",
+          "Chỉ đóng cổng HTTPS cho mọi người"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Firewall kiểm soát lưu lượng; công cụ chống malware đánh giá file và hành vi ở máy.",
+          "Khoá TLS dài hơn không làm file tải về hết độc.",
+          "Cảnh báo IDS không thay cho phát hiện và xử lý file độc tại đầu cuối.",
+          "Đóng HTTPS làm mất truy cập hợp pháp, không phải lớp bổ sung đánh giá file."
+        ],
+        "page": 88
+      },
+      {
+        "id": "1-q25",
+        "section": "1.10",
+        "topic": "Bài tập nền tảng mạng và tổng hợp",
+        "level": "Nhận biết",
+        "stem": "Trình tự bắt tay TCP cơ bản là gì?",
+        "options": [
+          "SYN → ACK → SYN-ACK",
+          "SYN-ACK → SYN → ACK",
+          "ACK → SYN-ACK → SYN",
+          "SYN → SYN-ACK → ACK"
+        ],
+        "correct": 3,
+        "explanations": [
+          "SYN-ACK phải đáp SYN trước khi ACK hoàn tất; thứ tự này đảo hai bước cuối.",
+          "Máy chủ không gửi SYN-ACK trước khi nhận SYN trong bắt tay được hỏi.",
+          "ACK không mở đầu bắt tay chủ động chuẩn này.",
+          "Bắt tay ba bước thiết lập trạng thái TCP giữa hai đầu."
+        ],
+        "page": 95
+      }
+    ]
+  },
+  {
+    "id": "2a",
+    "title": "Các phần mềm gây hại — Trojan",
+    "pages": 69,
+    "file": "Bài 2a - Các phần mềm gây hại - Trojan.pdf",
+    "overview": "Trojan được hiểu qua cách nguỵ trang, chức năng trái phép và dấu vết để phòng thủ. Bài kết nối malware trong tổng quan với giám sát tiến trình, dịch vụ, lưu lượng và nguyên tắc ít quyền.",
+    "objectives": [
+      "Phân biệt sáu nhóm Trojan theo chức năng.",
+      "Nhận biết đường xâm nhập và dấu vết đáng kiểm tra.",
+      "Giải thích vì sao cổng mở chưa đủ kết luận và cần nhiều lớp phòng thủ."
+    ],
+    "sections": [
+      {
+        "id": "2a.1",
+        "title": "Lịch sử hình thành Trojan",
+        "from": 6,
+        "to": 6,
+        "explanation": "Tên Trojan lấy từ câu chuyện ngựa gỗ: vật trông có vẻ hữu ích lại che giấu nguy cơ. Trang 6 nêu Back Orifice và cổng 31337. Hai khẳng định về niên đại truyền thuyết và Trojan đầu tiên trong slide cần kiểm chứng; không dùng làm câu hỏi chấm điểm. Ý nghĩa cần hiểu là cơ chế đánh lừa lòng tin, không phải thuộc một mốc lịch sử chưa được xác minh.",
+        "plain": "Thứ bạn nghĩ là món quà có thể kèm chức năng không được báo trước. Ví von không giải thích cách chương trình thực thi.",
+        "example": "Một bộ cài tiện ích chứa thêm chức năng điều khiển không được người dùng biết tới phù hợp mô hình lừa bằng vỏ bọc.",
+        "pitfalls": [
+          "Không suy Back Orifice là mọi Trojan.",
+          "Không dùng niên đại chưa xác minh làm sự thật."
+        ],
+        "recap": [
+          "Giải thích nguồn gốc tên gọi theo cơ chế nguỵ trang."
+        ]
+      },
+      {
+        "id": "2a.2",
+        "title": "Khái niệm và đường xâm nhập",
+        "from": 7,
+        "to": 13,
+        "explanation": "Trojan là chương trình mang chức năng gây hại hoặc trái phép, thường hoạt động kín và không tự nhân bản như virus. Slide nêu điều khiển từ xa là công dụng thường gặp; máy chậm hoặc bị hạn chế chỉnh registry là dấu hiệu có thể có, không phải tiêu chí chắc chắn. Các đường xâm nhập gồm file đính kèm, chat, web/email, chia sẻ file, phần mềm miễn phí, game/screensaver tải về và truy cập vật lý. Hình 11–13 minh hoạ việc ghép và nguỵ trang chương trình; học rủi ro của nguồn không tin cậy thay vì thao tác tạo mã độc.",
+        "plain": "Trojan không nhất thiết tự bò từ máy này qua máy khác; người dùng hoặc một kênh xâm nhập đưa nó vào, sau đó nó làm việc ngầm.",
+        "example": "Một file được gửi qua chat có tên giống ảnh nhưng thực chất là chương trình: cần kiểm tra loại file và nguồn, không chỉ biểu tượng.",
+        "pitfalls": [
+          "Miễn phí không đồng nghĩa độc hại; nguồn và hành vi mới cần đánh giá.",
+          "Máy chậm có nhiều nguyên nhân.",
+          "Không phải Trojan nào cũng mở cổng cố định."
+        ],
+        "recap": [
+          "Kể được các đường vào.",
+          "Phân biệt khả năng tự nhân bản với khả năng điều khiển từ xa."
+        ]
+      },
+      {
+        "id": "2a.3",
+        "title": "Phân loại và Trojan điều khiển từ xa (RAT)",
+        "from": 14,
+        "to": 17,
+        "explanation": "Slide phân loại Remote Access Trojan (RAT), keylogger, password-stealing Trojan, FTP Trojan, destructive Trojan và privilege-escalation Trojan. RAT cho bên điều khiển thao tác từ xa. Mô hình minh hoạ của slide có thành phần server trên máy bị nhiễm và client ở bên điều khiển; có thể tự chạy cùng hệ thống và nguỵ trang file. Vai trò client/server là cách nhìn kiến trúc, không có nghĩa mọi RAT hiện đại phải chờ kết nối vào trên một cổng. Phần mềm quản trị từ xa hợp pháp cần sự cho phép và kiểm soát; cùng năng lực kỹ thuật có thể bị lạm dụng.",
+        "plain": "Máy bị nhiễm có thể trở thành nơi nhận lệnh. Đây không phải server web công khai do chủ máy chủ động mở.",
+        "example": "Phần mềm hỗ trợ kỹ thuật được công ty phê duyệt khác với công cụ điều khiển bị cài lén dù cả hai có chức năng xem màn hình.",
+        "pitfalls": [
+          "Có điều khiển từ xa chưa tự chứng minh là malware.",
+          "Không đồng nhất vai trò server với quyền hợp pháp."
+        ],
+        "recap": [
+          "Nêu đặc trưng RAT.",
+          "Phân loại theo chức năng, chấp nhận nhãn chồng lấn."
+        ]
+      },
+      {
+        "id": "2a.4",
+        "title": "Keylogger: phần cứng, phần mềm và cấu trúc",
+        "from": 18,
+        "to": 22,
+        "explanation": "Keylogger ghi nhận thao tác bàn phím, có thể kèm ảnh màn hình và gửi hoặc lưu nhật ký. Loại phần cứng nằm trên đường tín hiệu thiết bị; loại phần mềm chạy trong hệ thống. Slide mô tả ba phần: chương trình điều khiển điều phối cấu hình; hook/monitor thu thao tác; log lưu kết quả. Có thể có protect và report. Kích thước nhỏ hoặc ít dùng bộ nhớ khiến dấu hiệu tài nguyên không rõ. Hình 21–22 minh hoạ thiết bị gắn ở dây bàn phím. Quan điểm giám sát người thân trong slide không tự tạo quyền theo dõi; phần mở rộng cần xét sự đồng ý và quy định áp dụng.",
+        "plain": "Keylogger giống người chép lại phím bạn bấm, chứ không cần phá được mã hoá trên mạng. Ví von chỉ nói về điểm thu thập dữ liệu.",
+        "example": "Dù trang đăng nhập dùng kênh mã hoá, dữ liệu có thể bị ghi tại máy trước khi gửi; bảo vệ đường truyền và bảo vệ đầu cuối giải quyết hai vị trí khác nhau.",
+        "pitfalls": [
+          "HTTPS không ngăn mọi ghi phím ở đầu cuối.",
+          "Quét phần mềm không bảo đảm phát hiện thiết bị phần cứng.",
+          "Log không phải bộ phận thu phím."
+        ],
+        "recap": [
+          "So sánh phần cứng/phần mềm.",
+          "Gán đúng vai trò controller–monitor–log."
+        ]
+      },
+      {
+        "id": "2a.5",
+        "title": "Trojan lấy mật khẩu, FTP, phá hoại và leo thang quyền",
+        "from": 23,
+        "to": 26,
+        "explanation": "Password-stealing Trojan lấy thông tin đăng nhập đã có trên máy, khác với keylogger tập trung thao tác gõ. FTP Trojan trong ví dụ mở dịch vụ truyền file ở cổng 21 để truy cập dữ liệu trái phép; cổng 21 cũng là cổng của dịch vụ hợp pháp nên không thể chỉ nhìn số cổng để kết luận. Trojan phá hoại làm mất khả năng sử dụng dữ liệu, ví dụ xoá hay mã hoá file. Trojan leo thang đặc quyền giúp đạt quyền cao hơn quyền ban đầu. Các nhóm trả lời mục tiêu khác nhau, nên một mẫu có thể kết hợp nhiều chức năng.",
+        "plain": "Lấy chìa khoá đã lưu, lén chép dữ liệu, phá dữ liệu và xin được quyền quản trị là bốn việc khác nhau.",
+        "example": "Tài khoản chỉ được đọc nhưng chương trình làm nó đạt quyền quản trị là vấn đề leo thang; cài backdoor sau đó là chức năng bổ sung.",
+        "pitfalls": [
+          "Cổng 21 không đủ chứng minh FTP Trojan.",
+          "Mọi Trojan không nhất thiết đánh cắp mật khẩu.",
+          "Leo thang quyền khác với chỉ đăng nhập từ xa."
+        ],
+        "recap": [
+          "Ghép bốn nhóm với hành vi đặc trưng."
+        ]
+      },
+      {
+        "id": "2a.6",
+        "title": "Một số Trojan và công cụ minh hoạ trong slide",
+        "from": 27,
+        "to": 39,
+        "explanation": "Các tên trong slide gồm KGB SPY, Blazing Tool Perfect Keylogger, 007 Spy Software, Stealth Keylogger, DJI RAT, NET BUS và HackerzRAT. KGB SPY minh hoạ ghi phím, màn hình, cấu hình và gửi báo cáo; Perfect Keylogger minh hoạ thu phím, liên kết web và nội dung chat. Các ảnh còn lại giúp nhận diện chức năng giám sát hoặc điều khiển trong giao diện lịch sử, không phải khuyến nghị phần mềm đang dùng. Trang 38–39 là ảnh công cụ tạo Trojan, được đưa vào bản đồ học dưới góc độ rủi ro của việc tạo và ghép chức năng độc hại; không tái hiện thao tác triển khai. Tên thương mại hay biểu tượng không thay thế phân tích hành vi.",
+        "plain": "Đừng chỉ học tên công cụ: hãy hỏi nó lấy dữ liệu nào, giữ quyền ra sao và để lại dấu vết gì.",
+        "example": "Một giao diện có tab screenshot và email delivery cho thấy nhóm khả năng thu thập/gửi dữ liệu; cần chứng cứ trên hệ thống để kết luận sự cố thật.",
+        "pitfalls": [
+          "Ảnh sản phẩm cũ không chứng minh mức phổ biến hiện tại.",
+          "Không chạy mẫu để học thuộc tên.",
+          "Giao diện không xác minh được toàn bộ hành vi."
+        ],
+        "recap": [
+          "Nhận diện nhóm chức năng từ mô tả.",
+          "Phân biệt ví dụ lịch sử với khuyến nghị hiện tại."
+        ]
+      },
+      {
+        "id": "2a.7",
+        "title": "Phòng chống Trojan: kiểm tra nhiều nguồn dấu vết",
+        "from": 40,
+        "to": 50,
+        "explanation": "Slide đề xuất kiểm tra cổng, tiến trình, registry, hoạt động mạng và phần mềm chống Trojan. Netstat, Fport, TCPView và CurrPorts giúp quan sát endpoint/kết nối, thường gắn với tiến trình; Process Viewer/Process Explorer tập trung tiến trình; công cụ theo dõi thay đổi hệ thống hỗ trợ kiểm tra cấu hình. Hình 47–49 bổ sung registry tự khởi động, Windows services và startup; trang 50 kiểm tra tính toàn vẹn file/thư mục. Giá trị của từng công cụ là tạo chứng cứ đối chiếu: tiến trình nào mở kết nối gì, bắt đầu từ đâu, thuộc phần mềm nào. Phát hiện bất thường phải kiểm tra ngữ cảnh trước khi xoá.",
+        "plain": "Điều tra như ráp nhiều mảnh ghép: một port lạ là câu hỏi cần tìm nguyên nhân, không phải bản án.",
+        "example": "Một dịch vụ mới tự chạy cùng máy và tạo kết nối ra ngoài không khớp phần mềm đã phê duyệt đáng được kiểm tra sâu hơn một cổng mở đơn lẻ.",
+        "pitfalls": [
+          "Tên tiến trình có thể bị giả.",
+          "Ứng dụng hợp pháp cũng có cổng mở.",
+          "Xoá bừa registry có thể hỏng hệ thống."
+        ],
+        "recap": [
+          "Nối cổng với tiến trình và nguồn khởi động.",
+          "Đánh giá nhiều dấu vết trước khi kết luận."
+        ]
+      },
+      {
+        "id": "2a.8",
+        "title": "Chống malware, phân tích mạng và kiểm thử được phép",
+        "from": 51,
+        "to": 58,
+        "explanation": "Slide minh hoạ Trojan Hunter, Spyware Doctor và Capsa Network Analyzer. Capsa được mô tả có giám sát thời gian thực, phân tích bảo mật/hiệu suất, nhiều giao thức, thống kê và báo cáo. Công cụ phân tích lưu lượng không tự thay thế công cụ xử lý file độc. Hình 56–58 đưa quy trình kiểm thử Trojan/backdoor: học ở cấp xác định phạm vi, quan sát dấu vết, xác minh, báo cáo và khắc phục; không cài mẫu lên máy thật hay hệ thống ngoài phạm vi. Phần mở rộng về phòng ngừa: nguồn phần mềm đáng tin, cập nhật, ít quyền, kiểm soát thực thi, bảo vệ đầu cuối và sao lưu bổ sung nhau.",
+        "plain": "Camera nhìn đường đi không tự sửa được chiếc xe hỏng; xem lưu lượng và làm sạch đầu cuối là hai phần công việc.",
+        "example": "Báo cáo lưu lượng chỉ ra kết nối bất thường, sau đó cần kiểm tra tiến trình và chính sách để đánh giá nguyên nhân.",
+        "pitfalls": [
+          "Không xem danh sách phần mềm cũ là bảng xếp hạng hiện tại.",
+          "Pen testing phải có phạm vi được phép.",
+          "Không dùng tài khoản quản trị cho tác vụ thường ngày."
+        ],
+        "recap": [
+          "Phân biệt quan sát mạng và xử lý đầu cuối.",
+          "Nêu vòng phát hiện–xác minh–khắc phục."
+        ]
+      },
+      {
+        "id": "2a.9",
+        "title": "Các cổng đi cùng Trojan thông dụng",
+        "from": 59,
+        "to": 62,
+        "explanation": "Slide cung cấp danh sách liên hệ tên Trojan và cổng lịch sử. Ví dụ Back Orifice được ghi 31337/31338, NetBus 2 Pro 20034; nhiều tên hoặc phiên bản dùng nhiều cổng, và một cổng có thể gắn nhiều tên. Danh sách có khác biệt giữa các trang như GirlFriend 21544 và 21554, NetBus các số khác nhau; đây là phần cần xác minh, không tự chọn một số để ra câu hỏi. Dữ liệu cổng là dấu hiệu tham khảo cho giám sát và ACL (Access Control List — danh sách kiểm soát truy cập), không phải chữ ký tuyệt đối. Nên giữ nguyên các bảng gốc khi đối chiếu thay vì học thuộc mỗi cặp số.",
+        "plain": "Số nhà giúp tìm nơi cần kiểm tra, nhưng không chứng minh ai đang ở trong đó. Cổng cũng có thể đổi hoặc được dùng hợp pháp.",
+        "example": "Chặn một cổng từng được mã độc dùng không bảo đảm mã độc không chuyển sang cổng khác; cần theo dõi tiến trình và chính sách lưu lượng.",
+        "pitfalls": [
+          "Port không phải định danh duy nhất của malware.",
+          "Bảng cũ không bao phủ mọi biến thể.",
+          "Không biến dữ liệu mâu thuẫn thành câu thi chắc chắn."
+        ],
+        "recap": [
+          "Giải thích giới hạn danh sách port.",
+          "Biết dùng danh sách như gợi ý điều tra."
+        ]
+      },
+      {
+        "id": "2a.10",
+        "title": "Bài tập tổng hợp, tài khoản quản trị và cookie",
+        "from": 63,
+        "to": 69,
+        "explanation": "Bài tập gốc gồm tìm worm/Trojan, thiết kế ACL, heuristic, so sánh antivirus, Web 2.0, công cụ đầu cuối và rủi ro cookie. Các yêu cầu tìm mã độc mới trong hai tuần là hoạt động cần tra cứu có thời điểm, không phải dữ kiện hiện tại đã có trong slide. Phần giải thích mở rộng: dùng tài khoản ít quyền hạn chế tác động nếu ứng dụng bị khai thác; không bảo đảm tuyệt đối an toàn. Cookie chứa token phiên có thể bị lấy để mạo danh nếu truyền không an toàn; phía máy chủ không được tin giá trị client tự sửa mà không xác thực. Bài tập Defender/Security Essentials và thư mục IE phản ánh môi trường Windows cũ; không làm theo đường dẫn/cài đặt cũ một cách máy móc. Hướng ôn tập: lập bảng khả năng công cụ và so sánh nguồn dữ liệu, không thử cài mã độc.",
+        "plain": "Đưa chìa khoá tổng cho trình duyệt khiến một sự cố có thể ảnh hưởng rộng hơn. Ít quyền giúp hạn chế phạm vi chứ không làm nội dung tải về thành an toàn.",
+        "example": "Nếu website tin cookie role=admin do người dùng tự thay đổi thì lỗi là kiểm soát phía máy chủ; cookie không tự có thẩm quyền chỉ vì nằm trên máy người học.",
+        "pitfalls": [
+          "Cookie không đồng nghĩa luôn chứa mật khẩu.",
+          "ACL theo cổng không thay mọi kiểm soát.",
+          "Bài tập yêu cầu tra cứu chưa phải kết luận nghiên cứu."
+        ],
+        "recap": [
+          "Tự giải thích rủi ro dùng quyền quản trị.",
+          "Phân tích bí mật và toàn vẹn của cookie."
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "title": "Các nhóm Trojan",
+        "headers": [
+          "Nhóm",
+          "Mục đích",
+          "Phân biệt"
+        ],
+        "rows": [
+          [
+            "RAT",
+            "Điều khiển từ xa",
+            "Khác quản trị hợp pháp ở sự cho phép"
+          ],
+          [
+            "Keylogger",
+            "Thu thao tác phím",
+            "Không chỉ đọc kho mật khẩu"
+          ],
+          [
+            "Password stealer",
+            "Lấy thông tin đăng nhập",
+            "Không cần mọi dữ liệu đều qua bàn phím"
+          ],
+          [
+            "FTP Trojan",
+            "Mở truy cập file trái phép",
+            "Cổng FTP hợp pháp chưa là bằng chứng"
+          ],
+          [
+            "Destructive",
+            "Phá khả dụng dữ liệu",
+            "Không bắt buộc có điều khiển từ xa"
+          ],
+          [
+            "Privilege escalation",
+            "Đạt quyền cao hơn",
+            "Khác với chỉ giữ phiên hiện có"
+          ]
+        ]
+      }
+    ],
+    "study": [
+      "Học sáu loại bằng động từ: điều khiển, ghi phím, lấy mật khẩu, truyền file, phá, nâng quyền.",
+      "Dùng bảng cổng–tiến trình–dịch vụ–khởi động–lưu lượng để tập phân tích dấu vết.",
+      "Tự giải thích vì sao HTTPS không chặn keylogger và vì sao port mở chưa đủ kết luận."
+    ],
+    "terms": [
+      {
+        "en": "RAT — Remote Access Trojan",
+        "vi": "Trojan truy cập từ xa",
+        "meaning": "Chức năng điều khiển máy trái phép từ xa."
+      },
+      {
+        "en": "Keylogger",
+        "vi": "Bộ ghi phím",
+        "meaning": "Thu và lưu thao tác bàn phím bằng phần mềm hoặc phần cứng."
+      },
+      {
+        "en": "Privilege escalation",
+        "vi": "Leo thang đặc quyền",
+        "meaning": "Đạt quyền cao hơn quyền được cấp ban đầu."
+      },
+      {
+        "en": "ACL — Access Control List",
+        "vi": "Danh sách kiểm soát truy cập",
+        "meaning": "Các quy tắc cho phép/từ chối truy cập theo chính sách."
+      },
+      {
+        "en": "Persistence",
+        "vi": "Duy trì hiện diện",
+        "meaning": "Khả năng tiếp tục hoạt động sau khởi động hoặc thay đổi phiên."
+      },
+      {
+        "en": "Cookie",
+        "vi": "Dữ liệu trình duyệt lưu cho website",
+        "meaning": "Có thể chứa mã phiên hoặc tùy chọn, cần bảo vệ phù hợp."
+      },
+      {
+        "en": "Trojan horse",
+        "vi": "Trojan nguỵ trang",
+        "meaning": "Chương trình ẩn chức năng trái phép dưới vỏ bọc hữu ích."
+      },
+      {
+        "en": "Backdoor",
+        "vi": "Cửa hậu",
+        "meaning": "Lối truy cập bỏ qua cơ chế kiểm soát thông thường."
+      },
+      {
+        "en": "Password stealer",
+        "vi": "Trojan lấy thông tin đăng nhập",
+        "meaning": "Thu mật khẩu hoặc thông tin xác thực lưu trên máy."
+      },
+      {
+        "en": "FTP — File Transfer Protocol",
+        "vi": "Giao thức truyền file",
+        "meaning": "Giao thức truyền file; có thể bị lạm dụng bởi FTP Trojan."
+      },
+      {
+        "en": "Destructive Trojan",
+        "vi": "Trojan phá hoại",
+        "meaning": "Tập trung làm hỏng hoặc làm mất khả năng dùng dữ liệu/hệ thống."
+      },
+      {
+        "en": "Hook / monitor",
+        "vi": "Bộ thu sự kiện",
+        "meaning": "Thành phần quan sát thao tác như phím trong mô hình keylogger."
+      },
+      {
+        "en": "Log",
+        "vi": "Nhật ký",
+        "meaning": "Dữ liệu sự kiện được ghi để xem và phân tích."
+      },
+      {
+        "en": "Registry",
+        "vi": "Kho cấu hình Windows",
+        "meaning": "Nơi lưu nhiều cấu hình hệ thống và ứng dụng."
+      },
+      {
+        "en": "Process",
+        "vi": "Tiến trình",
+        "meaning": "Một thực thể chương trình đang thực thi."
+      },
+      {
+        "en": "Service",
+        "vi": "Dịch vụ hệ thống",
+        "meaning": "Thành phần thường chạy nền cung cấp chức năng."
+      },
+      {
+        "en": "Startup",
+        "vi": "Tự khởi động",
+        "meaning": "Cơ chế chạy phần mềm khi máy hoặc phiên bắt đầu."
+      },
+      {
+        "en": "Penetration testing",
+        "vi": "Kiểm thử xâm nhập",
+        "meaning": "Đánh giá có kiểm soát và được phép để tìm yếu điểm."
+      },
+      {
+        "en": "Least privilege",
+        "vi": "Nguyên tắc ít quyền",
+        "meaning": "Chỉ cấp quyền cần thiết cho nhiệm vụ."
+      },
+      {
+        "en": "Heuristic",
+        "vi": "Phương pháp nhận diện dựa dấu hiệu",
+        "meaning": "Dùng quy tắc/đặc trưng đáng ngờ, có thể báo nhầm hoặc bỏ sót."
+      },
+      {
+        "en": "Port",
+        "vi": "Cổng giao thức vận chuyển",
+        "meaning": "Số phân biệt endpoint dịch vụ, không phải định danh chắc chắn malware."
+      },
+      {
+        "en": "Session token",
+        "vi": "Mã phiên",
+        "meaning": "Thông tin giúp máy chủ nhận biết phiên đăng nhập."
+      }
+    ],
+    "issues": [
+      {
+        "page": 6,
+        "note": "Mốc truyền thuyết thế kỷ 17 và khẳng định Back Orifice là Trojan đầu tiên cần kiểm chứng; không dùng để chấm điểm."
+      },
+      {
+        "page": 19,
+        "note": "Ví dụ giám sát người thân không mặc nhiên tạo quyền theo dõi; cần sự đồng ý/phạm vi phù hợp."
+      },
+      {
+        "page": 61,
+        "note": "Bảng cổng trang 59–62 có số khác nhau theo tên/phiên bản; GirlFriend 21544/21554 cần xác minh."
+      },
+      {
+        "page": 67,
+        "note": "Tên sản phẩm và đường dẫn thao tác thuộc Windows cũ; chưa được xác minh cho hệ điều hành hiện tại."
+      }
+    ],
+    "questions": [
+      {
+        "id": "2a-q1",
+        "section": "2a.2",
+        "topic": "Khái niệm và đường xâm nhập",
+        "level": "Nhận biết",
+        "stem": "Trojan khác virus ở đặc trưng nào trong bài?",
+        "options": [
+          "Luôn tự nhân bản qua file chủ",
+          "Luôn tự lan độc lập như worm",
+          "Không thể tồn tại trên máy người dùng",
+          "Không có đặc tính tự nhân bản như virus"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Gắn chủ và tự nhân bản mô tả virus, không phải đặc tính Trojan.",
+          "Tự lan độc lập mô tả worm, không phải Trojan trong bài.",
+          "Trojan có thể chạy trên máy người dùng; đó chính là môi trường nhiễm được mô tả.",
+          "Đặc tính phân biệt được nêu là không tự nhân bản; chức năng gây hại có thể đa dạng."
+        ],
+        "page": 9
+      },
+      {
+        "id": "2a-q2",
+        "section": "2a.2",
+        "topic": "Khái niệm và đường xâm nhập",
+        "level": "Nhận biết",
+        "stem": "Kênh nào được slide nêu là đường xâm nhập Trojan?",
+        "options": [
+          "Chỉ qua email có macro Office",
+          "Chỉ khi người dùng chia sẻ mật khẩu",
+          "File đính kèm và phần mềm tải về",
+          "Chỉ qua dịch vụ FTP cổng 21"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Không chỉ macro email: còn chat, tải file, chia sẻ và truy cập vật lý.",
+          "Nạn nhân có thể chạy bộ cài có hại mà không cung cấp mật khẩu cho người khác.",
+          "Slide liệt kê email, chat, chia sẻ, tải file và truy cập vật lý.",
+          "Trojan có nhiều đường vào; FTP chỉ là một loại chức năng được nêu."
+        ],
+        "page": 10
+      },
+      {
+        "id": "2a-q3",
+        "section": "2a.2",
+        "topic": "Khái niệm và đường xâm nhập",
+        "level": "Thông hiểu",
+        "stem": "Máy chạy chậm cho phép kết luận nào?",
+        "options": [
+          "Chỉ có thể do virus boot",
+          "Cần kiểm tra thêm vì có nhiều nguyên nhân",
+          "Chắc chắn có RAT",
+          "Chắc chắn là keylogger"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Lỗi phần cứng, ứng dụng hoặc nhiều nguyên nhân khác cũng gây chậm; không riêng virus boot.",
+          "Máy chậm là dấu hiệu không đặc hiệu, cần đối chiếu bằng chứng.",
+          "Máy chậm không chỉ ra riêng chức năng điều khiển từ xa.",
+          "Không thể suy có ghi phím chỉ từ tốc độ máy."
+        ],
+        "page": 9
+      },
+      {
+        "id": "2a-q4",
+        "section": "2a.3",
+        "topic": "Phân loại và Trojan điều khiển từ xa (RAT)",
+        "level": "Nhận biết",
+        "stem": "Theo mô hình RAT trong slide, thành phần ở máy bị nhiễm thường đóng vai trò nào?",
+        "options": [
+          "Server nhận điều khiển",
+          "Client điều khiển máy của hacker",
+          "Gateway chống malware",
+          "Máy chủ xác thực được tin cậy"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Slide minh hoạ server ở máy bị nhiễm, client ở bên điều khiển.",
+          "Client điều khiển nằm ở phía bên điều khiển trong hình, không phải vai trò phần nhiễm được hỏi.",
+          "Gateway chống malware là phòng thủ, không phải server RAT trên nạn nhân.",
+          "Thành phần nhiễm không mặc nhiên là máy chủ xác thực được tin cậy."
+        ],
+        "page": 16
+      },
+      {
+        "id": "2a-q5",
+        "section": "2a.3",
+        "topic": "Phân loại và Trojan điều khiển từ xa (RAT)",
+        "level": "Thông hiểu",
+        "stem": "Phân biệt quản trị từ xa hợp pháp và RAT trái phép cần xét gì?",
+        "options": [
+          "Chỉ dựa việc có cổng mạng mở",
+          "Chỉ dựa việc có xem được màn hình",
+          "Chỉ dựa tên thương mại của công cụ",
+          "Sự cho phép, mục đích và kiểm soát triển khai"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Dịch vụ hợp pháp cũng mở cổng; cổng không chứng minh sự cho phép.",
+          "Xem màn hình là khả năng của cả hỗ trợ hợp pháp lẫn RAT trái phép.",
+          "Tên thương mại có thể bị lạm dụng hoặc giả mạo; cần xét cách triển khai thực tế.",
+          "Năng lực từ xa có thể hợp pháp; việc cài lén và sử dụng trái phép là yếu tố quyết định."
+        ],
+        "page": 17
+      },
+      {
+        "id": "2a-q6",
+        "section": "2a.4",
+        "topic": "Keylogger: phần cứng, phần mềm và cấu trúc",
+        "level": "Nhận biết",
+        "stem": "Keylogger có thể tồn tại ở dạng nào?",
+        "options": [
+          "Chỉ thiết bị gắn bàn phím",
+          "Chỉ thành phần của RAT",
+          "Phần cứng hoặc phần mềm",
+          "Chỉ phần mềm chạy nền"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Slide có cả phần mềm nên chỉ thiết bị là thiếu.",
+          "Keylogger có thể độc lập; không bắt buộc là thành phần RAT.",
+          "Slide mô tả cả hai dạng.",
+          "Slide có cả thiết bị phần cứng nên chỉ phần mềm là thiếu."
+        ],
+        "page": 18
+      },
+      {
+        "id": "2a-q7",
+        "section": "2a.4",
+        "topic": "Keylogger: phần cứng, phần mềm và cấu trúc",
+        "level": "Thông hiểu",
+        "stem": "Thành phần nào trực tiếp ghi nhận thao tác trong mô hình keylogger?",
+        "options": [
+          "Thành phần gửi báo cáo",
+          "Hook hoặc monitor",
+          "Tập tin nhật ký",
+          "Chương trình xem/cấu hình log"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Gửi báo cáo chuyển dữ liệu đã thu; không phải nguồn ghi nhận phím chính.",
+          "Hook/monitor thu dữ liệu; log lưu kết quả.",
+          "Log lưu kết quả đã thu, không trực tiếp lấy sự kiện phím.",
+          "Bộ điều khiển cấu hình điều phối/cài đặt, khác thành phần thu sự kiện."
+        ],
+        "page": 20
+      },
+      {
+        "id": "2a-q8",
+        "section": "2a.4",
+        "topic": "Keylogger: phần cứng, phần mềm và cấu trúc",
+        "level": "Nhận biết",
+        "stem": "Log của keylogger có vai trò nào?",
+        "options": [
+          "Chứa kết quả đã ghi nhận",
+          "Trực tiếp thu tín hiệu phím",
+          "Điều phối cấu hình và lệnh",
+          "Bảo vệ đường truyền đăng nhập"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Log là nơi lưu thông tin thu được.",
+          "Thu tín hiệu là nhiệm vụ hook/monitor; log lưu dữ liệu sau khi thu.",
+          "Điều phối cấu hình thuộc controller.",
+          "Log không mã hoá hay bảo vệ đường truyền đăng nhập."
+        ],
+        "page": 20
+      },
+      {
+        "id": "2a-q9",
+        "section": "2a.4",
+        "topic": "Keylogger: phần cứng, phần mềm và cấu trúc",
+        "level": "Vận dụng",
+        "stem": "Trang dùng HTTPS nhưng máy có keylogger. Nhận định phù hợp?",
+        "options": [
+          "HTTPS ngăn mọi thu thập trên máy",
+          "Mã hoá kênh tự làm sạch đầu cuối",
+          "Chỉ thông tin gửi bằng bản rõ mới bị ghi phím",
+          "Phím có thể bị thu tại đầu cuối trước khi truyền"
+        ],
+        "correct": 3,
+        "explanations": [
+          "HTTPS bảo vệ kênh giữa các đầu, không ngăn mã độc quan sát dữ liệu ngay tại đầu cuối.",
+          "Mã hoá kênh không gỡ phần mềm độc hại đã chạy trên máy.",
+          "Keylogger có thể ghi trước bước mã hoá nên cả dữ liệu gửi trong TLS cũng gặp nguy cơ đầu cuối.",
+          "Bảo vệ đường truyền không xử lý mọi rủi ro đầu cuối."
+        ],
+        "page": 18
+      },
+      {
+        "id": "2a-q10",
+        "section": "2a.4",
+        "topic": "Keylogger: phần cứng, phần mềm và cấu trúc",
+        "level": "Vận dụng",
+        "stem": "Chỉ quét phần mềm có bảo đảm tìm được keylogger phần cứng?",
+        "options": [
+          "Có, chỉ cần quét thư mục startup",
+          "Có, vì antivirus luôn thấy mọi thiết bị",
+          "Không, cần kiểm tra thiết bị và kết nối vật lý phù hợp",
+          "Có, vì mọi keylogger đều là tiến trình"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Thiết bị vật lý không cần mục startup của hệ điều hành.",
+          "Antivirus không bảo đảm nhận ra mọi thiết bị ghi phím cắm ngoài.",
+          "Thiết bị gắn trên đường bàn phím có thể không hiện thành tiến trình phần mềm.",
+          "Keylogger phần cứng có thể không xuất hiện dưới dạng tiến trình."
+        ],
+        "page": 21
+      },
+      {
+        "id": "2a-q11",
+        "section": "2a.5",
+        "topic": "Trojan lấy mật khẩu, FTP, phá hoại và leo thang quyền",
+        "level": "Thông hiểu",
+        "stem": "Password-stealing Trojan tập trung vào gì?",
+        "options": [
+          "Chỉ mã hoá file để phá hoại",
+          "Lấy thông tin đăng nhập của nạn nhân",
+          "Chỉ theo dõi cổng TCP đang mở",
+          "Chỉ chiếm quyền bằng tràn bộ đệm"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Mã hoá phá hoại thuộc nhóm destructive; không nêu mục tiêu lấy thông tin đăng nhập.",
+          "Nhóm này được phân loại theo mục tiêu lấy mật khẩu/thông tin đăng nhập.",
+          "Theo dõi cổng là dấu vết mạng, không trực tiếp mô tả lấy mật khẩu.",
+          "Tràn bộ đệm là một cơ chế khai thác; password stealer phân loại theo thông tin bị lấy."
+        ],
+        "page": 23
+      },
+      {
+        "id": "2a-q12",
+        "section": "2a.5",
+        "topic": "Trojan lấy mật khẩu, FTP, phá hoại và leo thang quyền",
+        "level": "Vận dụng",
+        "stem": "Thấy cổng 21 đang mở, kết luận tốt nhất là gì?",
+        "options": [
+          "Kiểm tra dịch vụ, tiến trình và sự cho phép trước khi kết luận",
+          "Chắc chắn là FTP Trojan",
+          "Chắc chắn chỉ là FTP hợp pháp",
+          "Chỉ cần đóng cổng là hết mọi malware"
+        ],
+        "correct": 0,
+        "explanations": [
+          "FTP hợp pháp cũng dùng cổng 21; cổng không là bằng chứng duy nhất.",
+          "FTP hợp pháp cũng dùng cổng 21 nên không đủ kết luận Trojan.",
+          "Trojan có thể lạm dụng FTP nên cũng không đủ kết luận hợp pháp.",
+          "Đóng một cổng không gỡ thành phần độc hoặc ngăn nó dùng kênh khác."
+        ],
+        "page": 24
+      },
+      {
+        "id": "2a-q13",
+        "section": "2a.5",
+        "topic": "Trojan lấy mật khẩu, FTP, phá hoại và leo thang quyền",
+        "level": "Nhận biết",
+        "stem": "Trojan phá hoại trong slide có thể làm gì?",
+        "options": [
+          "Chỉ ghi thao tác bàn phím",
+          "Chỉ lấy mật khẩu đã lưu",
+          "Chỉ nâng quyền mà không tác động dữ liệu",
+          "Phá hoặc mã hoá file làm mất khả năng sử dụng"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Ghi phím là keylogger; không phải đặc trưng phá dữ liệu được hỏi.",
+          "Lấy mật khẩu là password stealer; không mô tả tác động phá hoại chính.",
+          "Nâng quyền là privilege escalation; có thể kết hợp nhưng không định nghĩa destructive Trojan.",
+          "Phân loại này tập trung tác động gây hại đến dữ liệu/hệ thống."
+        ],
+        "page": 25
+      },
+      {
+        "id": "2a-q14",
+        "section": "2a.5",
+        "topic": "Trojan lấy mật khẩu, FTP, phá hoại và leo thang quyền",
+        "level": "Thông hiểu",
+        "stem": "Leo thang đặc quyền nghĩa là gì?",
+        "options": [
+          "Lấy thông tin đăng nhập từ file",
+          "Mở một dịch vụ truyền file",
+          "Đạt quyền cao hơn quyền ban đầu",
+          "Giữ nguyên quyền nhưng duy trì phiên"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Lấy dữ liệu đăng nhập là đánh cắp thông tin, không tự là tăng mức quyền.",
+          "Mở truyền file là chức năng truy cập dữ liệu; không tự nâng quyền hệ thống.",
+          "Đặc quyền là mức quyền thực hiện hành động trên hệ thống.",
+          "Duy trì phiên là giữ hiện diện/quyền hiện có, chưa chắc đạt quyền cao hơn."
+        ],
+        "page": 26
+      },
+      {
+        "id": "2a-q15",
+        "section": "2a.6",
+        "topic": "Một số Trojan và công cụ minh hoạ trong slide",
+        "level": "Nhận biết",
+        "stem": "KGB SPY được dùng minh hoạ khả năng gì?",
+        "options": [
+          "Chỉ kiểm tra danh sách cổng",
+          "Ghi phím và màn hình",
+          "Phân tích lưu lượng ở gateway",
+          "Chỉ quét toàn vẹn bằng HMAC"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Kiểm tra danh sách cổng không mô tả thu thông tin người dùng của công cụ này.",
+          "Các tab chức năng trong slide tập trung giám sát và báo cáo.",
+          "Phân tích mạng ở gateway là nhóm network analyzer, khác ví dụ giám sát phím/màn hình.",
+          "HMAC kiểm tra toàn vẹn không phải khả năng KGB SPY được nêu."
+        ],
+        "page": 27
+      },
+      {
+        "id": "2a-q16",
+        "section": "2a.6",
+        "topic": "Một số Trojan và công cụ minh hoạ trong slide",
+        "level": "Thông hiểu",
+        "stem": "Tên công cụ cũ trong slide nên được học thế nào?",
+        "options": [
+          "Liên hệ với nhóm chức năng và dấu vết",
+          "Coi tên sản phẩm là bằng chứng file độc",
+          "Coi mô tả phổ biến là hiện trạng",
+          "Chỉ học cổng mặc định thay cho hành vi"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Tên sản phẩm lịch sử không chứng minh mức phổ biến hay tính an toàn hiện tại.",
+          "Tên có thể bị giả hoặc trùng; cần bằng chứng hành vi và ngữ cảnh.",
+          "Mức phổ biến trong slide phản ánh thời điểm biên soạn, không tự là hiện trạng.",
+          "Cổng có thể thay đổi; chỉ học số làm mất bản chất chức năng và dấu vết."
+        ],
+        "page": 30
+      },
+      {
+        "id": "2a-q17",
+        "section": "2a.7",
+        "topic": "Phòng chống Trojan: kiểm tra nhiều nguồn dấu vết",
+        "level": "Nhận biết",
+        "stem": "TCPView/Netstat hữu ích chủ yếu để quan sát gì?",
+        "options": [
+          "Chỉ tính ICV của file sạch",
+          "Chỉ ghi lại bàn phím",
+          "Chỉ phát hiện virus dựa chữ ký",
+          "Kết nối/cổng mạng và dữ kiện liên quan"
+        ],
+        "correct": 3,
+        "explanations": [
+          "ICV kiểm tra nội dung file; không phải quan sát endpoint/kết nối chính của các công cụ này.",
+          "Ghi phím thuộc keylogger, không phải TCPView/Netstat.",
+          "Quét chữ ký malware là nhóm antivirus; các công cụ này cung cấp dữ kiện kết nối.",
+          "Đây là nguồn dấu vết mạng để đối chiếu với tiến trình và chính sách."
+        ],
+        "page": 43
+      },
+      {
+        "id": "2a-q18",
+        "section": "2a.7",
+        "topic": "Phòng chống Trojan: kiểm tra nhiều nguồn dấu vết",
+        "level": "Thông hiểu",
+        "stem": "Vì sao cần nối cổng với tiến trình?",
+        "options": [
+          "Để chứng minh port mở luôn do Trojan",
+          "Để thay thế hoàn toàn kiểm tra file",
+          "Để xác định chương trình tạo kết nối và đánh giá ngữ cảnh",
+          "Để kết luận mọi kết nối ra ngoài đều độc"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Port mở chỉ cho biết endpoint, không tự chứng minh nguồn Trojan.",
+          "Nối tiến trình không thay phân tích file, nguồn gốc và tính toàn vẹn.",
+          "Cổng đơn lẻ thiếu ngữ cảnh; tiến trình giúp truy nguồn hoạt động.",
+          "Nhiều ứng dụng hợp pháp kết nối ra ngoài; phải đánh giá ngữ cảnh."
+        ],
+        "page": 46
+      },
+      {
+        "id": "2a-q19",
+        "section": "2a.7",
+        "topic": "Phòng chống Trojan: kiểm tra nhiều nguồn dấu vết",
+        "level": "Vận dụng",
+        "stem": "Dịch vụ lạ tự chạy sau khởi động gợi ý cần kiểm tra khả năng nào?",
+        "options": [
+          "Chỉ phát lại token",
+          "Duy trì hiện diện (persistence)",
+          "Chỉ mã hoá đường truyền",
+          "Chỉ phân giải địa chỉ"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Replay tái dùng thông điệp; không phải cơ chế duy trì dịch vụ trên máy.",
+          "Tự khởi động và dịch vụ có thể là cơ chế duy trì hiện diện; vẫn cần xác minh.",
+          "Tự chạy lại nói đến cơ chế khởi động, không phải bảo vệ đường truyền.",
+          "Phân giải địa chỉ không giải thích dịch vụ tự xuất hiện sau khởi động."
+        ],
+        "page": 49
+      },
+      {
+        "id": "2a-q20",
+        "section": "2a.8",
+        "topic": "Chống malware, phân tích mạng và kiểm thử được phép",
+        "level": "Nhận biết",
+        "stem": "Capsa được slide mô tả thuộc nhóm nào?",
+        "options": [
+          "Phân tích và giám sát lưu lượng mạng",
+          "Tự động cách ly mọi file độc",
+          "Ghi và gửi thao tác bàn phím",
+          "Tạo kho mật khẩu người dùng"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Capsa được mô tả với phân tích lưu lượng, báo cáo, giao thức và bảo mật.",
+          "Capsa phân tích mạng, không tự bảo đảm cách ly mọi file độc.",
+          "Ghi và gửi phím thuộc keylogger.",
+          "Kho mật khẩu phục vụ xác thực; không phải phân tích lưu lượng của Capsa."
+        ],
+        "page": 55
+      },
+      {
+        "id": "2a-q21",
+        "section": "2a.8",
+        "topic": "Chống malware, phân tích mạng và kiểm thử được phép",
+        "level": "Thông hiểu",
+        "stem": "Điều kiện cần trước kiểm thử bảo mật là gì?",
+        "options": [
+          "Chỉ cần có công cụ được tải công khai",
+          "Chỉ cần mục tiêu có IP công cộng",
+          "Chỉ cần người kiểm thử có chứng chỉ",
+          "Phạm vi và sự cho phép rõ ràng"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Công cụ công khai không tạo quyền tác động hệ thống của người khác.",
+          "IP công cộng chỉ là khả năng truy cập, không phải sự đồng ý kiểm thử.",
+          "Chứng chỉ thể hiện đào tạo, không thay uỷ quyền cho mục tiêu cụ thể.",
+          "Kiểm thử phải có ủy quyền và giới hạn, không chỉ khả năng kỹ thuật."
+        ],
+        "page": 56
+      },
+      {
+        "id": "2a-q22",
+        "section": "2a.9",
+        "topic": "Các cổng đi cùng Trojan thông dụng",
+        "level": "Thông hiểu",
+        "stem": "Danh sách port–Trojan có giới hạn nào?",
+        "options": [
+          "Chặn bảng cổng bảo đảm sạch mã độc",
+          "Mọi biến thể phải chờ kết nối vào cùng port",
+          "Cổng có thể đổi và trùng với ứng dụng khác",
+          "Mỗi cổng là một định danh malware cố định"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Chặn port không kiểm soát hết file, hành vi và các kênh khác.",
+          "Mẫu có thể dùng kết nối ra hoặc cổng khác; không bắt buộc một port vào cố định.",
+          "Port là dấu hiệu tham khảo, không định danh tuyệt đối.",
+          "Cổng có thể chia sẻ và đổi theo cấu hình, không định danh cố định một malware."
+        ],
+        "page": 59
+      },
+      {
+        "id": "2a-q23",
+        "section": "2a.10",
+        "topic": "Bài tập tổng hợp, tài khoản quản trị và cookie",
+        "level": "Vận dụng",
+        "stem": "Vì sao quản trị viên nên dùng tài khoản ít quyền khi duyệt web?",
+        "options": [
+          "Bảo vệ mọi dữ liệu dù đã cấp toàn quyền",
+          "Hạn chế tác động nếu ứng dụng bị khai thác",
+          "Bảo đảm không tải được mã độc",
+          "Thay thế hoàn toàn bản vá bảo mật"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Nếu đã cấp toàn quyền thì nguyên tắc ít quyền không còn được áp dụng ở tác vụ đó.",
+          "Least privilege giới hạn phạm vi hành động có thể bị lạm dụng.",
+          "Tài khoản ít quyền vẫn có thể tải/chạy phần mềm trong phạm vi quyền đó.",
+          "Ít quyền hạn chế hậu quả, không sửa lỗ hổng phần mềm."
+        ],
+        "page": 65
+      },
+      {
+        "id": "2a-q24",
+        "section": "2a.10",
+        "topic": "Bài tập tổng hợp, tài khoản quản trị và cookie",
+        "level": "Vận dụng",
+        "stem": "Cookie phiên bị lộ trên kênh không an toàn có thể dẫn đến gì?",
+        "options": [
+          "Mạo danh phiên nếu token đủ để truy cập",
+          "Chỉ làm lộ sở thích giao diện, không thể mạo danh",
+          "Luôn cho biết mật khẩu bản rõ",
+          "Tự động trao quyền quản trị hệ điều hành"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Token phiên có thể đóng vai trò thông tin xác thực phiên.",
+          "Cookie có thể chứa token phiên, không chỉ sở thích giao diện.",
+          "Token phiên có thể mạo danh mà không làm lộ mật khẩu gốc; không suy luôn có mật khẩu bản rõ.",
+          "Phiên web không tự trao quyền quản trị hệ điều hành; phạm vi phụ thuộc ứng dụng và quyền."
+        ],
+        "page": 68
+      },
+      {
+        "id": "2a-q25",
+        "section": "2a.10",
+        "topic": "Bài tập tổng hợp, tài khoản quản trị và cookie",
+        "level": "Thông hiểu",
+        "stem": "Máy chủ có nên tin role=admin do client tự sửa trong cookie?",
+        "options": [
+          "Có, vì cookie luôn do máy chủ kiểm soát",
+          "Có, nếu giá trị được lưu lâu dài",
+          "Có, vì dữ liệu trên trình duyệt là đáng tin",
+          "Không, cần xác thực và kiểm soát quyền phía máy chủ"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Client có thể kiểm soát hoặc sửa nhiều giá trị cookie; máy chủ phải xác minh.",
+          "Lưu lâu không làm giá trị đáng tin hoặc có thẩm quyền.",
+          "Dữ liệu từ trình duyệt là đầu vào ngoài ranh giới tin cậy, không phải bằng chứng quyền.",
+          "Dữ liệu client kiểm soát phải được kiểm tra; không tự tạo quyền quản trị."
+        ],
+        "page": 68
+      }
+    ]
+  },
+  {
+    "id": "2b",
+    "title": "Các phần mềm gây hại — Virus",
+    "pages": 97,
+    "file": "Bài 2b - Các phần mềm gây hại - Virus.pdf",
+    "overview": "Bài giải thích virus bằng vòng đời, vật chủ, cách tồn tại và cách bị phát hiện. Các trang kỹ thuật được học ở cấp cơ chế và dấu vết phòng thủ; không tái tạo mã, công cụ sinh virus hay thao tác lây nhiễm.",
+    "objectives": [
+      "Phân biệt virus, worm, Trojan và zombie.",
+      "Phân loại virus theo nhiều trục, giải thích thường trú và che giấu.",
+      "So sánh chữ ký, heuristic và kiểm tra toàn vẹn; xây dựng phòng thủ nhiều lớp."
+    ],
+    "sections": [
+      {
+        "id": "2b.1",
+        "title": "Tổng quan: vòng đời, vật chủ và lịch sử",
+        "from": 6,
+        "to": 17,
+        "explanation": "Virus gắn vào đối tượng chủ, giành quyền thực thi khi chủ chạy, tìm đối tượng khác để lây, có thể thực hiện tác vụ phá hoại/do thám và trả quyền cho chương trình chủ. Vật chủ có thể là file thực thi, tài liệu có macro hoặc vùng khởi động; vì vậy không phải chỉ EXE mới có nguy cơ. Worm độc lập và có khả năng tự lan; Trojan nguỵ trang chức năng; zombie mô tả máy bị điều khiển, không phải một cơ chế lây riêng. Các tính chất trong slide gồm lây lan, phá hoại, nhỏ gọn, tương thích và phát triển kế thừa; đây là xu hướng mô tả, không phải mọi mẫu đều có cùng mức độ. Dòng thời gian trang 9–15 minh hoạ phát triển từ lý thuyết tự nhân bản đến boot/macro/worm. Một số năm, nhãn và sự kiện chưa chính xác cần kiểm chứng; không biến chúng thành câu chấm điểm.",
+        "plain": "Virus dùng chương trình khác như vật mang để được chạy và tiếp tục lây. Tuy vậy, file vẫn mở bình thường không chứng minh chưa nhiễm.",
+        "example": "Một tài liệu có macro nguy hiểm có thể chạy lệnh khi được cho phép; nguy cơ nằm ở nội dung thực thi và cơ chế ứng dụng, không chỉ ở phần mở rộng.",
+        "pitfalls": [
+          "Không phải mọi file tài liệu đều thực thi tự động.",
+          "Virus không đồng nghĩa mọi malware.",
+          "Zombie là trạng thái máy bị điều khiển."
+        ],
+        "recap": [
+          "Kể lại vòng đời bằng lời của mình.",
+          "Nêu ít nhất ba nhóm vật chủ."
+        ]
+      },
+      {
+        "id": "2b.2",
+        "title": "Các cách phân loại virus",
+        "from": 18,
+        "to": 22,
+        "explanation": "Slide có nhiều trục độc lập. Theo môi trường/vật chủ: boot, file-system, file-format, macro, script, registry. Theo tồn tại: thường trú và không thường trú. Theo bố trí lây: ghi đè, ghi đè bảo toàn, dịch chuyển, song hành, nối thêm, chèn giữa. Danh sách khác còn nêu system-sector/boot, file, macro, source-code, network; stealth, polymorphic, cavity, tunneling, camouflage, shell, add-on và intrusive. Không ép các trục thành các loại loại trừ nhau. Stealth che dấu hiện diện; polymorphic thay đổi hình dạng mã; cavity tận dụng khoảng trống nên kích thước file có thể không đổi; intrusive ghi đè mã chủ. Mô tả tunneling và add-on trong slide ngắn, có điểm cần xác minh khi muốn đi sâu, nên không ra câu thi dựa trên định nghĩa tuyệt đối của hai tên này.",
+        "plain": "Một chiếc xe có thể vừa chạy điện vừa màu trắng; virus cũng có thể vừa thường trú vừa đa hình. Những nhãn này trả lời câu hỏi khác nhau.",
+        "example": "Kích thước file không đổi vẫn có thể có biến đổi nội dung; cavity là ví dụ cho giới hạn của việc chỉ kiểm tra kích thước.",
+        "pitfalls": [
+          "Thường trú không phải tên vật chủ.",
+          "Đa hình không đồng nghĩa không có hành vi.",
+          "Kích thước không đổi không chứng minh toàn vẹn."
+        ],
+        "recap": [
+          "Tách trục vật chủ, tồn tại, bố trí mã và che giấu.",
+          "Giải thích vì sao có thể có nhiều nhãn cùng lúc."
+        ]
+      },
+      {
+        "id": "2b.3",
+        "title": "Ví dụ Klez, Disk Killer và các hình công cụ",
+        "from": 23,
+        "to": 39,
+        "explanation": "Klez minh hoạ phát tán qua thư điện tử, hành vi sửa/lây file và tác vụ gây hại; Disk Killer minh hoạ virus boot và nguy cơ với nội dung đĩa. Các hình trang 28–36 có cấu trúc mã, che dấu vết và công cụ sinh virus; trang 37–39 nói về worm và công cụ sinh worm. Trong giáo trình này chúng được ghi nhận trong bảng đối chiếu để không bỏ qua nguồn, nhưng được diễn giải theo mục tiêu phòng thủ: vật chủ nào bị tác động, dấu vết nào cần quan sát, tại sao chỉ nhìn ngày sửa file hay giao diện không đủ. Không cung cấp mã hoặc quy trình tạo/lây virus. Các tên công cụ là ví dụ lịch sử, không là nguồn để tải phần mềm.",
+        "plain": "Nhận diện một bệnh không đòi hỏi tự gây bệnh. Học cơ chế để biết phải bảo vệ và kiểm tra chỗ nào.",
+        "example": "File bị thay nội dung nhưng giữ nhãn thời gian cho thấy metadata không thể thay kiểm tra toàn vẹn nội dung.",
+        "pitfalls": [
+          "Không chạy công cụ sinh malware trên máy học thật.",
+          "Không coi tên mẫu lịch sử là hiện trạng.",
+          "Ảnh slide nhỏ không đủ xác minh mọi lệnh bên trong."
+        ],
+        "recap": [
+          "Liên hệ ví dụ với vật chủ và dấu vết.",
+          "Nêu giới hạn của kiểm tra metadata."
+        ]
+      },
+      {
+        "id": "2b.4",
+        "title": "Kỹ thuật cơ bản: lây nhiễm và định vị bộ nhớ",
+        "from": 40,
+        "to": 49,
+        "explanation": "Slide liệt kê chín nhóm kỹ thuật cơ bản. Lây nhiễm là thay đổi đối tượng để virus được thực thi; virus boot tác động vùng khởi động, virus file thay đổi cấu trúc file chủ. Nối thêm, chèn giữa, điền khoảng trống hay ghi đè tạo dấu vết khác nhau; hình PE và W32/Virut là minh hoạ phân tích cấu trúc, không phải bài thực hành sửa file. Định vị trong vùng nhớ đưa mã đến vị trí có thể tiếp tục hoạt động; đây là vấn đề quan trọng của mã máy và mô hình segment:offset cũ. Macro/script chạy trong môi trường ứng dụng nên không có cùng yêu cầu định vị như mã máy trong ví dụ. Không suy rằng mọi malware hiện đại đều tuân theo bố trí bộ nhớ của DOS.",
+        "plain": "Chương trình có thể bị đổi nơi bắt đầu thực thi hoặc vùng chứa mã. Dấu hiệu cần nhìn là cấu trúc và hành vi, không chỉ tên file.",
+        "example": "Ứng dụng vẫn mở nhưng đồng thời thực hiện tác vụ lạ: việc trả lại quyền cho chủ có thể giúp che giấu sự tồn tại.",
+        "pitfalls": [
+          "Không học một thuật toán lây file cũ thành mô hình của mọi hệ điều hành.",
+          "Không phải mọi thay đổi file đều là virus.",
+          "Macro vẫn nguy hiểm dù không dùng segment:offset."
+        ],
+        "recap": [
+          "Phân biệt vật chủ và cách bố trí mã.",
+          "Nêu lý do cần hiểu cấu trúc file khi phân tích phòng thủ."
+        ]
+      },
+      {
+        "id": "2b.5",
+        "title": "Kiểm tra tồn tại và thường trú",
+        "from": 50,
+        "to": 51,
+        "explanation": "Kiểm tra sự tồn tại giúp virus tránh lây hoặc cài thường trú nhiều lần, hạn chế chậm và lỗi khiến bị phát hiện. Slide nêu dò dấu nhận diện, kích thước, nhãn thời gian hoặc dấu trong bộ nhớ. Thường trú nghĩa là tiếp tục có mặt trong bộ nhớ để hoạt động sau khi chương trình chủ trả quyền; khác với không thường trú chỉ hoạt động trong đợt thực thi hiện tại. Cơ chế trong slide gắn với boot/file virus đời cũ. Phần mở rộng: persistence qua khởi động và residency trong bộ nhớ là khái niệm liên quan nhưng không hoàn toàn trùng nhau.",
+        "plain": "Virus tránh chồng thêm bản sao lên cùng vật chủ để bớt gây lộ; có mặt trong RAM không tự động đồng nghĩa sống qua mọi lần khởi động.",
+        "example": "Một máy hết tiến trình ban đầu nhưng thành phần khác còn hoạt động trong bộ nhớ: cần quan sát toàn hệ thống, không chỉ cửa sổ vừa đóng.",
+        "pitfalls": [
+          "Mọi virus không bắt buộc thường trú.",
+          "Dấu nhận diện có thể thay đổi.",
+          "RAM thường trú không đồng nghĩa có mặt vĩnh viễn."
+        ],
+        "recap": [
+          "Giải thích mục đích tránh lây lặp.",
+          "Phân biệt thời gian hiện diện và cơ chế tự khởi động."
+        ]
+      },
+      {
+        "id": "2b.6",
+        "title": "Mã hoá, nguỵ trang, phá hoại, chống bẫy và tối ưu",
+        "from": 52,
+        "to": 55,
+        "explanation": "Mã hoá ở đây nhằm che thân mã độc để khó nhận dạng; không phải vì dùng mật mã mà chương trình trở nên hợp pháp. Slide nói thủ tục mã hoá cũng là giải mã, phù hợp một số phép biến đổi đối xứng đơn giản chứ không phải tính chất mọi giải thuật. Nguỵ trang che dấu thay đổi, có thể giữ kích thước biểu kiến; ảnh nén file chủ minh hoạ vì sao kích thước chưa đủ. Phá hoại gồm tác động dữ liệu/hệ thống. Chống bẫy là tránh những đối tượng mà tác giả nghi là mẫu kiểm tra của antivirus. Tối ưu cải thiện tốc độ và kích thước. Các tiêu chí chống bẫy trong slide là ví dụ lịch sử, không phải quy tắc an toàn cho người dùng đặt tên file.",
+        "plain": "Mã độc có thể đổi lớp áo để khó nhận diện; lớp áo không làm đổi mục tiêu gây hại bên trong.",
+        "example": "Một file có kích thước và ngày sửa quen thuộc vẫn cần kiểm tra hash/hành vi khi có bằng chứng khác đáng ngờ.",
+        "pitfalls": [
+          "Không coi file có số trong tên là miễn nhiễm.",
+          "Không đồng nhất nén/mã hoá với malware.",
+          "Không suy mọi phép mã hoá đều tự đảo bằng cùng thủ tục."
+        ],
+        "recap": [
+          "Phân biệt che mã, che hiện diện và tác vụ phá hoại.",
+          "Nêu giới hạn dấu hiệu kích thước/thời gian."
+        ]
+      },
+      {
+        "id": "2b.7",
+        "title": "Kỹ thuật đặc biệt: vỏ bọc, đa hình và biến hình",
+        "from": 56,
+        "to": 60,
+        "explanation": "Tạo vỏ bọc làm việc phân tích khó hơn bằng lớp bao, luồng điều khiển phức tạp hoặc thủ tục không phục vụ chức năng chính. Polymorphism (đa hình) thay đổi hình thức, điển hình thay phần giải mã trong khi logic chính tương tự. Metamorphism (biến hình) biến đổi chính biểu diễn mã tạo biến thể khác mà vẫn giữ hành vi tương đương. Chống mô phỏng/theo dõi nhằm gây khó cho môi trường phân tích; slide minh hoạ mã rác xen kẽ. Hiểu ở cấp đối kháng với phương pháp phát hiện: mẫu byte cố định yếu trước biến đổi hình thức, nên cần phối hợp phân tích cấu trúc và hành vi. Không phải thay đổi byte nào cũng là biến hình hay mã độc.",
+        "plain": "Đa hình như đổi cách bọc một nội dung; biến hình như viết lại câu bằng cách khác mà vẫn cùng nghĩa. Phép ví von không phản ánh toàn bộ kỹ thuật mã máy.",
+        "example": "Hai mẫu có hash khác nhau vẫn có thể cùng thực hiện hành vi độc hại, nên chỉ đối chiếu một hash không bao phủ mọi biến thể.",
+        "pitfalls": [
+          "Đa hình không phải mọi lần chạy làm nhiệm vụ khác.",
+          "Biến hình không có nghĩa hành vi hoàn toàn mới.",
+          "Heuristic không bảo đảm phát hiện mọi biến thể."
+        ],
+        "recap": [
+          "So sánh đa hình với biến hình.",
+          "Giải thích vì sao cần nhiều cách phát hiện."
+        ]
+      },
+      {
+        "id": "2b.8",
+        "title": "Các kỹ thuật virus trên mạng",
+        "from": 61,
+        "to": 62,
+        "explanation": "Mạng mở rộng phạm vi lan qua tài nguyên chia sẻ, ổ đĩa ánh xạ và thư điện tử. Slide nêu khả năng dùng giao diện hệ điều hành để tìm tài nguyên đã kết nối; đây là lý do quyền truy cập thư mục chia sẻ phải giới hạn. Các tác vụ mạng có thể gồm do thám, lấy mật khẩu, tạo cửa hậu và gây DoS. Phát tán là đưa tác nhân tới máy khác; lây nhiễm là tác động vật chủ; phá hoại là hậu quả. Một chương trình có thể tham gia nhiều bước nhưng ba khái niệm không đồng nghĩa.",
+        "plain": "Ổ chia sẻ thuận tiện cho làm nhóm cũng mở đường lan nếu quyền quá rộng. Sự tiện lợi phải đi cùng ranh giới quyền.",
+        "example": "Tài khoản chỉ cần đọc tài liệu nhưng được sửa mọi thư mục chung làm tăng tác động nếu máy nhiễm malware.",
+        "pitfalls": [
+          "Có email không đồng nghĩa đã nhiễm.",
+          "Không phải mọi sâu đều cần người mở đính kèm.",
+          "Chia sẻ mạng không tự nguy hiểm nếu được quản lý phù hợp."
+        ],
+        "recap": [
+          "Phân biệt phát tán–lây nhiễm–phá hoại.",
+          "Nối quyền thư mục với phạm vi lan."
+        ]
+      },
+      {
+        "id": "2b.9",
+        "title": "Phòng chống và dấu hiệu nhiễm",
+        "from": 63,
+        "to": 66,
+        "explanation": "Mục tiêu phòng chống là ổn định hoạt động, giữ dữ liệu và thông tin mật. Máy chậm, treo, không khởi động, thiếu file, có file lạ, thiếu bộ nhớ hay mất dữ liệu là dấu hiệu cần kiểm tra, không phải chẩn đoán chắc chắn. Phòng ngừa trong slide gồm kiểm tra thiết bị lưu trữ không rõ nguồn, hạn chế phần mềm không cần thiết/không tin cậy, cẩn trọng email, dùng bảo vệ đầu cuối và sao lưu. Phần mở rộng: vá lỗi, ít quyền, kiểm soát macro và khôi phục từ bản sao đã kiểm tra giúp giảm khả năng và hậu quả. Cài nhiều sản phẩm antivirus không tự tăng chất lượng và có thể xung đột.",
+        "plain": "Chữa bệnh và phòng bệnh khác nhau: chặn nguồn vào giảm khả năng nhiễm, sao lưu giảm mất mát, còn xác minh nguyên nhân giúp chọn cách xử lý đúng.",
+        "example": "Ổ đĩa hỏng cũng làm mất file và chậm máy; phải kết hợp log, quét và dấu vết thay vì kết luận từ một triệu chứng.",
+        "pitfalls": [
+          "Sao lưu không ngăn lây nhiễm nhưng hỗ trợ khôi phục.",
+          "Không tồn tại phần mềm bảo đảm phát hiện tuyệt đối.",
+          "Trả tiền cho phần mềm không tự chứng minh file sạch."
+        ],
+        "recap": [
+          "Tách dấu hiệu khỏi bằng chứng.",
+          "Xếp biện pháp theo phòng ngừa, phát hiện và khôi phục."
+        ]
+      },
+      {
+        "id": "2b.10",
+        "title": "Các phương pháp phát hiện: basic, heuristic và ICV",
+        "from": 67,
+        "to": 69,
+        "explanation": "Basic scanning tìm chữ ký, mẫu và đặc trưng virus đã biết trong hostable files, có thể theo dõi thay đổi kích thước. Heuristic scanning dựa quy tắc/đặc trưng mã hoặc hành vi đáng ngờ, có thể hỗ trợ phát hiện chưa khớp mẫu đã biết nhưng có báo nhầm và bỏ sót. Integrity Check Value (ICV) là giá trị kiểm tra toàn vẹn. Slide minh hoạ tính ICV bằng Hash-based Message Authentication Code (HMAC) trên file sạch với khoá bí mật rồi so sánh về sau. Cần bảo vệ khoá, bản chuẩn và cơ chế kiểm tra; dùng khoá cố định không có nghĩa công khai khoá. ICV thay đổi cho thấy nội dung khác baseline, không tự chứng minh nguyên nhân là virus. Hình 69 bổ sung interception/giám sát can thiệp hoạt động khi diễn ra.",
+        "plain": "Chữ ký giống nhận diện mẫu quen; heuristic giống nhận ra hành vi đáng ngờ; toàn vẹn giống so niêm phong với bản chuẩn. Không cách nào một mình trả lời hết.",
+        "example": "Cập nhật phần mềm hợp pháp cũng làm hash thay đổi; người quản trị phải xác minh thay đổi rồi cập nhật baseline đáng tin.",
+        "pitfalls": [
+          "Không thấy chữ ký không có nghĩa sạch.",
+          "ICV chỉ đáng tin nếu baseline/khoá được bảo vệ.",
+          "Toàn vẹn thay đổi chưa xác định tác nhân."
+        ],
+        "recap": [
+          "So sánh dữ liệu đầu vào và giới hạn ba phương pháp.",
+          "Giải thích nhu cầu baseline sạch."
+        ]
+      },
+      {
+        "id": "2b.11",
+        "title": "Công cụ phân tích, chống mã độc và kiểm thử",
+        "from": 70,
+        "to": 87,
+        "explanation": "Trang 70–71 tổng hợp biện pháp; 72–73 giới thiệu IDA Pro để phân tích mã, khác công cụ chống malware chuyên nhận diện/cách ly. 74–79 là ảnh các sản phẩm antivirus và giao diện phân tích lịch sử; 80–83 mô tả kiểm thử; 84–86 là danh sách công cụ và nguồn tra cứu. Không dùng danh sách cũ làm lời khuyên mua sản phẩm hay tự chạy mẫu. Học quy trình phòng thủ: xác định phạm vi được phép, thu bằng chứng an toàn, phân tích tĩnh/quan sát có kiểm soát, báo cáo, xử lý và kiểm tra khôi phục. Trang 87 nhấn mạnh vai trò người dùng: công nghệ không thay được nhận thức và quy trình.",
+        "plain": "Công cụ tháo xem cấu trúc khác công cụ tự động cách ly file; chọn công cụ theo câu hỏi điều tra.",
+        "example": "Muốn biết file có thay đổi thì xem toàn vẹn; muốn hiểu luồng logic thì cần phân tích mã; muốn phục hồi thì cần bản sạch và quy trình xử lý.",
+        "pitfalls": [
+          "Ảnh antivirus cũ không phải khuyến nghị hiện tại.",
+          "Không chạy mẫu trên máy cá nhân để thử.",
+          "Phân tích tĩnh không bảo đảm hiểu hết hành vi."
+        ],
+        "recap": [
+          "Phân biệt phân tích và bảo vệ vận hành.",
+          "Nêu vai trò con người cùng công cụ."
+        ]
+      },
+      {
+        "id": "2b.12",
+        "title": "Bài tập tổng hợp",
+        "from": 88,
+        "to": 97,
+        "explanation": "Bài tập gốc lặp một phần Bài 2a: tra worm/Trojan, ACL, heuristic, antivirus, tài khoản quản trị, Web 2.0, cookie và công cụ đầu cuối; thêm mô tả kỹ thuật virus, ưu tiên phòng chống và lab CEH. Phần trùng được gộp về cùng khái niệm để tránh học hai định nghĩa khác nhau. Yêu cầu tìm mẫu mới phải có ngày và nguồn, chưa được hoàn tất chỉ bằng tài liệu cũ. Các lab tạo/lây hoặc triển khai mã độc được chuyển thành bài phân tích phòng thủ trên mô tả, log hoặc mẫu đã khử độc trong môi trường được phép. Cách ôn trắc nghiệm: phân loại từ dữ kiện hành vi, chọn phương pháp phát hiện phù hợp, tìm điều kiện giới hạn và tránh đáp án tuyệt đối.",
+        "plain": "Thay vì thuộc tên 20 công cụ, hãy giải được câu: đang cần phát hiện, giải thích, ngăn chặn hay khôi phục điều gì?",
+        "example": "Nếu câu hỏi nói chưa biết mẫu chữ ký nhưng có hành vi đáng ngờ, heuristic phù hợp hơn chỉ so chữ ký; vẫn không được kết luận chắc chắn đúng.",
+        "pitfalls": [
+          "Không gọi câu tự biên soạn là đề thật.",
+          "Lab cũ không phải hướng dẫn cài đặt hiện tại.",
+          "Yêu cầu nghiên cứu không phải kiến thức đã được xác nhận."
+        ],
+        "recap": [
+          "Lập bảng kỹ thuật–mục đích–dấu vết–phòng thủ.",
+          "Tự giải thích giới hạn của từng đáp án mình chọn."
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "title": "Phương pháp phát hiện",
+        "headers": [
+          "Phương pháp",
+          "Dựa vào",
+          "Giới hạn"
+        ],
+        "rows": [
+          [
+            "Signature/basic",
+            "Mẫu/đặc trưng đã biết",
+            "Biến thể có thể không khớp"
+          ],
+          [
+            "Heuristic",
+            "Mã hoặc hành vi đáng ngờ",
+            "Có báo nhầm/bỏ sót"
+          ],
+          [
+            "Integrity/ICV",
+            "So với baseline đáng tin",
+            "Thay đổi không luôn do virus"
+          ],
+          [
+            "Interception",
+            "Hoạt động đang diễn ra",
+            "Cần ngữ cảnh và chính sách"
+          ]
+        ]
+      },
+      {
+        "title": "Đa hình và biến hình",
+        "headers": [
+          "Điểm",
+          "Đa hình",
+          "Biến hình"
+        ],
+        "rows": [
+          [
+            "Trọng tâm",
+            "Thay dạng biểu hiện, thường lớp giải mã",
+            "Biến đổi biểu diễn thân mã"
+          ],
+          [
+            "Ý nghĩa",
+            "Nhiều mẫu khác nhau cùng logic",
+            "Mã viết lại vẫn có chức năng tương đương"
+          ],
+          [
+            "Phòng thủ",
+            "Không chỉ dựa mẫu byte cố định",
+            "Phối hợp cấu trúc, hành vi, ngữ cảnh"
+          ]
+        ]
+      }
+    ],
+    "study": [
+      "Vẽ vòng đời virus; ghi mỗi bước một dấu vết cần quan sát.",
+      "Phân loại theo trục riêng: vật chủ, thường trú, cách bố trí và che giấu.",
+      "Ôn theo cặp đa hình–biến hình, chữ ký–heuristic, dấu hiệu–bằng chứng.",
+      "Sau khi sai câu, viết lại điều kiện khiến lựa chọn mình chọn không phù hợp."
+    ],
+    "terms": [
+      {
+        "en": "Polymorphism",
+        "vi": "Đa hình",
+        "meaning": "Thay đổi biểu hiện mã trong khi giữ logic cốt lõi."
+      },
+      {
+        "en": "Metamorphism",
+        "vi": "Biến hình",
+        "meaning": "Viết lại biểu diễn thân mã nhưng giữ chức năng tương đương."
+      },
+      {
+        "en": "Heuristic scanning",
+        "vi": "Quét dựa suy đoán có quy tắc",
+        "meaning": "Phát hiện đặc trưng hoặc hành vi đáng ngờ, có khả năng sai."
+      },
+      {
+        "en": "ICV — Integrity Check Value",
+        "vi": "Giá trị kiểm tra toàn vẹn",
+        "meaning": "Dữ liệu so sánh để nhận ra nội dung thay đổi."
+      },
+      {
+        "en": "HMAC — Hash-based Message Authentication Code",
+        "vi": "Mã xác thực thông điệp dựa hàm băm",
+        "meaning": "Kết hợp khoá bí mật và hàm băm để kiểm tra tính toàn vẹn/xác thực."
+      },
+      {
+        "en": "Resident virus",
+        "vi": "Virus thường trú",
+        "meaning": "Giữ thành phần trong bộ nhớ để tiếp tục hoạt động."
+      },
+      {
+        "en": "Baseline",
+        "vi": "Bản chuẩn",
+        "meaning": "Trạng thái sạch đáng tin làm mốc đối chiếu."
+      },
+      {
+        "en": "API — Application Programming Interface",
+        "vi": "Giao diện lập trình ứng dụng",
+        "meaning": "Các chức năng phần mềm cung cấp cho chương trình sử dụng."
+      },
+      {
+        "en": "Virus",
+        "vi": "Virus máy tính",
+        "meaning": "Mã tự nhân bản bằng cách gắn vào vật chủ."
+      },
+      {
+        "en": "Worm",
+        "vi": "Sâu máy tính",
+        "meaning": "Chương trình độc lập có khả năng tự lan."
+      },
+      {
+        "en": "Trojan",
+        "vi": "Chương trình nguỵ trang",
+        "meaning": "Che chức năng gây hại, không lấy tự nhân bản làm đặc trưng."
+      },
+      {
+        "en": "Zombie",
+        "vi": "Máy bị điều khiển",
+        "meaning": "Trạng thái máy chịu lệnh để tham gia hoạt động của bên khác."
+      },
+      {
+        "en": "Boot sector",
+        "vi": "Vùng khởi động",
+        "meaning": "Vùng chứa thông tin/mã liên quan bắt đầu khởi động đĩa."
+      },
+      {
+        "en": "Macro virus",
+        "vi": "Virus macro",
+        "meaning": "Virus dùng cơ chế macro của ứng dụng/tài liệu."
+      },
+      {
+        "en": "Script virus",
+        "vi": "Virus script",
+        "meaning": "Virus dùng mã lệnh được môi trường script xử lý."
+      },
+      {
+        "en": "File virus",
+        "vi": "Virus lây file",
+        "meaning": "Virus tác động file làm vật chủ."
+      },
+      {
+        "en": "Stealth virus",
+        "vi": "Virus ẩn mình",
+        "meaning": "Sử dụng che giấu để khó nhận biết sự hiện diện."
+      },
+      {
+        "en": "Cavity virus",
+        "vi": "Virus tận dụng khoảng trống",
+        "meaning": "Có thể nằm trong vùng trống khiến kích thước file không đổi."
+      },
+      {
+        "en": "Camouflage",
+        "vi": "Nguỵ trang",
+        "meaning": "Làm hình thức giống đối tượng đáng tin để che hiện diện."
+      },
+      {
+        "en": "Shell virus",
+        "vi": "Virus vỏ bọc",
+        "meaning": "Mô hình mã bao quanh chương trình chủ trong phân loại slide."
+      },
+      {
+        "en": "Intrusive virus",
+        "vi": "Virus ghi đè",
+        "meaning": "Ghi đè một phần hoặc toàn bộ mã của vật chủ."
+      },
+      {
+        "en": "Nonresident virus",
+        "vi": "Virus không thường trú",
+        "meaning": "Hoạt động trong đợt thực thi mà không duy trì thành phần thường trú như mô hình bài."
+      },
+      {
+        "en": "Hostable file",
+        "vi": "File có thể làm vật chủ",
+        "meaning": "Đối tượng có khả năng chứa và kích hoạt mã virus."
+      },
+      {
+        "en": "Signature scanning",
+        "vi": "Quét chữ ký",
+        "meaning": "So khớp đặc trưng của mẫu mã độc đã biết."
+      },
+      {
+        "en": "Interception",
+        "vi": "Giám sát/chặn tại thời điểm hoạt động",
+        "meaning": "Quan sát tác vụ đang diễn ra để phát hiện hành vi."
+      },
+      {
+        "en": "Obfuscation",
+        "vi": "Làm rối mã",
+        "meaning": "Biến biểu diễn khó phân tích hơn mà giữ logic cốt lõi."
+      },
+      {
+        "en": "Anti-emulation",
+        "vi": "Chống mô phỏng",
+        "meaning": "Gây khó cho môi trường giả lập dùng phân tích."
+      },
+      {
+        "en": "Anti-debugging",
+        "vi": "Chống theo dõi/gỡ rối",
+        "meaning": "Gây khó cho công cụ và người phân tích thực thi."
+      },
+      {
+        "en": "Static analysis",
+        "vi": "Phân tích tĩnh",
+        "meaning": "Xem cấu trúc và mã mà không thực thi mẫu."
+      },
+      {
+        "en": "False positive",
+        "vi": "Báo nhầm",
+        "meaning": "Đánh dấu đối tượng hợp lệ thành đáng ngờ hoặc độc hại."
+      },
+      {
+        "en": "False negative",
+        "vi": "Bỏ sót",
+        "meaning": "Không phát hiện đối tượng có vấn đề."
+      },
+      {
+        "en": "Quarantine",
+        "vi": "Cách ly",
+        "meaning": "Cô lập đối tượng đáng ngờ khỏi hoạt động bình thường."
+      },
+      {
+        "en": "Backup",
+        "vi": "Bản sao lưu",
+        "meaning": "Bản dữ liệu để hỗ trợ khôi phục khi có sự cố."
+      }
+    ],
+    "issues": [
+      {
+        "page": 10,
+        "note": "Dòng thời gian trang 9–15 chứa mốc/nhãn lịch sử cần kiểm chứng, không đưa thành câu chấm điểm."
+      },
+      {
+        "page": 13,
+        "note": "Mô tả ILOVEYOU là macro và Sasser qua mở thư cần xác minh; không dùng mô tả này làm đáp án."
+      },
+      {
+        "page": 20,
+        "note": "Các tên tunneling/camouflage được định nghĩa rất ngắn; cần nguồn bổ sung nếu phân tích chuyên sâu."
+      },
+      {
+        "page": 52,
+        "note": "Mã hoá và giải mã cùng thủ tục chỉ đúng với một số phép biến đổi, không phải mọi mật mã."
+      },
+      {
+        "page": 72,
+        "note": "Ảnh giao diện công cụ và nguồn tra cứu trang 72–86 thuộc thời kỳ cũ; chưa kiểm chứng tình trạng hiện tại."
+      },
+      {
+        "page": 28,
+        "note": "Các trang 28–39,43–47 chứa mã/công cụ tạo hoặc phân tích malware; đã bao phủ bằng giải thích cơ chế phòng thủ, không tái hiện thao tác lây nhiễm."
+      }
+    ],
+    "questions": [
+      {
+        "id": "2b-q1",
+        "section": "2b.1",
+        "topic": "Tổng quan: vòng đời, vật chủ và lịch sử",
+        "level": "Nhận biết",
+        "stem": "Virus thường cần gì để được thực thi trong mô hình truyền thống?",
+        "options": [
+          "Luôn tự lan mà không cần chủ",
+          "Chỉ cần có kết nối Internet",
+          "Chỉ cần một cổng TCP đang mở",
+          "Đối tượng chủ bị lây nhiễm được chạy hoặc kích hoạt"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Tự lan độc lập không cần chủ mô tả worm, không phải virus truyền thống.",
+          "Có Internet không đủ kích hoạt mã virus trong một vật chủ chưa chạy.",
+          "Cổng mở là bề mặt dịch vụ, không phải điều kiện đủ để virus trong file thực thi.",
+          "Virus gắn với vật chủ và lấy quyền thực thi thông qua vật chủ."
+        ],
+        "page": 7
+      },
+      {
+        "id": "2b-q2",
+        "section": "2b.1",
+        "topic": "Tổng quan: vòng đời, vật chủ và lịch sử",
+        "level": "Nhận biết",
+        "stem": "Nhóm nào có thể là đối tượng lây trong slide?",
+        "options": [
+          "Chỉ tài liệu có macro",
+          "Chỉ vùng khởi động",
+          "File thực thi, tài liệu và vùng khởi động",
+          "Chỉ file EXE"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Chỉ macro bỏ sót file thực thi và boot sector.",
+          "Chỉ boot bỏ sót file và tài liệu.",
+          "Slide nêu nhiều nhóm vật chủ, không giới hạn EXE.",
+          "Chỉ EXE bỏ sót tài liệu và vùng khởi động."
+        ],
+        "page": 8
+      },
+      {
+        "id": "2b-q3",
+        "section": "2b.1",
+        "topic": "Tổng quan: vòng đời, vật chủ và lịch sử",
+        "level": "Thông hiểu",
+        "stem": "Vì sao chương trình chủ vẫn chạy bình thường chưa chứng minh file sạch?",
+        "options": [
+          "Mọi thay đổi nội dung đều làm chủ không chạy",
+          "Virus có thể trả lại quyền điều khiển cho chủ",
+          "Virus luôn ngăn chủ chạy ngay lập tức",
+          "File mở được bảo đảm toàn vẹn"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Có thể thay nội dung mà vẫn bảo toàn hoạt động nhìn thấy của chủ.",
+          "Trả quyền giúp chủ hoạt động và có thể làm việc nhiễm khó nhận thấy.",
+          "Virus có thể trả quyền cho chủ; không bắt buộc ngăn chủ chạy.",
+          "Khả năng mở file không chứng minh nội dung trùng bản sạch."
+        ],
+        "page": 7
+      },
+      {
+        "id": "2b-q4",
+        "section": "2b.2",
+        "topic": "Các cách phân loại virus",
+        "level": "Thông hiểu",
+        "stem": "Một virus vừa thường trú vừa lây file có mâu thuẫn không?",
+        "options": [
+          "Không, hai nhãn thuộc hai trục phân loại khác nhau",
+          "Có, mỗi mẫu chỉ thuộc một loại",
+          "Có, thường trú chỉ là vật chủ boot",
+          "Có, lây file không thể dùng bộ nhớ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Thường trú mô tả tồn tại, lây file mô tả vật chủ.",
+          "Các trục độc lập cho phép một mẫu thuộc nhiều nhãn.",
+          "Thường trú mô tả hiện diện bộ nhớ, không phải chỉ riêng vật chủ boot.",
+          "Virus lây file cũng có thể đưa thành phần vào bộ nhớ thường trú."
+        ],
+        "page": 18
+      },
+      {
+        "id": "2b-q5",
+        "section": "2b.2",
+        "topic": "Các cách phân loại virus",
+        "level": "Nhận biết",
+        "stem": "Cavity virus minh hoạ giới hạn của kiểm tra nào?",
+        "options": [
+          "Chỉ kiểm tra quyền thư mục",
+          "Chỉ dùng quan sát lưu lượng",
+          "Chỉ phân tích hành vi thực thi",
+          "Chỉ dựa kích thước file"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Quyền thư mục kiểm soát truy cập; cavity đặc biệt cho thấy nội dung đổi dù kích thước giữ nguyên.",
+          "Quan sát lưu lượng có giới hạn khác; đặc trưng cavity được hỏi là kích thước file.",
+          "Phân tích hành vi có thể thấy tác động; cavity không chứng minh cách này luôn thất bại.",
+          "Tận dụng khoảng trống có thể giữ kích thước không đổi dù nội dung thay đổi."
+        ],
+        "page": 20
+      },
+      {
+        "id": "2b-q6",
+        "section": "2b.2",
+        "topic": "Các cách phân loại virus",
+        "level": "Thông hiểu",
+        "stem": "Stealth virus tập trung đặc tính gì?",
+        "options": [
+          "Chỉ giới hạn quyền người dùng",
+          "Chỉ tìm file ở ổ chia sẻ",
+          "Che giấu sự hiện diện",
+          "Chỉ thay đổi loại vật chủ"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Giới hạn quyền là biện pháp phòng thủ chứ không định nghĩa stealth virus.",
+          "Tìm file chia sẻ là cơ chế chọn/lây vật chủ, không phải che dấu hiện diện.",
+          "Stealth là đặc tính tránh bị nhận biết, khác với tên vật chủ.",
+          "Vật chủ là trục phân loại khác; stealth nói về che hiện diện."
+        ],
+        "page": 20
+      },
+      {
+        "id": "2b-q7",
+        "section": "2b.3",
+        "topic": "Ví dụ Klez, Disk Killer và các hình công cụ",
+        "level": "Vận dụng",
+        "stem": "Ngày sửa và kích thước không đổi nhưng nội dung bất thường. Nên nghĩ gì?",
+        "options": [
+          "Ngày sửa luôn phản ánh mọi lần ghi",
+          "Metadata không đủ kết luận toàn vẹn",
+          "Metadata không đổi bảo đảm file sạch",
+          "Chỉ kích thước quyết định file có nhiễm"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Nhãn thời gian có thể bị giữ/thay, không ghi lại đáng tin mọi lần viết.",
+          "Một số kỹ thuật che giấu giữ metadata trong khi nội dung đã đổi.",
+          "Metadata có thể được giữ hoặc phục hồi nên không bảo đảm nội dung sạch.",
+          "Có kỹ thuật giữ kích thước; chỉ dùng kích thước sẽ bỏ sót biến đổi."
+        ],
+        "page": 29
+      },
+      {
+        "id": "2b-q8",
+        "section": "2b.3",
+        "topic": "Ví dụ Klez, Disk Killer và các hình công cụ",
+        "level": "Thông hiểu",
+        "stem": "Mục tiêu phù hợp khi học ảnh công cụ tạo virus là gì?",
+        "options": [
+          "Hiểu rủi ro và cơ chế phòng thủ mà không tái tạo lây nhiễm",
+          "Tạo mẫu để kiểm tra trên máy đang dùng",
+          "Coi công cụ sinh virus là antivirus",
+          "Học thao tác phát tán để tăng số câu ôn"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Học cơ chế không đòi hỏi tạo hoặc triển khai malware.",
+          "Máy cá nhân đang dùng không phải môi trường an toàn để chạy công cụ tạo mã độc.",
+          "Công cụ sinh mã độc tạo nguy cơ, không phải công cụ làm sạch.",
+          "Tăng số câu không biện minh tái tạo phát tán; mục tiêu là hiểu và phòng thủ."
+        ],
+        "page": 32
+      },
+      {
+        "id": "2b-q9",
+        "section": "2b.4",
+        "topic": "Kỹ thuật cơ bản: lây nhiễm và định vị bộ nhớ",
+        "level": "Nhận biết",
+        "stem": "Virus boot tác động trực tiếp nhóm đối tượng nào?",
+        "options": [
+          "Tài liệu Office có macro",
+          "Bảng thông tin mật khẩu",
+          "Kho token phiên trình duyệt",
+          "Vùng khởi động của đĩa"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Tài liệu macro là vật chủ của macro virus, không phải vùng boot.",
+          "Kho mật khẩu liên quan thông tin xác thực, không phải đối tượng boot được hỏi.",
+          "Kho token phiên là dữ liệu ứng dụng, không phải vùng khởi động.",
+          "Slide phân biệt lây boot với lây file."
+        ],
+        "page": 42
+      },
+      {
+        "id": "2b-q10",
+        "section": "2b.4",
+        "topic": "Kỹ thuật cơ bản: lây nhiễm và định vị bộ nhớ",
+        "level": "Thông hiểu",
+        "stem": "Theo ví dụ slide, macro/script khác mã máy ở yêu cầu nào?",
+        "options": [
+          "Không thể làm vật chủ",
+          "Không phụ thuộc môi trường ứng dụng",
+          "Không cần cùng kỹ thuật định vị segment:offset của mã máy",
+          "Không thực thi mã nào"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Tài liệu và script có thể làm môi trường/vật chủ mã độc.",
+          "Chúng phụ thuộc môi trường xử lý ứng dụng/script, chỉ khác cơ chế định vị mã máy cũ.",
+          "Macro/script dựa môi trường ứng dụng; không suy ra chúng vô hại.",
+          "Macro/script vẫn là lệnh được ứng dụng hoặc trình thông dịch thực thi."
+        ],
+        "page": 48
+      },
+      {
+        "id": "2b-q11",
+        "section": "2b.5",
+        "topic": "Kiểm tra tồn tại và thường trú",
+        "level": "Thông hiểu",
+        "stem": "Vì sao virus kiểm tra đã tồn tại trước khi lây?",
+        "options": [
+          "Để bảo đảm mọi bản virus đều bị phát hiện",
+          "Tránh lây/cài lặp gây chậm hoặc lỗi làm lộ",
+          "Để xin phép chủ file trước mỗi lần lây",
+          "Để tăng số bản sao trên cùng file"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Tránh lây lặp giúp khó bị nhận biết hơn, không bảo đảm antivirus phát hiện.",
+          "Mục đích nêu trong slide là hạn chế lặp và ảnh hưởng dễ bị phát hiện.",
+          "Virus hoạt động trái phép không cần thiết kế bước xin phép chủ file.",
+          "Lây lặp làm tăng nguy cơ chậm/lỗi và lộ; trái mục đích kiểm tra tồn tại."
+        ],
+        "page": 50
+      },
+      {
+        "id": "2b-q12",
+        "section": "2b.5",
+        "topic": "Kiểm tra tồn tại và thường trú",
+        "level": "Nhận biết",
+        "stem": "Thường trú nghĩa là gì trong nội dung bài?",
+        "options": [
+          "Giữ thành phần trong bộ nhớ để tiếp tục hoạt động",
+          "Luôn tồn tại sau khi mất điện",
+          "Chỉ nằm trong file mà không chạy",
+          "Chỉ phát tán qua ổ chia sẻ"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Thường trú bộ nhớ không tự đồng nghĩa tồn tại qua mọi lần khởi động.",
+          "RAM thông thường mất nội dung khi mất điện; sống qua khởi động cần cơ chế khác.",
+          "Chỉ lưu trong file chưa mô tả thành phần hoạt động thường trú bộ nhớ.",
+          "Ổ chia sẻ là đường lan, không định nghĩa thường trú."
+        ],
+        "page": 51
+      },
+      {
+        "id": "2b-q13",
+        "section": "2b.6",
+        "topic": "Mã hoá, nguỵ trang, phá hoại, chống bẫy và tối ưu",
+        "level": "Thông hiểu",
+        "stem": "Mã hoá thân virus thường nhằm mục đích gì?",
+        "options": [
+          "Chứng minh file có nguồn hợp pháp",
+          "Bảo đảm antivirus không bao giờ phát hiện",
+          "Bảo vệ khoá bí mật cho người dùng",
+          "Che giấu mã thực để khó nhận diện"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Mã hoá là kỹ thuật biến đổi dữ liệu, không chứng minh nguồn hợp pháp.",
+          "Mã hoá làm khó một số cách dò nhưng không bảo đảm chống mọi phân tích/phát hiện.",
+          "Trong ngữ cảnh này mục tiêu là che thân mã độc, không bảo vệ bí mật cho người dùng.",
+          "Vai trò của kỹ thuật trong ngữ cảnh này là che mã, không phải chứng nhận an toàn."
+        ],
+        "page": 52
+      },
+      {
+        "id": "2b-q14",
+        "section": "2b.6",
+        "topic": "Mã hoá, nguỵ trang, phá hoại, chống bẫy và tối ưu",
+        "level": "Vận dụng",
+        "stem": "File giữ nguyên kích thước có bảo đảm chưa nhiễm?",
+        "options": [
+          "Có, mọi virus đều phải làm file dài hơn",
+          "Có, nếu ngày sửa cũng không đổi",
+          "Không, có kỹ thuật che giấu hoặc tận dụng khoảng trống",
+          "Có, kích thước là kiểm tra toàn vẹn đầy đủ"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Cavity hoặc nguỵ trang có thể giữ kích thước.",
+          "Cả kích thước và ngày sửa có thể giữ nguyên dù nội dung thay đổi.",
+          "Kích thước không phản ánh đầy đủ nội dung và hành vi.",
+          "Kích thước không là phép kiểm tra toàn bộ nội dung."
+        ],
+        "page": 53
+      },
+      {
+        "id": "2b-q15",
+        "section": "2b.6",
+        "topic": "Mã hoá, nguỵ trang, phá hoại, chống bẫy và tối ưu",
+        "level": "Thông hiểu",
+        "stem": "Chống bẫy trong slide là gì?",
+        "options": [
+          "Quét chữ ký để làm sạch hệ thống",
+          "Tránh những đối tượng bị nghi là mẫu kiểm tra của antivirus",
+          "Tìm mọi file giống nhau để lây lặp",
+          "Đảm bảo không gây lỗi cho người dùng"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Quét chữ ký làm sạch là chức năng phòng thủ antivirus, không phải né bẫy của virus.",
+          "Đây là cách malware né đối tượng phân tích/phát hiện, không phải bảo vệ dữ liệu người dùng.",
+          "Chống bẫy tránh đối tượng nghi là bẫy, không chủ trương lây lặp mọi file giống nhau.",
+          "Né bẫy nhằm tránh bị phát hiện, không bảo đảm sự ổn định cho người dùng."
+        ],
+        "page": 54
+      },
+      {
+        "id": "2b-q16",
+        "section": "2b.7",
+        "topic": "Kỹ thuật đặc biệt: vỏ bọc, đa hình và biến hình",
+        "level": "Thông hiểu",
+        "stem": "Đa hình thường hướng đến chống cách nhận diện nào?",
+        "options": [
+          "Dò mẫu mã cố định",
+          "Kiểm tra toàn vẹn với baseline đáng tin",
+          "Phân tích hành vi và ngữ cảnh",
+          "Giới hạn quyền ghi file"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Thay biểu hiện mã làm khó chữ ký cố định.",
+          "Toàn vẹn so nội dung với baseline vẫn nhận ra thay đổi; đa hình không trực tiếp vô hiệu nguyên tắc này.",
+          "Phân tích hành vi có thể thấy logic tương tự dù mã thay đổi; đa hình nhắm mạnh vào mẫu biểu diễn.",
+          "Quyền ghi là rào kiểm soát tác động file, không phải nhận diện bằng mẫu byte."
+        ],
+        "page": 58
+      },
+      {
+        "id": "2b-q17",
+        "section": "2b.7",
+        "topic": "Kỹ thuật đặc biệt: vỏ bọc, đa hình và biến hình",
+        "level": "Thông hiểu",
+        "stem": "Biến hình khác ví dụ đa hình ở điểm nào?",
+        "options": [
+          "Chỉ đổi tên file",
+          "Chỉ thay khoá giữ nguyên mọi byte mã",
+          "Luôn thay đổi hoàn toàn mục tiêu hành vi",
+          "Có thể biến đổi chính biểu diễn thân mã"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Đổi tên file không phải viết lại biểu diễn thân mã.",
+          "Chỉ đổi khoá/lớp giải mã gần ví dụ đa hình hơn thay đổi thân mã.",
+          "Biến hình giữ chức năng tương đương, không bắt buộc đổi mục tiêu hành vi.",
+          "Metamorphism viết lại biểu diễn mã trong khi giữ chức năng tương đương."
+        ],
+        "page": 58
+      },
+      {
+        "id": "2b-q18",
+        "section": "2b.7",
+        "topic": "Kỹ thuật đặc biệt: vỏ bọc, đa hình và biến hình",
+        "level": "Vận dụng",
+        "stem": "Hai mẫu hash khác nhau có loại trừ cùng hành vi độc hại không?",
+        "options": [
+          "Có, mỗi họ malware chỉ một hash",
+          "Có, nếu kích thước hai file cũng khác",
+          "Không, biến thể mã có thể giữ hành vi tương tự",
+          "Có, hash khác bảo đảm hành vi khác"
+        ],
+        "correct": 2,
+        "explanations": [
+          "Một họ có thể có rất nhiều biến thể và hash.",
+          "Kích thước khác cũng không loại trừ cùng logic độc hại.",
+          "Hash nhận diện nội dung cụ thể, không bao phủ toàn bộ họ hành vi.",
+          "Hash khác chỉ chứng minh nội dung byte khác với xác suất phù hợp, không kết luận an toàn."
+        ],
+        "page": 60
+      },
+      {
+        "id": "2b-q19",
+        "section": "2b.8",
+        "topic": "Các kỹ thuật virus trên mạng",
+        "level": "Vận dụng",
+        "stem": "Thư mục chia sẻ cho phép mọi máy ghi rộng làm tăng nguy cơ nào?",
+        "options": [
+          "Loại bỏ nhu cầu kiểm soát truy cập",
+          "Phạm vi tác động và lây lan nếu một máy bị xâm hại",
+          "Tự tăng tính toàn vẹn của file chung",
+          "Bảo đảm mọi máy dùng bản sao sạch"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Chính quyền rộng làm kiểm soát truy cập cần thiết hơn, không loại bỏ nhu cầu.",
+          "Quyền ghi rộng mở rộng tài nguyên có thể bị tác động.",
+          "Quyền ghi rộng không tự phát hiện hay ngăn sửa trái phép.",
+          "Cấp quyền rộng không tạo baseline hoặc sao lưu sạch."
+        ],
+        "page": 61
+      },
+      {
+        "id": "2b-q20",
+        "section": "2b.9",
+        "topic": "Phòng chống và dấu hiệu nhiễm",
+        "level": "Thông hiểu",
+        "stem": "Máy treo và file mất nên được xem là gì?",
+        "options": [
+          "Dấu hiệu cần xác minh thêm",
+          "Bằng chứng chắc chắn virus boot",
+          "Bằng chứng chắc chắn Trojan lấy mật khẩu",
+          "Bằng chứng chắc chắn worm mạng"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Triệu chứng có nhiều nguyên nhân; cần kết hợp bằng chứng.",
+          "Treο và mất file có thể do nhiều nguyên nhân; không xác định riêng virus boot.",
+          "Không có dữ kiện thu mật khẩu nên không thể chẩn đoán Trojan loại đó.",
+          "Không có dấu vết tự lan mạng nên không thể xác định worm."
+        ],
+        "page": 64
+      },
+      {
+        "id": "2b-q21",
+        "section": "2b.9",
+        "topic": "Phòng chống và dấu hiệu nhiễm",
+        "level": "Vận dụng",
+        "stem": "Sao lưu tốt đóng góp chủ yếu vào việc gì?",
+        "options": [
+          "Ngăn mọi lần thực thi mã độc",
+          "Tự động phát hiện mọi virus mới",
+          "Thay thế cập nhật và kiểm soát quyền",
+          "Khôi phục dữ liệu khi có sự cố"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Bản sao lưu không ngăn chương trình thực thi trên máy.",
+          "Sao lưu không phân tích mọi mẫu virus mới.",
+          "Khôi phục không thay việc giảm lỗ hổng và giới hạn quyền.",
+          "Sao lưu giảm hậu quả và hỗ trợ khôi phục; không tự chặn lây nhiễm."
+        ],
+        "page": 65
+      },
+      {
+        "id": "2b-q22",
+        "section": "2b.10",
+        "topic": "Các phương pháp phát hiện: basic, heuristic và ICV",
+        "level": "Nhận biết",
+        "stem": "Basic scanning chủ yếu dựa vào gì?",
+        "options": [
+          "Chỉ đối chiếu với baseline sạch",
+          "Chỉ giám sát cổng đang mở",
+          "Mẫu hoặc chữ ký đã biết",
+          "Hành vi đáng ngờ không cần mẫu đã biết"
+        ],
+        "correct": 2,
+        "explanations": [
+          "So baseline là integrity scanning.",
+          "Giám sát cổng là quan sát mạng, không phải so chữ ký file của basic scanning.",
+          "Slide mô tả tìm đặc trưng virus đã biết trong file có thể làm vật chủ.",
+          "Dựa hành vi/quy tắc đáng ngờ là heuristic, không phải basic signature được hỏi."
+        ],
+        "page": 67
+      },
+      {
+        "id": "2b-q23",
+        "section": "2b.10",
+        "topic": "Các phương pháp phát hiện: basic, heuristic và ICV",
+        "level": "Thông hiểu",
+        "stem": "Heuristic scanning có giới hạn nào?",
+        "options": [
+          "Chỉ so khớp chữ ký mẫu đã biết",
+          "Có thể báo nhầm hoặc bỏ sót",
+          "Luôn phát hiện chính xác mẫu chưa biết",
+          "Không cần dữ liệu hay quy tắc"
+        ],
+        "correct": 1,
+        "explanations": [
+          "Chỉ so chữ ký là basic scanning; heuristic dùng suy luận dấu hiệu rộng hơn.",
+          "Đánh giá dấu hiệu đáng ngờ không phải chứng minh tuyệt đối.",
+          "Heuristic có sai số và không bảo đảm nhận ra mọi mẫu chưa biết.",
+          "Phương pháp vẫn cần đặc trưng, quy tắc hoặc dữ liệu để đánh giá."
+        ],
+        "page": 68
+      },
+      {
+        "id": "2b-q24",
+        "section": "2b.10",
+        "topic": "Các phương pháp phát hiện: basic, heuristic và ICV",
+        "level": "Vận dụng",
+        "stem": "ICV khác baseline sau cập nhật phần mềm hợp pháp. Kết luận nào phù hợp?",
+        "options": [
+          "Đã có thay đổi, cần xác minh nguyên nhân trước khi gọi là virus",
+          "Chắc chắn virus đã thay file",
+          "Chắc chắn nội dung chưa thay đổi",
+          "Chỉ cần xoá baseline để hết cảnh báo"
+        ],
+        "correct": 0,
+        "explanations": [
+          "Kiểm tra toàn vẹn phát hiện thay đổi; cập nhật hợp pháp cũng làm thay đổi.",
+          "Cập nhật hợp pháp cũng đổi nội dung nên không thể suy chắc virus.",
+          "ICV khác phù hợp với việc nội dung đã khác baseline, không phải chưa đổi.",
+          "Xoá baseline làm mất mốc tin cậy, không xác minh hay xử lý nguyên nhân."
+        ],
+        "page": 68
+      },
+      {
+        "id": "2b-q25",
+        "section": "2b.10",
+        "topic": "Các phương pháp phát hiện: basic, heuristic và ICV",
+        "level": "Thông hiểu",
+        "stem": "Điều gì quan trọng với ICV dùng HMAC?",
+        "options": [
+          "Công khai khoá để mọi chương trình cập nhật ICV",
+          "Bỏ kiểm tra tính sạch của baseline",
+          "Chỉ giữ kích thước file làm giá trị kiểm tra",
+          "Bảo vệ khoá và baseline sạch đáng tin"
+        ],
+        "correct": 3,
+        "explanations": [
+          "Lộ khoá có thể cho bên trái phép tính lại HMAC hợp lệ.",
+          "Baseline nhiễm làm mốc sẽ hợp thức hoá trạng thái xấu.",
+          "Kích thước không kiểm tra đầy đủ nội dung và không thay HMAC.",
+          "Nếu khoá hoặc bản chuẩn bị kiểm soát, kẻ tấn công có thể làm suy yếu giá trị kiểm tra."
+        ],
+        "page": 68
+      }
+    ]
+  }
+]
