@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>NetStudy — An toàn mạng máy tính</title>
+  <rect width="64" height="64" rx="16" fill="#175c4b"/>
+  <path d="M32 9 50 16v14c0 12-7.5 20-18 25-10.5-5-18-13-18-25V16Z" fill="#e0f39e" fill-opacity=".09" stroke="#e0f39e" stroke-width="3" stroke-linejoin="round"/>
+  <path d="m32 24-9 14h18Zm0 0v18" fill="none" stroke="#e0f39e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#e0f39e"><circle cx="32" cy="24" r="3.8"/><circle cx="23" cy="38" r="3.8"/><circle cx="41" cy="38" r="3.8"/></g>
+</svg>
