@@ -27,13 +27,19 @@ jobs:
         with:
           node-version: '22'
       - name: Assemble course data
-        run: python assemble.py
+        run: |
+          python assemble.py
+          python build-models.py
       - name: Check JavaScript syntax
         run: |
           node --check dist/app.js
           node --check dist/core.js
+          node --check dist/models.js
+          node --check dist/model-ui.js
       - name: Run functional checks
-        run: node checks.cjs
+        run: |
+          node checks.cjs
+          node checks-models.cjs
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site

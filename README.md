@@ -5,6 +5,7 @@
 ## Chức năng
 
 - 9 bài, 95 mục học, 264 câu hỏi giải thích từng lựa chọn và 278 thuật ngữ.
+- 27 sơ đồ cơ chế, 112 bước giải thích, tô sáng luồng đang xét; có ví dụ, giới hạn và câu tự kiểm tra.
 - Luyện tập theo bài/chủ đề/mức độ; học có giải thích hoặc tự kiểm tra.
 - Đề cố định và ngẫu nhiên: 40 câu / 75 phút, tự nộp khi hết giờ.
 - Ma trận ôn tập đề xuất: 12 nhận biết, 20 thông hiểu, 8 vận dụng; không phải cấu trúc đề thật. Điểm = số câu đúng × 0,25, không trừ điểm sai.
@@ -30,6 +31,11 @@ Mở http://localhost:8000. Dừng server bằng Ctrl+C. macOS/Linux dùng `pyth
 | `dist/style.css` | Màu sắc, bố cục, responsive |
 | `dist/app.js` | Bài học, luyện tập, lịch sử, nhập/xuất |
 | `dist/core.js` | Sinh đề, chấm điểm, kiểm tra sao lưu |
+| `dist/models.js` | 27 mô hình và diễn giải có nguồn theo bài |
+| `dist/model-ui.js` | Vẽ SVG, chọn từng bước, thư viện mô hình |
+| `dist/models.css` | Bố cục sơ đồ và phần giải thích |
+| `build-models.py` | Biên soạn dữ liệu mô hình, sinh lại models.js |
+| `checks-models.cjs` | Kiểm luồng, thao tác, nguồn và phép tính minh họa |
 | `dist/data.js` | Học liệu đã ghép từ JSON nguồn |
 | `content-a.json` | Bài 1, 2a, 2b |
 | `content-b.json` | Bài 3, 4, 5 |
@@ -45,9 +51,11 @@ Sửa các JSON nguồn, sau đó chạy:
 
 ```powershell
 py assemble.py
+py build-models.py
 node --check dist/app.js
 node --check dist/core.js
 node checks.cjs
+node checks-models.cjs
 ```
 
 Dùng Python 3.10+ và Node.js 22+. Không cần `npm install`. Giữ mã bài, mục và câu cũ khi bổ sung học liệu. Không dùng lại một mã câu cho câu khác về bản chất. Không sửa riêng `dist/data.js` rồi chạy assemble vì thay đổi sẽ bị ghi đè.
@@ -60,3 +68,9 @@ Kiểm thử bao gồm schema, các trang chức năng, 100 lượt sinh đề, 
 Học liệu biên soạn từ 9 PDF môn An toàn mạng máy tính do người học cung cấp; tham chiếu chi tiết hiển thị trong ứng dụng. Bản xuất không kèm PDF gốc. Diễn giải, ví dụ và câu hỏi là học liệu bổ trợ được xây dựng với hỗ trợ AI, có ghi chú các phát biểu cần xác minh. Đây là dự án học tập cá nhân, không gắn nhãn đề thi thật.
 
 Bản xuất không chứa kho Git cũ, cấu hình định danh Sites, thông tin xác thực hoặc lịch sử làm bài cá nhân.
+
+## Mô hình trực quan
+
+Mở **Mô hình trực quan** trên menu hoặc đọc sơ đồ ngay trong từng mục học. Dùng **Bước tiếp theo** để tô sáng luồng và đọc lời giải tương ứng. Có thể mở **Đọc liên tục toàn bộ cơ chế** để xem toàn bộ bước cùng lúc. Các sơ đồ được tự biên soạn bổ trợ, ghi nguồn bài/trang và giới hạn đơn giản hóa; không phải ảnh chép từ slide.
+
+Bộ kiểm tra mô hình xác minh 27 sơ đồ, toàn bộ 112 bước, chiều tham chiếu cạnh, thao tác chuyển bước, lọc theo bài, chặn chỉ số sai và độc lập kiểm lại các phép tính RSA/Diffie–Hellman/OTP. Sơ đồ SVG đã được render để rà soát hình; giao diện trình duyệt cần kiểm tra trực quan bổ sung nếu thay đổi bố cục.
