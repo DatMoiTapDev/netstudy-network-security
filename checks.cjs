@@ -2,8 +2,8 @@ const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const root=__dirname+'/dist/';
 const els=new Map();function el(sel){if(!els.has(sel))els.set(sel,{innerHTML:'',textContent:'',style:{},value:'',classList:{toggle(){}},insertAdjacentHTML(){},addEventListener(){},click(){}});return els.get(sel)}
 let stored={},clock=1800000000000,hash='#home';const intervals=[];
-const win={addEventListener(){},scrollTo(){},COURSE:[]};const document={querySelector:el,addEventListener(){},getElementById(){return{scrollIntoView(){}}},createElement(){return{click(){}}},hidden:false};
-const ctx={window:win,document,localStorage:{getItem:k=>stored[k]||null,setItem:(k,v)=>stored[k]=v},location:{get hash(){return hash},set hash(v){hash=v.startsWith('#')?v:'#'+v}},setInterval:fn=>{intervals.push(fn);return intervals.length},clearInterval(){},setTimeout(){},requestAnimationFrame:fn=>fn(),scrollY:0,scrollTo(){},confirm:()=>true,Blob,URL,Date:class extends Date{constructor(...a){super(...(a.length?a:[clock]))}static now(){return clock}},console};vm.createContext(ctx);
+const win={addEventListener(){},scrollTo(){},COURSE:[]};const docListeners={};const document={querySelector:el,addEventListener(type,fn){docListeners[type]=fn},getElementById(){return{scrollIntoView(){}}},createElement(){return{click(){}}},hidden:false};
+const ctx={window:win,document,docListeners,localStorage:{getItem:k=>stored[k]||null,setItem:(k,v)=>stored[k]=v},location:{get hash(){return hash},set hash(v){hash=v.startsWith('#')?v:'#'+v}},setInterval:fn=>{intervals.push(fn);return intervals.length},clearInterval(){},setTimeout(){},requestAnimationFrame:fn=>fn(),scrollY:0,scrollTo(){},confirm:()=>true,Blob,URL,Date:class extends Date{constructor(...a){super(...(a.length?a:[clock]))}static now(){return clock}},console};vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(root+'data.js','utf8'),ctx);vm.runInContext(fs.readFileSync(root+'core.js','utf8'),ctx);ctx.StudyCore=win.StudyCore;vm.runInContext(fs.readFileSync(root+'models.js','utf8'),ctx);vm.runInContext(fs.readFileSync(root+'model-ui.js','utf8'),ctx);vm.runInContext(fs.readFileSync(root+'app.js','utf8'),ctx);
 const run=s=>vm.runInContext(s,ctx),C=win.StudyCore,bank=run('bank');
 assert.equal(win.COURSE.length,9);assert.equal(new Set(bank.map(q=>q.id)).size,bank.length);
@@ -19,4 +19,23 @@ run("begin(bank.slice(0,3).map(q=>q.id),'learn','Học thử');render()");assert
 run("state.active=null;begin(bank.slice(0,3).map(q=>q.id),'test','Tự kiểm tra');state.active.answers[state.active.ids[0]]=0;render()");assert(!el('#app').innerHTML.includes('Đáp án đúng:'));run('submit();render()');assert(el('#app').innerHTML.includes('Đáp án đúng:'));
 assert.throws(()=>C.validate({version:1}));assert.throws(()=>C.validate({...C.fresh(),active:{ids:[]}}));
 const backup=JSON.stringify(run('state'));C.validate(JSON.parse(backup));assert.equal(JSON.parse(backup).history.length,2);
+run("begin(bank.slice(0,5).map(q=>q.id),'test','Kiểm tra tương tác vi mô'); render();");
+const activeId=run('state.active.ids[0]');
+run("updateOptionSelection(2)");
+assert.equal(run('state.active.answers[state.active.ids[0]]'),2);
+assert.equal(JSON.parse(stored[C.KEY]).active.answers[activeId],2);
+run("updateFlagState()");
+assert.equal(run('state.active.flags.includes(state.active.ids[0])'),true);
+run("updateFlagState()");
+assert.equal(run('state.active.flags.includes(state.active.ids[0])'),false);
+run("updateSectionCompletion('1','1.1')");
+assert.equal(run("state.completed.includes('1:1.1')"),true);
+run("updateSectionCompletion('1','1.1')");
+assert.equal(run("state.completed.includes('1:1.1')"),false);
+run("updateBookmarkState(bank[0].id)");
+assert.equal(run("state.marked.includes(bank[0].id)"),true);
+run("updateBookmarkState(bank[0].id)");
+assert.equal(run("state.marked.includes(bank[0].id)"),false);
+if(docListeners.keydown){let prevented=false;docListeners.keydown({key:'1',preventDefault(){prevented=true}});assert.equal(run('state.active.answers[state.active.ids[0]]'),0);assert(prevented);docListeners.keydown({key:'f',preventDefault(){}});assert.equal(run('state.active.flags.includes(state.active.ids[0])'),true);docListeners.keydown({key:'ArrowRight',preventDefault(){}});assert.equal(run('state.active.index'),1);docListeners.keydown({key:'ArrowLeft',preventDefault(){}});assert.equal(run('state.active.index'),0)}
+run("safeFocus(null); safeFocus({}); safeFocus({focus(){}})");
 console.log(JSON.stringify({chapters:win.COURSE.length,sections:win.COURSE.reduce((n,c)=>n+c.sections.length,0),questions:bank.length,examRandomizations:100,checks:'PASS: schema, routes, matrix, score, answer visibility, expiry, persisted deadline, backup'},null,2));
