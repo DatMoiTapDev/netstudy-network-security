@@ -1,0 +1,21 @@
+{
+  "name": "netstudy-network-security",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NetStudy Network Security Course & Testing Harness",
+  "scripts": {
+    "test:syntax": "node --check dist/core.js dist/app.js dist/data.js dist/models.js dist/model-ui.js",
+    "test:whitespace": "git diff --check",
+    "test:units": "node checks.cjs && node checks-models.cjs && node checks-perf.cjs && node checks-learning.cjs",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:a11y": "playwright test tests/accessibility.spec.js",
+    "test:serve": "node scripts/test-server.cjs",
+    "test": "npm run test:syntax && npm run test:whitespace && npm run test:units && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@playwright/test": "^1.49.0"
+  }
+}

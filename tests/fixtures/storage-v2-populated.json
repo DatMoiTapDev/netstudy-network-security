@@ -1,0 +1,212 @@
+{
+  "version": 2,
+  "completed": [
+    "1:1.1", "1:1.2", "1:1.3", "1:1.4", "1:1.5",
+    "1:1.6", "1:1.7", "1:1.8", "1:1.9", "1:1.10", "1:1.11",
+    "2a:2a.1", "2a:2a.2", "2a:2a.3", "2a:2a.4"
+  ],
+  "marked": [
+    "1-q1", "1-q4", "2a-q1", "3-q2"
+  ],
+  "bookmarks": [
+    "1-q1", "2a-q1"
+  ],
+  "seen": [
+    "1-q1", "1-q2", "1-q3", "1-q4", "1-q5", "2a-q1", "2a-q2", "3-q1", "3-q2"
+  ],
+  "history": [
+    {
+      "id": "1730000000000",
+      "mode": "exam",
+      "title": "Thi thử Đề A (Cố định)",
+      "ids": ["1-q1", "1-q2", "1-q3", "1-q4", "2a-q1", "3-q1"],
+      "answers": { "1-q1": 0, "1-q2": 1, "1-q3": 0, "1-q4": 2, "2a-q1": 1, "3-q1": 3 },
+      "score": 8.5,
+      "started": 1730000000000,
+      "ended": 1730003000000,
+      "auto": false
+    },
+    {
+      "id": "1730010000000",
+      "mode": "exam",
+      "title": "Thi thử Đề B (Ngẫu nhiên)",
+      "ids": ["1-q1", "1-q3", "2a-q1", "2a-q2", "3-q1", "3-q2"],
+      "answers": { "1-q1": 0, "1-q3": 2, "2a-q1": 1, "2a-q2": 0, "3-q1": 3, "3-q2": 1 },
+      "score": 7.5,
+      "started": 1730010000000,
+      "ended": 1730013600000,
+      "auto": false
+    },
+    {
+      "id": "1730020000000",
+      "mode": "exam",
+      "title": "Thi thử Đề C",
+      "ids": ["1-q2", "1-q4", "2a-q1", "3-q2"],
+      "answers": { "1-q2": 1, "1-q4": 2, "2a-q1": 1, "3-q2": 1 },
+      "score": 9.0,
+      "started": 1730020000000,
+      "ended": 1730022400000,
+      "auto": false
+    },
+    {
+      "id": "1730030000000",
+      "mode": "exam",
+      "title": "Thi thử Đề D",
+      "ids": ["1-q1", "1-q2", "1-q3", "1-q4"],
+      "answers": { "1-q1": 0, "1-q2": 1, "1-q3": 2, "1-q4": 2 },
+      "score": 7.0,
+      "started": 1730030000000,
+      "ended": 1730032000000,
+      "auto": false
+    },
+    {
+      "id": "1730040000000",
+      "mode": "exam",
+      "title": "Thi thử Đề E",
+      "ids": ["1-q1", "1-q2", "1-q3", "1-q4"],
+      "answers": { "1-q1": 0, "1-q2": 1, "1-q3": 2, "1-q4": 2 },
+      "score": 8.0,
+      "started": 1730040000000,
+      "ended": 1730042100000,
+      "auto": false
+    },
+    {
+      "id": "1730050000000",
+      "mode": "learn",
+      "title": "Luyện tập Bài 1",
+      "ids": ["1-q1", "1-q2"],
+      "answers": { "1-q1": 0, "1-q2": 1 },
+      "started": 1730050000000,
+      "ended": 1730050600000,
+      "auto": false
+    },
+    {
+      "id": "1730060000000",
+      "mode": "test",
+      "title": "Tự kiểm tra Bài 2a",
+      "ids": ["2a-q1", "2a-q2"],
+      "answers": { "2a-q1": 1, "2a-q2": 3 },
+      "started": 1730060000000,
+      "ended": 1730060800000,
+      "auto": false
+    },
+    {
+      "id": "1730070000000",
+      "mode": "learn",
+      "title": "Luyện tập thích ứng: Câu hay sai",
+      "ids": ["1-q3", "2a-q2"],
+      "answers": { "1-q3": 2, "2a-q2": 0 },
+      "started": 1730070000000,
+      "ended": 1730071200000,
+      "auto": false
+    }
+  ],
+  "questionStats": {
+    "1-q1": {
+      "questionId": "1-q1",
+      "chapter": "1",
+      "level": "NB",
+      "attempts": 4,
+      "correctCount": 4,
+      "wrongCount": 0,
+      "consecutiveCorrect": 2,
+      "masteryStatus": "mastered",
+      "lastAttempted": 1730050600000,
+      "lastResult": true,
+      "marked": true
+    },
+    "1-q2": {
+      "questionId": "1-q2",
+      "chapter": "1",
+      "level": "TH",
+      "attempts": 3,
+      "correctCount": 2,
+      "wrongCount": 1,
+      "consecutiveCorrect": 1,
+      "masteryStatus": "in_review",
+      "lastAttempted": 1730050600000,
+      "lastResult": true,
+      "marked": false
+    },
+    "1-q3": {
+      "questionId": "1-q3",
+      "chapter": "1",
+      "level": "VD",
+      "attempts": 3,
+      "correctCount": 1,
+      "wrongCount": 2,
+      "consecutiveCorrect": 0,
+      "masteryStatus": "needs_practice",
+      "lastAttempted": 1730071200000,
+      "lastResult": false,
+      "marked": false
+    },
+    "1-q4": {
+      "questionId": "1-q4",
+      "chapter": "1",
+      "level": "TH",
+      "attempts": 2,
+      "correctCount": 2,
+      "wrongCount": 0,
+      "consecutiveCorrect": 2,
+      "masteryStatus": "mastered",
+      "lastAttempted": 1730042100000,
+      "lastResult": true,
+      "marked": true
+    },
+    "2a-q1": {
+      "questionId": "2a-q1",
+      "chapter": "2a",
+      "level": "NB",
+      "attempts": 2,
+      "correctCount": 2,
+      "wrongCount": 0,
+      "consecutiveCorrect": 2,
+      "masteryStatus": "mastered",
+      "lastAttempted": 1730060800000,
+      "lastResult": true,
+      "marked": true
+    },
+    "2a-q2": {
+      "questionId": "2a-q2",
+      "chapter": "2a",
+      "level": "TH",
+      "attempts": 2,
+      "correctCount": 0,
+      "wrongCount": 2,
+      "consecutiveCorrect": 0,
+      "masteryStatus": "needs_practice",
+      "lastAttempted": 1730071200000,
+      "lastResult": false,
+      "marked": false
+    },
+    "3-q1": {
+      "questionId": "3-q1",
+      "chapter": "3",
+      "level": "VD",
+      "attempts": 2,
+      "correctCount": 2,
+      "wrongCount": 0,
+      "consecutiveCorrect": 1,
+      "masteryStatus": "in_review",
+      "lastAttempted": 1730013600000,
+      "lastResult": true,
+      "marked": false
+    },
+    "3-q2": {
+      "questionId": "3-q2",
+      "chapter": "3",
+      "level": "TH",
+      "attempts": 2,
+      "correctCount": 1,
+      "wrongCount": 1,
+      "consecutiveCorrect": 0,
+      "masteryStatus": "needs_practice",
+      "lastAttempted": 1730022400000,
+      "lastResult": false,
+      "marked": true
+    }
+  },
+  "savedExams": [],
+  "active": null
+}
