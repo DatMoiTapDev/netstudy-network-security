@@ -1,6 +1,6 @@
 'use strict';
 const C=StudyCore, chapters=window.COURSE||[], bank=chapters.flatMap(c=>c.questions.map(q=>({...q,chapter:c.id,file:c.file}))), qmap=new Map(bank.map(q=>[q.id,q])), app=document.querySelector('#app');
-let state=C.fresh(), route='', tick=null, storageError='';
+let state=C.fresh(), route='', tick=null, timerEl=null, storageError='';
 try{const saved=localStorage.getItem(C.KEY);if(saved)state=C.validate(JSON.parse(saved))}catch(e){storageError='Không đọc được dữ liệu đã lưu. Hãy nhập bản sao lưu nếu có.'}
 
 /* Utilities */
@@ -11,6 +11,7 @@ const btn=(label,action,cls='')=>`<button type="button" class="btn ${cls}" data-
 const minutes=ms=>`${Math.floor(ms/60000)} phút ${Math.floor(ms/1000)%60} giây`;
 const chapter=id=>chapters.find(c=>c.id===id);
 const source=(c,p)=>`<div class="source">Nguồn: ${e(c.file)} · trang PDF ${e(p)}. Số trang tính từ đầu file.</div>`;
+function debounce(fn,delay=120){let timer=null;return function(...args){if(timer)clearTimeout(timer);timer=setTimeout(()=>{timer=null;fn.apply(this,args)},delay)}}
 function toast(t){const el=document.querySelector('#toast');if(!el)return;el.textContent=t;el.style.display='block';setTimeout(()=>el.style.display='none',3200)}
 function save(){try{localStorage.setItem(C.KEY,JSON.stringify(state))}catch(err){storageError='Trình duyệt không lưu được dữ liệu. Hãy xuất bản sao lưu trước khi đóng trang.';toast(storageError)}}
 function go(path){if(location.hash==='#'+path)render();else location.hash=path}
@@ -42,7 +43,7 @@ function icon(name, cls='', size=null, label=''){
   const a = label ? ` role="img" aria-label="${e(label)}"` : ' aria-hidden="true"';
   const c = cls ? ` ${cls}` : '';
   const s = size ? ` style="width:${size}px;height:${size}px"` : '';
-  return `<svg class="svg-icon${c}" viewBox="0 0 24 24"${a}${s}>${p}</svg>`;
+  return `<svg class="svg-icon${c}" width="24" height="24" viewBox="0 0 24 24"${a}${s}>${p}</svg>`;
 }
 
 /* Theme Management API */
@@ -125,7 +126,7 @@ function home(){
 function courses(){
   app.innerHTML=pageTop('GIÁO TRÌNH','Từng bài, từng bước.','Bám cấu trúc tài liệu gốc. Phần diễn giải, ví dụ và gợi ý học là học liệu biên soạn bổ trợ; nguồn slide được ghi ở từng mục.')+`<input class="search" id="courseSearch" placeholder="Tìm bài, khái niệm, nội dung…" aria-label="Tìm bài học"><div class="grid" id="courseGrid">${chapters.map(card).join('')}</div>`;
   const cs=document.querySelector('#courseSearch');
-  if(cs)cs.oninput=ev=>{let t=ev.target.value.toLocaleLowerCase('vi');document.querySelector('#courseGrid').innerHTML=chapters.filter(c=>JSON.stringify(c).toLocaleLowerCase('vi').includes(t)).map(card).join('')};
+  if(cs)cs.oninput=debounce(ev=>{let t=ev.target.value.toLocaleLowerCase('vi');const cg=document.querySelector('#courseGrid');if(cg)cg.innerHTML=chapters.filter(c=>JSON.stringify(c).toLocaleLowerCase('vi').includes(t)).map(card).join('')},120);
 }
 
 function externalNotes(c){
@@ -147,7 +148,7 @@ function terms(){
   };
   draw('');
   const ts=document.querySelector('#termSearch');
-  if(ts)ts.oninput=ev=>draw(ev.target.value);
+  if(ts)ts.oninput=debounce(ev=>draw(ev.target.value),120);
 }
 
 function practice(id){
@@ -186,15 +187,15 @@ function session(){
   if(!q){toast('Có câu hỏi không còn trong phiên bản học liệu. Hãy xuất sao lưu.');return go('settings')}
   let answered=Object.hasOwn(a.answers,q.id), reveal=a.mode==='learn'&&answered;
   app.innerHTML=pageTop(a.mode==='exam'?'THI THỬ / 40 CÂU · 75 PHÚT':'LUYỆN TẬP',e(a.title))+`<div class="quiz-layout"><div class="card"><div class="quiz-head"><span class="chip">Câu ${a.index+1} / ${a.ids.length}</span><span class="badge">Bài ${e(q.chapter)} · ${e(q.level)}</span></div><div class="question">${e(q.stem)}</div><div>${q.options.map((o,i)=>`<button type="button" class="option ${a.answers[q.id]===i?'selected':''} ${reveal?(i===q.correct?'right':a.answers[q.id]===i?'wrong':''):''}" aria-pressed="${a.answers[q.id]===i}" data-action="answer|${i}" ${reveal?'disabled':''}><b>${'ABCD'[i]}</b><span>${e(o)}</span></button>`).join('')}</div>${reveal?rationale(q):'<p class="tiny muted">Đáp án chưa được công bố.</p>'}<div class="actions">${btn('← Trước','prev')}${btn(a.flags.includes(q.id)?(icon('star-fill')+' Đã đánh dấu'):(icon('review')+' Đánh dấu xem lại'),'flag')}${btn(a.index===a.ids.length-1?'Đến câu đầu ↻':'Tiếp theo →','next','primary')}</div></div><div class="card lesson-nav"><div class="quiz-head"><strong>${a.mode==='exam'?'Thời gian còn lại':'Tiến độ làm bài'}</strong></div><div id="timer" class="timer">${a.deadline?'':'Không giới hạn'}</div><p class="tiny muted">${Object.keys(a.answers).length}/${a.ids.length} câu đã trả lời</p><div class="qnav">${a.ids.map((id,i)=>`<button type="button" aria-label="Đến câu ${i+1}" class="${Object.hasOwn(a.answers,id)?'answered':''} ${a.flags.includes(id)?'flagged':''} ${i===a.index?'current':''}" data-action="jump|${i}">${i+1}</button>`).join('')}</div><p class="tiny muted">Xanh: đã trả lời · Gạch vàng: đánh dấu</p>${btn('Nộp bài','submit','primary')}<p class="tiny muted">Tự lưu sau mỗi thao tác.</p></div></div>`;
-  if(a.deadline){updateTimer();tick=setInterval(updateTimer,1000)}
+  timerEl=document.querySelector('#timer');clearInterval(tick);if(a.deadline){updateTimer();tick=setInterval(updateTimer,1000)}
 }
 
 function updateTimer(){
   let a=state.active;
   if(!a||!a.deadline)return;
   const remaining=a.deadline-Date.now();
-  if(remaining<=0){clearInterval(tick);return submit(true)}
-  let el=document.querySelector('#timer');
+  if(remaining<=0){clearInterval(tick);tick=null;timerEl=null;return submit(true)}
+  if(!timerEl)timerEl=document.querySelector('#timer');let el=timerEl;
   if(el){el.textContent=Math.floor(remaining/60000)+':'+String(Math.floor(remaining/1000)%60).padStart(2,'0');el.classList.toggle('urgent',remaining<5*60000)}
 }
 
@@ -206,7 +207,7 @@ function submit(auto=false){
   const a=state.active;
   if(!a)return;
   if(!auto&&!confirm('Nộp bài và xem kết quả? Bạn không thể sửa đáp án sau khi nộp.'))return;
-  clearInterval(tick);
+  clearInterval(tick);tick=null;timerEl=null;
   a.ended=Math.min(Date.now(),a.deadline||Date.now());
   a.auto=auto;
   state.history.push(a);
@@ -349,7 +350,7 @@ function updateBookmarkState(qid,triggerEl){
 /* Master Route & Render Dispatcher */
 function render(){
   closeDrawer();
-  clearInterval(tick);
+  clearInterval(tick);tick=null;timerEl=null;
   if(state.active?.deadline&&Date.now()>=state.active.deadline){submit(true);return}
   route=location.hash.slice(1)||'home';
   const [page,id,sectionId,modelId]=route.split('/');
