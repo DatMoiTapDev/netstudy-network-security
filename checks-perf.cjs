@@ -32,7 +32,7 @@ for (const file of files) {
   totalBytes += sz;
 }
 
-const MAX_PAYLOAD_BYTES = 725000; // SLA budget
+const MAX_PAYLOAD_BYTES = 752640; // SLA budget (735 KB per Feature 004 FR-010)
 if (totalBytes > MAX_PAYLOAD_BYTES) {
   console.error(`FAIL: Total payload ${totalBytes} bytes exceeds SLA budget of ${MAX_PAYLOAD_BYTES} bytes!`);
   process.exit(1);
