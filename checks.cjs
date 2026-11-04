@@ -1,8 +1,8 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const root=__dirname+'/dist/';
-const els=new Map();function el(sel){if(!els.has(sel))els.set(sel,{innerHTML:'',textContent:'',style:{},value:'',classList:{toggle(){}},insertAdjacentHTML(){},addEventListener(){},click(){}});return els.get(sel)}
+const els=new Map();function el(sel){if(!els.has(sel))els.set(sel,{innerHTML:'',textContent:'',style:{},value:'',classList:{toggle(){},add(){},remove(){},contains(){return false}},setAttribute(){},getAttribute(){return null},insertAdjacentHTML(){},addEventListener(){},click(){}});return els.get(sel)}
 let stored={},clock=1800000000000,hash='#home';const intervals=[];
-const win={addEventListener(){},scrollTo(){},COURSE:[]};const docListeners={};const document={querySelector:el,addEventListener(type,fn){docListeners[type]=fn},getElementById(){return{scrollIntoView(){}}},createElement(){return{click(){}}},hidden:false};
+const win={addEventListener(){},scrollTo(){},COURSE:[]};const docListeners={};const document={querySelector:el,addEventListener(type,fn){docListeners[type]=fn},getElementById(){return{scrollIntoView(){}}},createElement(){return{click(){}}},documentElement:{dataset:{}},hidden:false};
 const ctx={window:win,document,docListeners,localStorage:{getItem:k=>stored[k]||null,setItem:(k,v)=>stored[k]=v},location:{get hash(){return hash},set hash(v){hash=v.startsWith('#')?v:'#'+v}},setInterval:fn=>{intervals.push(fn);return intervals.length},clearInterval(){},setTimeout(){},requestAnimationFrame:fn=>fn(),scrollY:0,scrollTo(){},confirm:()=>true,Blob,URL,Date:class extends Date{constructor(...a){super(...(a.length?a:[clock]))}static now(){return clock}},console};vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(root+'data.js','utf8'),ctx);vm.runInContext(fs.readFileSync(root+'core.js','utf8'),ctx);ctx.StudyCore=win.StudyCore;vm.runInContext(fs.readFileSync(root+'models.js','utf8'),ctx);vm.runInContext(fs.readFileSync(root+'model-ui.js','utf8'),ctx);vm.runInContext(fs.readFileSync(root+'app.js','utf8'),ctx);
 const run=s=>vm.runInContext(s,ctx),C=win.StudyCore,bank=run('bank');
@@ -38,4 +38,14 @@ run("updateBookmarkState(bank[0].id)");
 assert.equal(run("state.marked.includes(bank[0].id)"),false);
 if(docListeners.keydown){let prevented=false;docListeners.keydown({key:'1',preventDefault(){prevented=true}});assert.equal(run('state.active.answers[state.active.ids[0]]'),0);assert(prevented);docListeners.keydown({key:'f',preventDefault(){}});assert.equal(run('state.active.flags.includes(state.active.ids[0])'),true);docListeners.keydown({key:'ArrowRight',preventDefault(){}});assert.equal(run('state.active.index'),1);docListeners.keydown({key:'ArrowLeft',preventDefault(){}});assert.equal(run('state.active.index'),0)}
 run("safeFocus(null); safeFocus({}); safeFocus({focus(){}})");
+assert.equal(run("getThemeMode()"),'system');
+run("cycleThemeMode()");assert.equal(run("getThemeMode()"),'light');
+run("cycleThemeMode()");assert.equal(run("getThemeMode()"),'dark');
+run("cycleThemeMode()");assert.equal(run("getThemeMode()"),'system');
+run("setThemeMode('dark')");assert.equal(run("getThemeMode()"),'dark');assert.equal(stored['netstudy-theme'],'dark');
+assert(stored[C.KEY]&&!stored[C.KEY].includes('dark'),'Theme mode must be isolated from study state');
+for(const k of ['home','courses','terms','models','practice','exam','review','star-fill','history','sources','settings','sun','moon','monitor','check','menu','close']){
+  const svg=run("icon('"+k+"')");assert(svg.includes('class="svg-icon"')&&svg.includes('viewBox="0 0 24 24"'),'Icon '+k+' must be valid SVG');
+}
+run("openDrawer(); closeDrawer();");
 console.log(JSON.stringify({chapters:win.COURSE.length,sections:win.COURSE.reduce((n,c)=>n+c.sections.length,0),questions:bank.length,examRandomizations:100,checks:'PASS: schema, routes, matrix, score, answer visibility, expiry, persisted deadline, backup'},null,2));
