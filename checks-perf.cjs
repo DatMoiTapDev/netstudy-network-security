@@ -112,15 +112,23 @@ vm.runInContext(fs.readFileSync(path.join(distDir, 'model-ui.js'), 'utf8'), ctx)
 vm.runInContext(fs.readFileSync(path.join(distDir, 'app.js'), 'utf8'), ctx);
 const tLoad = performance.now() - t0;
 
-// 3. Route Transition Latency (100 transitions)
-const tR0 = performance.now();
+// 3. Route Transition Latency (100 transitions per sample).
+// Precompile the VM expression and warm up all routes: compilation and cold
+// JIT startup are not route transition costs. Use the median of five complete
+// samples to limit variance from shared CI runner scheduling.
 const routes = ['home', 'courses', 'terms', 'models', 'practice', 'exam', 'history', 'review', 'sources', 'settings'];
-for (let i = 0; i < 100; i++) {
-  ctx.location.hash = '#' + routes[i % routes.length];
-  vm.runInContext('render()', ctx);
+const renderScript = new vm.Script('render()');
+function measureRoutes(count) {
+  const start = performance.now();
+  for (let i = 0; i < count; i++) {
+    ctx.location.hash = '#' + routes[i % routes.length];
+    renderScript.runInContext(ctx);
+  }
+  return (performance.now() - start) / count;
 }
-const tRenders = performance.now() - tR0;
-const avgRouteMs = tRenders / 100;
+measureRoutes(100); // Warm-up
+const routeSamples = Array.from({ length: 5 }, () => measureRoutes(100));
+const avgRouteMs = routeSamples.sort((a, b) => a - b)[2];
 
 // 4. Model SVG Render Latency (270 renders across all 27 models)
 const tM0 = performance.now();
